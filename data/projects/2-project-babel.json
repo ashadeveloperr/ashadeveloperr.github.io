@@ -4,7 +4,7 @@
   "schemaVersion": 2,
   "title": "SAIL OR SUNK",
   "tagline": "물 위에 뜬 배가 기울거나 가라앉지 않도록 균형을 잡으며 화물을 던져 쌓고, 제한 시간 안에 점수를 모으는 2D 물리 게임",
-  "cover": null,
+  "cover": "images/launch_wind.png",
   "team": {
     "type": "solo",
     "size": "1인",
@@ -77,7 +77,12 @@
       "how": "상태에 맞는 카메라 타깃과 줌을 `Lerp()`로 보간하고, `RectTransform.anchoredPosition`과 `Lerp()`로 인게임 UI·침수 게이지·결과 화면을 슬라이드시킵니다.",
       "why": "조준·비행·적재 순간마다 봐야 할 대상이 달라 고정 카메라 대신 시점 전환을 택했고, 침수 게이지는 위험할 때만 등장시켜 위험 자체를 전달했습니다.",
       "section": "6.3 핵심 기능 및 구현",
-      "image": null
+      "image": {
+        "src": "images/flood_gauge.png",
+        "w": 838,
+        "h": 468,
+        "caption": "3스테이지 — 침수가 시작되면 오른쪽에 나타나는 침수 게이지와 CAUTION 표시"
+      }
     }
   ],
   "troubleshooting": [
@@ -109,7 +114,20 @@
       "section": "4.4 고민과 선택"
     }
   ],
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "images/launch_wind.png",
+      "w": 836,
+      "h": 464,
+      "caption": "1스테이지 투척 — 예상 궤적과 풍향·풍속 표시"
+    },
+    {
+      "src": "images/flood_gauge.png",
+      "w": 838,
+      "h": 468,
+      "caption": "3스테이지 — 침수가 시작되면 오른쪽에 나타나는 침수 게이지와 CAUTION 표시"
+    }
+  ],
   "retro": {
     "section": "7. 구현 결과 및 기술적 회고",
     "achieved": [
@@ -406,7 +424,21 @@
             "verbatim": true
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/launch_wind.png",
+            "w": 836,
+            "h": 464,
+            "caption": {
+              "text": "1스테이지 투척 — 예상 궤적과 풍향·풍속 표시",
+              "verbatim": true
+            },
+            "sectionPath": [
+              "3.1 개요"
+            ]
+          }
+        ]
       },
       {
         "key": "throw-launch",
@@ -767,7 +799,21 @@
             "verbatim": true
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/flood_gauge.png",
+            "w": 838,
+            "h": 468,
+            "caption": {
+              "text": "3스테이지 — 침수가 시작되면 오른쪽에 나타나는 침수 게이지와 CAUTION 표시",
+              "verbatim": true
+            },
+            "sectionPath": [
+              "6.3 핵심 기능 및 구현"
+            ]
+          }
+        ]
       },
       {
         "key": "fb-camera",
