@@ -20,6 +20,14 @@
         {
           "text": "업그레이드 단계별 선박 프리팹마다 부력·침수 판정 지점 조정",
           "project": "2-project-babel"
+        },
+        {
+          "text": "씬 병합 충돌을 HUD·상점 UI 프리팹 분리로 해결",
+          "project": "1-folk-sack"
+        },
+        {
+          "text": "어셈블리 정의로 Core·Runtime 규칙 분리",
+          "project": "3-desert-settlement"
         }
       ]
     },
@@ -42,6 +50,15 @@
       ]
     },
     {
+      "name": "Animator · 애니메이션 이벤트",
+      "evidence": [
+        {
+          "text": "곡괭이가 닿는 프레임의 애니메이션 이벤트로 굴착 실행 연결",
+          "project": "1-folk-sack"
+        }
+      ]
+    },
+    {
       "name": "uGUI",
       "evidence": [
         {
@@ -49,9 +66,38 @@
           "project": "2-project-babel"
         }
       ]
+    },
+    {
+      "name": "DOTween",
+      "evidence": [
+        {
+          "text": "DOTween.Shake로 칸 단위 타일 진동 설계·조정",
+          "project": "1-folk-sack"
+        }
+      ]
+    },
+    {
+      "name": "Git · GitHub",
+      "evidence": [
+        {
+          "text": "GitHub 이슈 46개 단위로 작업 관리",
+          "project": "3-desert-settlement"
+        }
+      ]
+    },
+    {
+      "name": "Asana",
+      "evidence": [
+        {
+          "text": "백로그·카드 템플릿·리뷰 칸으로 팀 검증 운영",
+          "project": "1-folk-sack"
+        }
+      ]
     }
   ],
   "projects": [
-    "2-project-babel"
+    "1-folk-sack",
+    "2-project-babel",
+    "3-desert-settlement"
   ]
 }
