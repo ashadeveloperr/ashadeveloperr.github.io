@@ -825,6 +825,45 @@
         ]
       },
       {
+        "key": "res-hospital",
+        "chapter": "residents",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "4.4 고민과 선택",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 기능 C — 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로",
+          "4.4 고민과 선택"
+        ],
+        "points": [
+          {
+            "label": "병원 회복 배율 — 왜 2배인가",
+            "text": "병원은 전염병에서 빨리 회복하기 위한 것이지 바로 끝내기 위한 것이 아니었음. 3~4배면 병원을 도배해 바로 끝나 버리다시피 함",
+            "verbatim": true
+          },
+          {
+            "label": "재검증",
+            "text": "3~4배면 도배할 필요도 없이 병원 한 곳으로 전염병이 퍼지지 못함",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "후보|장비 없음|병원 2병상|병원 4병상|D1 맵 손해"
+          },
+          {
+            "kind": "table",
+            "n": 3,
+            "fp": "병원 회복|병원 없음|1곳|2곳|4곳"
+          }
+        ]
+      },
+      {
         "key": "verify-structure",
         "chapter": "verify",
         "layout": "overview",
