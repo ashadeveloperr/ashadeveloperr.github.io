@@ -94,6 +94,8 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .toc-title { font-size: 12px; font-weight: 800; letter-spacing: .06em; color: var(--muted); margin-bottom: 10px; }
 .toc-links { position: relative; }
 .toc-links a { display: block; text-decoration: none; color: var(--muted); padding: 4px 10px; line-height: 1.45; border-left: 2px solid var(--line); }
+.toc-links a.h2 { font-weight: 700; }
+.toc-links a.h2:not(:first-child) { margin-top: 14px; }
 .toc-links a.h3 { padding-left: 22px; font-size: 13px; }
 .toc-links a:hover { color: var(--ink); }
 .toc-links a.active { color: var(--accent-ink); border-left-color: var(--accent-ink); font-weight: 700; background: var(--accent-soft); }
@@ -120,8 +122,9 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
                       background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 .doc-intro h1 { font-size: clamp(30px, 2.6vw, 42px); font-weight: 800; letter-spacing: -.03em; line-height: 1.15; margin: 6px 0 10px; }
 .doc-intro .tagline { font-size: 18px; font-weight: 600; color: var(--body); }
-.meta-line { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 12px; font-size: 14px; }
-.meta-line div { display: flex; gap: 6px; }
+/* 이름 칸(장르·기간…)과 내용 칸을 나눠, 내용이 모든 줄에서 같은 세로선에서 시작하게 */
+.meta-line { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 16px; margin-top: 12px; font-size: 14px; }
+.meta-line div { display: contents; }
 .meta-line dt { color: var(--muted); font-weight: 700; }
 .meta-line dd { color: var(--ink); }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin-top: 12px; }
@@ -171,6 +174,9 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .md .mmd { margin: 22px 0; }
 .mmd .mermaid { display: flex; justify-content: center; padding: 16px; border: 1px solid var(--diagram-bg); border-radius: calc(var(--r) * .7); overflow-x: auto; background: var(--diagram-bg); }
 .mmd .mermaid svg { display: block; max-width: 100%; height: auto; }
+/* 어두운 페이지(doc.js가 html[data-mmd-dark] 표시)는 다이어그램을 어두운 테마로 그리므로 판도 카드색. --t-diagram을 정했으면 그 값 */
+html[data-mmd-dark] { --diagram-bg: var(--t-diagram, var(--surface)); }
+html[data-mmd-dark] .mmd .mermaid { border-color: var(--line); }
 .mmd-bar { contain: inline-size; display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 6px 12px; margin-top: 6px; font-size: 13px; }
 .mmd-src summary { color: var(--muted); cursor: pointer; font-weight: 600; }
 .mmd-src pre { margin: 8px 0 0; max-height: 320px; overflow: auto; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; }
@@ -203,18 +209,30 @@ dialog.lightbox::backdrop { background: rgba(10, 11, 14, .82); }
 .lb-cap { color: #fff; text-align: center; font-size: 14px; margin-top: 10px; }
 .lb-close { display: block; margin: 10px auto 0; }
 
+/* 문서 끝: 다른 프로젝트로 바로 넘어가기 + 연락처(포트폴리오 문서 맨 아래 연락처와 같은 내용) */
+.doc-next { border-top: 1px solid var(--line); background: var(--surface); }
+.dn-in { max-width: var(--page-max); margin: 0 auto; padding: 48px var(--pad) 40px; display: grid; gap: 40px; }
+.dn-block > .eyebrow { margin: 0 0 14px; font-family: var(--t-display, 'Montserrat'), var(--sans); font-size: 13px; font-weight: 800; letter-spacing: .06em; color: var(--accent-ink); }
+.dn-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+.dn-card { display: flex; flex-direction: column; gap: 8px; padding: 20px 22px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+           box-shadow: 0 1px 3px var(--shadow); }
+.dn-no { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .04em; color: var(--muted); }
+.dn-card h2 { margin: 0; font-size: 20px; line-height: 1.35; }
+.dn-card h2 a { color: var(--ink); text-decoration: none; }
+.dn-card h2 a:hover { color: var(--accent-ink); }
+.dn-tag { margin: 0; color: var(--body); font-size: 14px; line-height: 1.6; flex: 1; }
+.dn-card .actions { margin-top: 6px; }
+.dn-name { margin: 0 0 12px; font-size: 20px; font-weight: 800; color: var(--ink); }
 .doc-foot { max-width: var(--page-max); margin: 0 auto; padding: 28px var(--pad) 48px; border-top: 1px solid var(--line);
             display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; color: var(--faint); font-size: 13px; }
 .doc-foot a { color: var(--muted); text-decoration: none; }
 
-/* ── ① 가운데 정렬 폭 규칙: 글줄 40rem을 본문 칸 가운데에, 코드·표는 글줄 왼쪽에서 오른쪽으로만, 도식·그림은 가운데 최대 1200 ── */
+/* ── ① 가운데 정렬 폭 규칙: 글줄 40rem을 본문 칸 가운데에. 코드·표·도식·그림도 글줄 폭을 넘지 않음(넘치는 코드·표는 안에서 가로 스크롤, 도식·그림은 줄여서 맞춤 — 크게 보려면 [크게 보기]) ── */
 .doc-intro, .md > * { max-width: min(var(--measure), 100%); }
-.md > :is(pre, .table-wrap) { width: max-content; min-width: min(var(--measure), 100%); max-width: 100%; overflow-x: auto; }
-.md > :is(.mmd, .pf-figure) { width: fit-content; max-width: min(100%, var(--fig-max)); }
+.md > :is(pre, .table-wrap) { width: min(var(--measure), 100%); overflow-x: auto; }
+.md > :is(.mmd, .pf-figure) { width: fit-content; }
 .md > .print-only { max-width: none; }
-.doc-intro, .md > :not(pre, .table-wrap, .mmd, .pf-figure) { margin-inline: auto; }
-.md > :is(pre, .table-wrap) { margin-left: max(0px, (100% - var(--measure)) / 2); max-width: calc(100% - max(0px, (100% - var(--measure)) / 2)); }
-.md > :is(.mmd, .pf-figure) { margin-inline: auto; }
+.doc-intro, .md > :not(.pf-never) { margin-inline: auto; }   /* :not(...)은 구체성을 .md p 같은 규칙보다 높이려는 것(가로 여백만 auto로) */
 
 /* ── 반응형 (화면에만; 인쇄 폭에서 켜지지 않게 screen으로 한정) ── */
 @media screen and (max-width: 1799.98px) {
@@ -234,7 +252,7 @@ dialog.lightbox::backdrop { background: rgba(10, 11, 14, .82); }
   .doc-intro { margin-bottom: 24px; }
   .doc-intro h1 { font-size: 30px; }
   .doc-intro .tagline { font-size: 17px; }
-  .meta-line { display: grid; gap: 2px; }
+  .meta-line { gap: 2px 12px; }
   .md h2 { font-size: 21px; margin-top: 44px; }
   .md h3 { font-size: 17.5px; }
   .md pre code, .md pre code.hljs { font-size: 12.5px; padding: 14px 16px; }
@@ -257,7 +275,7 @@ dialog.lightbox::backdrop { background: rgba(10, 11, 14, .82); }
   .doc-intro .eyebrow { background: none; -webkit-text-fill-color: currentColor; }
   html { scroll-behavior: auto; }
   body { background: #fff; }
-  .toc, .rail, .doc-head, .pf-newtab-icon, .pf-newtab-sr, dialog, .skip-link, .doc-fab, .glance, .mmd-bar, .doc-foot { display: none !important; }
+  .toc, .rail, .doc-head, .pf-newtab-icon, .pf-newtab-sr, dialog, .skip-link, .doc-fab, .glance, .mmd-bar, .doc-foot, .doc-next { display: none !important; }
   .print-only { display: block; }
   sup.print-only { display: inline; font-size: 7pt; color: #555; margin-left: 1px; }
   .print-urls { font-size: 8.5pt; color: #555; border-bottom: 1px solid #ccc; padding-bottom: 6px; margin-bottom: 10px; }
@@ -288,6 +306,8 @@ dialog.lightbox::backdrop { background: rgba(10, 11, 14, .82); }
   .md :is(th, td) a, .md .table-wrap.print-wide :is(th, td) { overflow-wrap: anywhere; }
   thead { display: table-header-group; }
   .mmd .mermaid { border: 0; padding: 0; overflow: visible; }
+  html[data-mmd-dark] { --diagram-bg: #FFFFFF; }
+  html[data-mmd-dark] .mermaid svg { filter: invert(1) hue-rotate(180deg); }   /* 어두운 테마로 그린 다이어그램을 흰 종이용 밝은 색으로 뒤집음 */
   .mermaid svg, .md img { max-width: 100% !important; height: auto; max-height: 230mm; }
   .md a { color: inherit; text-decoration: none; }
   .link-list { margin-top: 18pt; border-top: 1px solid #ccc; padding-top: 8pt; font-size: 9pt; }

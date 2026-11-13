@@ -37,6 +37,26 @@
   const name = pf.profile?.name || '';
   document.title = `${p.title} — ${PF.t('name.doc')}${name ? ' · ' + name : ''}`;
 
+  // 문서 끝: 다른 프로젝트로 바로 넘어가기 + 연락처(포트폴리오 문서 맨 아래 연락처와 같은 내용). 못 읽은 프로젝트는 건너뜀
+  const order = (pf.projects || []).map(String);
+  const others = (await Promise.all(order.filter((x) => x !== id).map((x) =>
+    PF.loadJSON(`data/projects/${encodeURIComponent(x)}.json`).then((q) => ({ ...q, id: x })).catch(() => null)))).filter(Boolean);
+  const prof = pf.profile || {};
+  const total = String(order.length).padStart(2, '0');
+  const moreHtml = others.length ? `<div class="dn-block"><p class="eyebrow">${T('doc.other-projects')}</p><ul class="dn-list">${others.map((q) => `<li class="dn-card">
+      <p class="dn-no">${esc(PF.t('page.project-no', { no: String(order.indexOf(q.id) + 1).padStart(2, '0'), total }))}</p>
+      <h2>${link({ href: `doc.html?p=${encodeURIComponent(q.id)}`, label: esc(q.title), kind: 'anchor' })}</h2>
+      ${q.tagline ? `<p class="dn-tag">${inline(q.tagline)}</p>` : ''}
+      <div class="actions">${link({ href: `doc.html?p=${encodeURIComponent(q.id)}`, label: T('name.doc'), kind: 'anchor', cls: 'btn primary' })}${link({ href: PF.projectUrl(q.id), label: T('name.deck'), kind: 'page', cls: 'btn' })}</div>
+    </li>`).join('')}</ul></div>` : '';
+  const contactHtml = (prof.email || PF.isUrl(prof.github) || (prof.links || []).some((l) => PF.isUrl(l.url))) ? `<div class="dn-block dn-contact"><p class="eyebrow">${T('en.contact')}</p>
+      <p class="dn-name">${esc(name)}</p>
+      <div class="actions">${[prof.email && link({ href: `mailto:${prof.email}`, label: esc(prof.email), kind: 'mail', cls: 'btn' }),
+        PF.isUrl(prof.github) && link({ href: prof.github, label: 'GitHub', kind: 'external', cls: 'btn' }),
+        ...(prof.links || []).filter((l) => PF.isUrl(l.url)).map((l) => link({ href: l.url, label: esc(l.label), kind: 'external', cls: 'btn' })),
+        link({ href: 'index.html', label: T('ui.back'), kind: 'page', cls: 'btn' })].filter(Boolean).join('')}</div></div>` : '';
+  const nextHtml = moreHtml || contactHtml ? `<section class="doc-next" aria-label="${esc(PF.t('doc.other-projects'))}"><div class="dn-in">${moreHtml}${contactHtml}</div></section>` : '';
+
   // ── 뼈대 ──
   const metaRows = (p.meta || []).map((m) => `<div><dt>${esc(m.label)}</dt><dd>${inline(m.value)}</dd></div>`).join('') +
     (p.team?.role ? `<div class="role"><dt>${T('name.role')}</dt><dd>${inline(p.team.role)}</dd></div>` : '');
@@ -78,7 +98,6 @@
       <aside class="rail" aria-label="프로젝트 정보">
         <section class="rail-card"><p class="rail-title">${T('doc.rail-project')}</p><dl class="rail-meta">${metaRows}</dl>
           <div class="actions">${deckBtn}${ext.join('')}</div></section>
-        <section class="rail-card" id="rail-now" aria-live="polite"><p class="rail-title">${T('doc.rail-now')}</p><p class="now-title">—</p><div class="now-body"></div></section>
         <section class="rail-card rail-misc">
           ${link({ href: srcPath(p.doc), label: T('doc.raw-md'), kind: 'file' })}
           ${PF.isUrl(p.links?.github) ? link({ href: p.links.github, label: T('doc.raw-github'), kind: 'external' }) : ''}
@@ -88,6 +107,7 @@
     </div>
     <div class="doc-fab" role="group" aria-label="빠른 이동"><button type="button" class="fab-toc" aria-haspopup="dialog">${T('name.toc')}</button><a class="fab-top" href="#top" aria-label="맨 위로">↑</a></div>
     <dialog class="toc-dialog" aria-label="문서 목차"><div class="toc-dialog-head"><p class="toc-title">${T('name.toc')}</p><button type="button" class="btn dlg-close">${T('ui.close')}</button></div><div class="toc-links"></div></dialog>
+    ${nextHtml}
     <footer class="doc-foot"><span>© ${esc(name)}</span>${link({ href: 'index.html', label: T('ui.back'), kind: 'page' })}</footer>`;
 
   // 좁은 화면(< 720px)에서는 "한눈에" 상자를 접어 둠
@@ -187,7 +207,10 @@
     markPrintWide();
     document.fonts?.addEventListener('loadingdone', markPrintWide);
     if (window.mermaid && figs.length) {
-      mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose', fontFamily: 'Pretendard, sans-serif' });
+      // 어두운 페이지면 다이어그램도 어두운 테마(밝은 판이 화면에서 튀지 않게). 문서가 %%{init}%%으로 직접 테마를 정했으면 그 색이 읽히게 밝은 판 그대로
+      const darkPage = /dark/.test(getComputedStyle(html).colorScheme) && ![...figs].some((f) => /%%\{\s*init/.test(f.querySelector('.mmd-src code')?.textContent || ''));
+      if (darkPage) html.dataset.mmdDark = '1';
+      mermaid.initialize({ startOnLoad: false, theme: darkPage ? 'dark' : 'neutral', class: { hideEmptyMembersBox: true }, securityLevel: 'loose', fontFamily: 'Pretendard, sans-serif' });
       try { await mermaid.run({ nodes: doc.querySelectorAll('.mermaid') }); }
       catch (err) { console.warn('[doc] Mermaid 렌더 오류:', err); }
     }
@@ -268,10 +291,8 @@
   function trackSection(list) {
     const links = new Map([...document.querySelectorAll('#toc-links a')].map((a) => [decodeURIComponent(a.hash.slice(1)), a]));
     const tocBox = document.getElementById('toc');
-    const nowTitle = document.querySelector('#rail-now .now-title');
-    const nowBody = document.querySelector('#rail-now .now-body');
+    // 지금 읽는 절은 왼쪽 목차 하이라이트로만 보여 줌(오른쪽 칸 "지금 읽는 절" 카드는 목차와 겹쳐서 뺌)
     let cur, t = 0;
-    const parentH2 = (h) => { let i = list.indexOf(h); while (i >= 0 && list[i].tagName !== 'H2') i--; return list[i] || null; };
     const update = () => {
       t = 0;
       let c = null;
@@ -279,7 +300,7 @@
       if (c === cur && cur !== undefined) return;
       cur = c;
       links.forEach((a) => { a.classList.remove('active'); a.removeAttribute('aria-current'); });
-      if (!c) { nowTitle.textContent = PF.t('doc.start'); nowBody.innerHTML = `<p class="now-none">${T('doc.now-none')}</p>`; return; }
+      if (!c) return;
       const a = links.get(c.id);
       if (a) {
         a.classList.add('active'); a.setAttribute('aria-current', 'location');
@@ -288,9 +309,6 @@
           if (top < tocBox.scrollTop + 40 || bottom > tocBox.scrollTop + tocBox.clientHeight - 40) tocBox.scrollTop = Math.max(0, top - tocBox.clientHeight / 3);
         }
       }
-      nowTitle.textContent = htext(c);
-      const h2 = parentH2(c);
-      nowBody.innerHTML = h2 && h2 !== c ? `<p class="now-parent">${esc(htext(h2))}</p>` : '';
     };
     addEventListener('scroll', () => { if (!t) t = setTimeout(update, 60); }, { passive: true });   // rAF 대신 setTimeout(가려진 창에서도 동작)
     addEventListener('resize', () => { cur = undefined; update(); });

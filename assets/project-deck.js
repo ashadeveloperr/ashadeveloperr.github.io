@@ -111,7 +111,11 @@
   async function renderMermaid(els) {
     if (!els.length) return;
     if (!window.mermaid) { els.forEach((el) => svgCache.set(el, { error: 'Mermaid를 불러오지 못했습니다' })); return; }
-    mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose', fontFamily: 'Pretendard, sans-serif', suppressErrorRendering: true });
+    // 어두운 덱이면 다이어그램도 어두운 테마(상세 문서와 같은 규칙). 문서가 %%{init}%%으로 직접 테마를 정했으면 밝은 판 그대로
+    const root = document.documentElement;
+    const darkDeck = /dark/.test(getComputedStyle(root).colorScheme) && !els.some((el) => /%%\{\s*init/.test(el.querySelector('code')?.textContent || ''));
+    if (darkDeck) root.dataset.mmdDark = '1';
+    mermaid.initialize({ startOnLoad: false, theme: darkDeck ? 'dark' : 'neutral', class: { hideEmptyMembersBox: true }, securityLevel: 'loose', fontFamily: 'Pretendard, sans-serif', suppressErrorRendering: true });
     if (!mmdHost) { mmdHost = document.createElement('div'); mmdHost.setAttribute('aria-hidden', 'true'); Object.assign(mmdHost.style, { position: 'absolute', left: '-20000px', top: '0', width: '1280px', visibility: 'hidden' }); document.body.appendChild(mmdHost); }
     let n = 0;
     for (const el of els) {

@@ -2,6 +2,11 @@
 // 데이터: data/portfolio.json, data/projects/<폴더 이름>.json(/portfolio-build가 생성), src/<폴더>/<기술 문서>.md
 // 이 파일은 글을 만들지 않습니다. 화면에 나오는 내용은 모두 위 데이터에서 오고, UI 문구(절 이름·버튼·라벨)는 assets/strings.js의 문구 표(PF.t)에서 옵니다.
 // 주석의 설계 근거(docs/design/…의 portfolio-structure·deck-vs-scroll·01 §, R0, 결정 F·Q·# 번호)와 원본 시안(spikes/…)은 템플릿 유지관리용 maintainer 브랜치에 있습니다. 이 레포에 없어도 정상입니다.
+// 취소선은 ~~두 개~~일 때만. marked의 gfm은 ~한 개~도 취소선으로 읽어서 "07.09~10 … 07.17~18"처럼 물결표가 두 번 나오는 줄이 지워진 것처럼 보임
+if (window.marked && !window.marked.__pfSingleTilde) {
+  window.marked.use({ tokenizer: { del(src) { return src.startsWith('~~') ? false : (src[0] === '~' ? { type: 'text', raw: '~', text: '~' } : false); } } });
+  window.marked.__pfSingleTilde = true;
+}
 const PF = (() => {
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   // 텍스트 필드: HTML 이스케이프 + `백틱` → <code>
