@@ -4,7 +4,7 @@
   "schemaVersion": 2,
   "title": "SAIL OR SUNK",
   "tagline": "물 위에 뜬 배가 기울거나 가라앉지 않도록 균형을 잡으며 화물을 던져 쌓고, 제한 시간 안에 점수를 모으는 2D 물리 게임",
-  "cover": "images/launch_wind.png",
+  "cover": "images/cover.png",
   "team": {
     "type": "solo",
     "size": "1인",
@@ -53,7 +53,12 @@
       "how": "드래그 거리와 질량으로 보정한 발사 운동량을 현재 풍속과 함께 `Block.Launch`에 넘기고, 발사 순간 Rigidbody2D를 Kinematic에서 Dynamic으로 전환합니다.",
       "why": "환경과 조건이 매번 같으면 투척 경험이 단순해질 수 있어, 화물의 크기·질량을 범위 안에서 무작위로 바꾸고 풍향·풍속의 영향을 받게 해 매번 탄도를 다시 계산하도록 설계했습니다.",
       "section": "3.3 핵심 기능 및 구현",
-      "image": null
+      "image": {
+        "src": "images/launch_throw.gif",
+        "w": 640,
+        "h": 400,
+        "caption": "바람 6.7m/s에서 예상 궤적을 따라 상자를 던져 범선에 싣는 모습"
+      }
     },
     {
       "title": "선박 부력 및 침수 시스템",
@@ -61,7 +66,12 @@
       "how": "좌우 부력 적용 지점마다 수심에 비례한 부력을 가해, 더 깊이 잠긴 쪽이 더 큰 힘을 받으면서 생기는 회전력으로 선박의 복원력을 구현합니다.",
       "why": "단일 부력 지점을 적용하자 선체가 걷잡을 수 없이 회전해 기울거나 뒤집혀, 좌우에 부력 적용 지점을 나눠 회전과 역회전으로 균형을 잡는 복원 움직임을 만들었습니다.",
       "section": "4.3 핵심 기능 및 구현",
-      "image": null
+      "image": {
+        "src": "images/buoyancy.gif",
+        "w": 640,
+        "h": 400,
+        "caption": "화물이 실린 범선이 좌우로 기울었다가 스스로 균형을 되찾는 복원 움직임"
+      }
     },
     {
       "title": "특수 화물 상호작용 시스템",
@@ -69,7 +79,12 @@
       "how": "`BombBlock`·`ChickenBlock`을 `Block`의 상속 클래스로 분리하고, 폭발 시 `Physics2D.OverlapCircleAll()`로 범위를 탐색해 거리에 따른 충격량을 주고 닭 화물에 `Fry()`를 호출합니다.",
       "why": "일반 화물에 특수 기능을 더하면 `Block`의 조건문과 상태가 늘어 책임이 지나치게 큰 클래스(갓 클래스)가 될 위험이 있어, 공통 기능은 `Block`에, 특수 동작은 상속 클래스에 두었습니다.",
       "section": "5.3 핵심 기능 및 구현",
-      "image": null
+      "image": {
+        "src": "images/bomb_explosion.gif",
+        "w": 640,
+        "h": 400,
+        "caption": "폭탄이 빨갛게 흔들리며 경고한 뒤 터지면, 범위 안의 상자는 튕겨 나가고 닭 화물은 치킨으로 바뀌는 모습 (0.5배속, 폭발 대기 시간을 5초로 고정해 촬영)"
+      }
     },
     {
       "title": "카메라 및 UI 피드백 시스템",
@@ -78,10 +93,10 @@
       "why": "조준·비행·적재 순간마다 플레이어가 집중해야 할 대상이 달라 고정 카메라 대신 시점 전환을 택했고, 침수 게이지는 침수가 진행될 때만 등장시켜 위험 자체를 UI의 등장으로 전달했습니다.",
       "section": "6.3 핵심 기능 및 구현",
       "image": {
-        "src": "images/flood_gauge.png",
-        "w": 838,
-        "h": 468,
-        "caption": "3스테이지 — 침수가 시작되면 오른쪽에 나타나는 침수 게이지와 CAUTION 표시"
+        "src": "images/camera_follow.gif",
+        "w": 640,
+        "h": 400,
+        "caption": "조준할 때는 화물과 궤적을, 날아가는 동안에는 화물을 따라가고, 착지하면 선박으로 돌아오는 카메라 시점 전환"
       }
     }
   ],
@@ -116,16 +131,40 @@
   ],
   "screenshots": [
     {
-      "src": "images/launch_wind.png",
-      "w": 836,
-      "h": 464,
-      "caption": "1스테이지 투척 — 예상 궤적과 풍향·풍속 표시"
+      "src": "images/launch_throw.gif",
+      "w": 640,
+      "h": 400,
+      "caption": "바람 6.7m/s에서 예상 궤적을 따라 상자를 던져 범선에 싣는 모습"
     },
     {
-      "src": "images/flood_gauge.png",
-      "w": 838,
-      "h": 468,
-      "caption": "3스테이지 — 침수가 시작되면 오른쪽에 나타나는 침수 게이지와 CAUTION 표시"
+      "src": "images/buoyancy.gif",
+      "w": 640,
+      "h": 400,
+      "caption": "화물이 실린 범선이 좌우로 기울었다가 스스로 균형을 되찾는 복원 움직임"
+    },
+    {
+      "src": "images/sinking.gif",
+      "w": 640,
+      "h": 400,
+      "caption": "화물을 계속 싣자 침수 게이지가 나타나 차오르고, 카누가 가라앉아 SUNK... 결과창이 뜨는 모습"
+    },
+    {
+      "src": "images/bomb_explosion.gif",
+      "w": 640,
+      "h": 400,
+      "caption": "폭탄이 빨갛게 흔들리며 경고한 뒤 터지면, 범위 안의 상자는 튕겨 나가고 닭 화물은 치킨으로 바뀌는 모습 (0.5배속, 폭발 대기 시간을 5초로 고정해 촬영)"
+    },
+    {
+      "src": "images/camera_follow.gif",
+      "w": 640,
+      "h": 400,
+      "caption": "조준할 때는 화물과 궤적을, 날아가는 동안에는 화물을 따라가고, 착지하면 선박으로 돌아오는 카메라 시점 전환"
+    },
+    {
+      "src": "images/result_screens.png",
+      "w": 1920,
+      "h": 720,
+      "caption": "상점(선박·장비 업그레이드)과 스테이지 결과 화면 — SAIL!(성공) · SUNK...(침몰) · ALIVE?(버텼지만 수익 0 이하) · STORY CLEAR! · 파산"
     }
   ],
   "retro": {
@@ -249,6 +288,13 @@
         ],
         "visuals": [
           {
+            "kind": "image",
+            "src": "images/tutorial_start.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {"text": "게임 시간이 멈춘 동안 튜토리얼 안내가 뜨고, 키를 누르면 안내가 내려가며 HUD가 들어오고 플레이가 시작되는 모습", "verbatim": true}
+          },
+          {
             "kind": "code",
             "n": 1,
             "lines": [1, 14],
@@ -269,7 +315,18 @@
           {"label": "", "text": "침몰·시간 종료에 따른 스테이지 결과 처리", "verbatim": true},
           {"label": "", "text": "유지비·보험·업그레이드와 파산 판정", "verbatim": true}
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/result_screens.png",
+            "w": 1920,
+            "h": 720,
+            "caption": {
+              "text": "상점(선박·장비 업그레이드)과 스테이지 결과 화면 — SAIL!(성공) · SUNK...(침몰) · ALIVE?(버텼지만 수익 0 이하) · STORY CLEAR! · 파산",
+              "verbatim": true
+            }
+          }
+        ]
       },
       {
         "key": "throw-structure",
@@ -361,7 +418,16 @@
             "verbatim": true
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/launch_throw.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {"text": "바람 6.7m/s에서 예상 궤적을 따라 상자를 던져 범선에 싣는 모습", "verbatim": true},
+            "sectionPath": ["3.3 핵심 기능 및 구현"]
+          }
+        ]
       },
       {
         "key": "buoy-structure",
@@ -377,7 +443,16 @@
           {"label": "", "text": "갑판 3개 침수 판정 지점 : 침수 게이지와 게임 오버 판정으로 연결", "verbatim": true},
           {"label": "", "text": "침몰 시에는 중력 스케일을 점진적으로 증가시켜 부력을 압도함으로써 서서히 가라앉는 선박의 움직임 구현", "verbatim": true}
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/sinking.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {"text": "화물을 계속 싣자 침수 게이지가 나타나 차오르고, 카누가 가라앉아 SUNK... 결과창이 뜨는 모습", "verbatim": true},
+            "sectionPath": ["4.3 핵심 기능 및 구현"]
+          }
+        ]
       },
       {
         "key": "buoy-force",
@@ -396,7 +471,16 @@
           {"label": "", "text": "선체가 가상의 수면 높이에 머무르도록 선체의 질량에 적합한 중력과 부력 값을 찾아 균형을 맞춤", "verbatim": true},
           {"label": "", "text": "갑판의 침수 여부에 따른 침수도의 상승과 하강으로 플레이어에게 게임 오버 위험을 직관적으로 전달", "verbatim": true}
         ],
-        "visuals": [{"kind": "code", "n": 1, "lines": [18, 30], "fp": "private void UpdateGravityBasedOnDepth()"}]
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/buoyancy.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {"text": "화물이 실린 범선이 좌우로 기울었다가 스스로 균형을 되찾는 복원 움직임", "verbatim": true}
+          },
+          {"kind": "code", "n": 1, "lines": [18, 30], "fp": "private void UpdateGravityBasedOnDepth()"}
+        ]
       },
       {
         "key": "buoy-choice",
@@ -450,7 +534,19 @@
             "verbatim": true
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/bomb_explosion.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {
+              "text": "폭탄이 빨갛게 흔들리며 경고한 뒤 터지면, 범위 안의 상자는 튕겨 나가고 닭 화물은 치킨으로 바뀌는 모습 (0.5배속, 폭발 대기 시간을 5초로 고정해 촬영)",
+              "verbatim": true
+            },
+            "sectionPath": ["5.3 핵심 기능 및 구현"]
+          }
+        ]
       },
       {
         "key": "cargo-explode",
@@ -495,7 +591,15 @@
             "verbatim": false
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/bomb_before_after.png",
+            "w": 1280,
+            "h": 400,
+            "caption": {"text": "폭발 전(경고 중인 폭탄·상자·닭)과 폭발 후(상자는 날아가고 치킨만 남음)", "verbatim": true}
+          }
+        ]
       },
       {
         "key": "fb-structure",
@@ -585,7 +689,16 @@
             "verbatim": false
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/camera_follow.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {"text": "조준할 때는 화물과 궤적을, 날아가는 동안에는 화물을 따라가고, 착지하면 선박으로 돌아오는 카메라 시점 전환", "verbatim": true},
+            "sectionPath": ["6.3 핵심 기능 및 구현"]
+          }
+        ]
       },
       {
         "key": "lessons",
@@ -697,6 +810,13 @@
         ],
         "visuals": [
           {
+            "kind": "image",
+            "src": "images/tutorial_start.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {"text": "게임 시간이 멈춘 동안 튜토리얼 안내가 뜨고, 키를 누르면 안내가 내려가며 HUD가 들어오고 플레이가 시작되는 모습", "verbatim": true}
+          },
+          {
             "kind": "code",
             "n": 1,
             "lines": [1, 14],
@@ -717,7 +837,18 @@
           {"label": "", "text": "침몰·시간 종료에 따른 스테이지 결과 처리", "verbatim": true},
           {"label": "", "text": "유지비·보험·업그레이드와 파산 판정", "verbatim": true}
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/result_screens.png",
+            "w": 1920,
+            "h": 720,
+            "caption": {
+              "text": "상점(선박·장비 업그레이드)과 스테이지 결과 화면 — SAIL!(성공) · SUNK...(침몰) · ALIVE?(버텼지만 수익 0 이하) · STORY CLEAR! · 파산",
+              "verbatim": true
+            }
+          }
+        ]
       },
       {
         "key": "throw-structure",
@@ -809,7 +940,16 @@
             "verbatim": true
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/launch_throw.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {"text": "바람 6.7m/s에서 예상 궤적을 따라 상자를 던져 범선에 싣는 모습", "verbatim": true},
+            "sectionPath": ["3.3 핵심 기능 및 구현"]
+          }
+        ]
       },
       {
         "key": "buoy-structure",
@@ -825,7 +965,16 @@
           {"label": "", "text": "갑판 3개 침수 판정 지점 : 침수 게이지와 게임 오버 판정으로 연결", "verbatim": true},
           {"label": "", "text": "침몰 시에는 중력 스케일을 점진적으로 증가시켜 부력을 압도함으로써 서서히 가라앉는 선박의 움직임 구현", "verbatim": true}
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/sinking.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {"text": "화물을 계속 싣자 침수 게이지가 나타나 차오르고, 카누가 가라앉아 SUNK... 결과창이 뜨는 모습", "verbatim": true},
+            "sectionPath": ["4.3 핵심 기능 및 구현"]
+          }
+        ]
       },
       {
         "key": "buoy-force",
@@ -844,7 +993,16 @@
           {"label": "", "text": "선체가 가상의 수면 높이에 머무르도록 선체의 질량에 적합한 중력과 부력 값을 찾아 균형을 맞춤", "verbatim": true},
           {"label": "", "text": "갑판의 침수 여부에 따른 침수도의 상승과 하강으로 플레이어에게 게임 오버 위험을 직관적으로 전달", "verbatim": true}
         ],
-        "visuals": [{"kind": "code", "n": 1, "lines": [18, 30], "fp": "private void UpdateGravityBasedOnDepth()"}]
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/buoyancy.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {"text": "화물이 실린 범선이 좌우로 기울었다가 스스로 균형을 되찾는 복원 움직임", "verbatim": true}
+          },
+          {"kind": "code", "n": 1, "lines": [18, 30], "fp": "private void UpdateGravityBasedOnDepth()"}
+        ]
       },
       {
         "key": "buoy-choice",
@@ -898,7 +1056,19 @@
             "verbatim": true
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/bomb_explosion.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {
+              "text": "폭탄이 빨갛게 흔들리며 경고한 뒤 터지면, 범위 안의 상자는 튕겨 나가고 닭 화물은 치킨으로 바뀌는 모습 (0.5배속, 폭발 대기 시간을 5초로 고정해 촬영)",
+              "verbatim": true
+            },
+            "sectionPath": ["5.3 핵심 기능 및 구현"]
+          }
+        ]
       },
       {
         "key": "cargo-explode",
@@ -943,7 +1113,15 @@
             "verbatim": false
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/bomb_before_after.png",
+            "w": 1280,
+            "h": 400,
+            "caption": {"text": "폭발 전(경고 중인 폭탄·상자·닭)과 폭발 후(상자는 날아가고 치킨만 남음)", "verbatim": true}
+          }
+        ]
       },
       {
         "key": "fb-structure",
@@ -1033,7 +1211,16 @@
             "verbatim": false
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/camera_follow.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {"text": "조준할 때는 화물과 궤적을, 날아가는 동안에는 화물을 따라가고, 착지하면 선박으로 돌아오는 카메라 시점 전환", "verbatim": true},
+            "sectionPath": ["6.3 핵심 기능 및 구현"]
+          }
+        ]
       },
       {
         "key": "lessons",
@@ -1063,6 +1250,6 @@
         "visuals": []
       }
     ],
-    "applied": "4d20dc575f1f72b5"
+    "applied": "e36d46a557ccba8c"
   }
 }
