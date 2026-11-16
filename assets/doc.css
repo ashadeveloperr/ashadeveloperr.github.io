@@ -230,7 +230,9 @@ dialog.lightbox::backdrop { background: rgba(10, 11, 14, .82); }
 /* ── ① 가운데 정렬 폭 규칙: 글줄 40rem을 본문 칸 가운데에. 코드·표·도식·그림도 글줄 폭을 넘지 않음(넘치는 코드·표는 안에서 가로 스크롤, 도식·그림은 줄여서 맞춤 — 크게 보려면 [크게 보기]) ── */
 .doc-intro, .md > * { max-width: min(var(--measure), 100%); }
 .md > :is(pre, .table-wrap) { width: min(var(--measure), 100%); overflow-x: auto; }
-.md > :is(.mmd, .pf-figure) { width: fit-content; }
+.md > .mmd { width: fit-content; }
+.md > .pf-figure { width: min(var(--measure), 100%); }   /* 본문 그림은 원래 크기와 관계없이 글줄 폭을 꽉 채움(작은 GIF는 늘리고 큰 그림은 줄임) */
+.md .pf-figure img { width: 100%; }
 .md > .print-only { max-width: none; }
 .doc-intro, .md > :not(.pf-never) { margin-inline: auto; }   /* :not(...)은 구체성을 .md p 같은 규칙보다 높이려는 것(가로 여백만 auto로) */
 
@@ -291,7 +293,7 @@ dialog.lightbox::backdrop { background: rgba(10, 11, 14, .82); }
   .md h3 { font-size: 13pt; margin-top: 16pt; }
   .md h4 { font-size: 11pt; }
   .md > * { max-width: none !important; width: auto !important; min-width: 0 !important; margin-left: 0 !important; margin-right: 0 !important; }
-  .md > :is(.mmd, .pf-figure) { width: fit-content !important; }
+  .md > .mmd { width: fit-content !important; }
   pre, .table-wrap, .mmd, .mermaid, .pf-figure, blockquote, tr, img { break-inside: avoid; }
   h2, h3, h4 { break-after: avoid; }
   /* .fade-r(화면용 흐림 mask)이 인쇄에 남으면 코드가 그림으로 바뀌고 글자가 두 번 들어감(시안 검증에서 발견) → 인쇄에서 mask를 끔 */

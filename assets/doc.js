@@ -326,7 +326,19 @@
       const st = dlg.querySelector('.lb-stage');
       st.className = svg ? 'lb-stage lb-svg' : 'lb-stage';
       st.innerHTML = '';
-      if (svg) { const c = svg.cloneNode(true); c.removeAttribute('id'); c.style.maxWidth = 'none'; st.appendChild(c); }
+      if (svg) {
+        // Mermaid는 색·선 규칙을 <style> 안에 "#<svg id> ..."로 묶어 둠 → id를 지우면 규칙이 모두 풀려 도형이 검게 칠해짐.
+        // 복제본에 새 id를 주고 <style>의 선택자도 같이 바꿔, 본문과 id가 겹치지 않으면서 같은 색으로 보이게 함
+        const c = svg.cloneNode(true);
+        const id = svg.id;
+        if (id) {
+          const nid = `${id}-zoom`;
+          c.id = nid;
+          c.querySelectorAll('style').forEach((s) => { s.textContent = s.textContent.split(`#${id}`).join(`#${nid}`); });
+        } else c.removeAttribute('id');
+        c.style.maxWidth = 'none';
+        st.appendChild(c);
+      }
       else { const im = new Image(); im.src = src; im.alt = caption || ''; st.appendChild(im); }
       dlg.querySelector('.lb-cap').textContent = caption || '';
       dlg.showModal();
