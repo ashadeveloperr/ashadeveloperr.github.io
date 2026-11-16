@@ -124,7 +124,7 @@ table.kv td.role { color: var(--accent-ink); font-weight: 800; }
 .toc-cols.one { grid-template-columns: minmax(0, 760px); }
 .toc-lb { font-size: 13px; font-weight: 800; letter-spacing: .12em; color: var(--muted); margin-bottom: 8px !important; }
 .toc-list { list-style: none; display: grid; gap: 0; }
-.toc-list a { display: flex; align-items: center; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+.toc-list a { display: flex; align-items: flex-start; gap: 16px;   /* 번호표를 장 제목 첫 줄 높이에 맞춤(제목이 여러 줄이어도 위에 붙음) — .ncard·기능 카드와 같은 규칙 */ padding: 9px 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; }
 .toc-list .n { width: 40px; height: 40px; border-radius: calc(var(--radius) * .6); background: var(--glow); color: #fff; display: flex; align-items: center; justify-content: center;
                font-family: var(--display); font-weight: 800; font-size: 16px; flex: none; font-variant-numeric: lining-nums tabular-nums; }
 .toc-list .tx { flex: 1; min-width: 0; }
