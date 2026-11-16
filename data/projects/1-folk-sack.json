@@ -92,7 +92,12 @@
       "how": "효과음마다 위치를 가진 `AudioSource`를 만들어 선형 거리 감쇠를 적용하고, `ResolveEffectPosition`에서 효과음 위치의 z값을 리스너와 같은 평면에 맞춥니다.",
       "why": "곡괭이 소리, 다이너마이트·지뢰 폭발음과 타이머가 거리와 관계없이 같은 크기로 들려, 위치 기반 거리 감쇠를 적용했습니다.",
       "section": "5.3 핵심 기능 및 구현",
-      "image": null
+      "image": {
+        "src": "images/dodge.gif",
+        "w": 640,
+        "h": 400,
+        "caption": "다이너마이트를 피해 폭발 위치에서 멀어지는 장면 — 폭발음은 이 거리에 따라 작아지도록 거리 감쇠 적용 (GIF에는 소리 없음)"
+      }
     }
   ],
   "troubleshooting": [
@@ -731,6 +736,16 @@
             "kind": "code",
             "n": 1,
             "fp": "GameObject voice = new GameObject(\"Sound_\" + Names[index]);"
+          },
+          {
+            "kind": "image",
+            "src": "images/dodge.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {
+              "text": "다이너마이트를 피해 폭발 위치에서 멀어지는 장면 — 폭발음은 이 거리에 따라 작아지도록 거리 감쇠 적용 (GIF에는 소리 없음)",
+              "verbatim": true
+            }
           }
         ]
       },
