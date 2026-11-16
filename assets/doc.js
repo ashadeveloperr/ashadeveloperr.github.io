@@ -155,7 +155,12 @@
       const kids = [...para.childNodes].filter((n) => !(n.nodeType === 3 && !n.textContent.trim()));
       const only = kids.length === 1 && kids[0].nodeType === 1 ? kids[0] : null;
       const img = only && (only.tagName === 'IMG' ? only : (only.tagName === 'A' && only.children.length >= 1 && [...only.childNodes].every((n) => n.nodeType === 1 ? n.tagName === 'IMG' || n.classList.contains('pf-newtab-icon') || n.classList.contains('pf-newtab-sr') : !n.textContent.trim()) ? only.querySelector('img') : null));
-      if (img) para.classList.add('pf-figure');
+      if (img) {
+        para.classList.add('pf-figure');
+        // 그림 설명(alt)을 그림 아래에 보이게 함 — 전에는 [크게 보기] 창에서만 보였음
+        const alt = (img.getAttribute('alt') || '').trim();
+        if (alt) { const cap = document.createElement('span'); cap.className = 'pf-figcap'; cap.textContent = alt; para.appendChild(cap); }
+      }
     });
 
     // ⑦ Mermaid (theme default, securityLevel loose). 글꼴을 먼저 받아 글자 폭을 맞춤

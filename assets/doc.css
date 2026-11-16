@@ -233,6 +233,7 @@ dialog.lightbox::backdrop { background: rgba(10, 11, 14, .82); }
 .md > .mmd { width: fit-content; }
 .md > .pf-figure { width: min(var(--measure), 100%); }   /* 본문 그림은 원래 크기와 관계없이 글줄 폭을 꽉 채움(작은 GIF는 늘리고 큰 그림은 줄임) */
 .md .pf-figure img { width: 100%; }
+.md .pf-figcap { display: block; margin-top: 8px; font-size: 13.5px; line-height: 1.5; color: var(--muted); text-align: center; }
 .md > .print-only { max-width: none; }
 .doc-intro, .md > :not(.pf-never) { margin-inline: auto; }   /* :not(...)은 구체성을 .md p 같은 규칙보다 높이려는 것(가로 여백만 auto로) */
 
