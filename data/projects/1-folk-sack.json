@@ -4,7 +4,7 @@
   "schemaVersion": 2,
   "title": "Folk Sack",
   "tagline": "최대 4명이 하나의 광산을 파 내려가 광물을 모으고, 지상에서 팔아 번 골드로 겨루는 2D 사이드뷰 경쟁형 멀티플레이 채굴 게임에서, 팀장으로 기획·일정을 이끌며 그래픽·캐릭터 애니메이션·굴착 피드백·사운드까지 클라이언트 표현 전반을 맡은 프로젝트",
-  "cover": null,
+  "cover": "images/cover.png",
   "team": {
     "type": "team",
     "size": "3인",
@@ -53,7 +53,12 @@
       "how": "클릭 시에는 방향 전환과 굴착 애니메이션 트리거만 켜고, 곡괭이가 닿는 프레임의 애니메이션 이벤트 `AnimationEvent_MineImpact`가 실행 단계(`ExecutePreparedUse`)를 호출해 예약한 칸이 아직 유효한지 다시 검사합니다. 이후 팀원과 의논해 실행 순간에는 칸 중심과 플레이어 사이 거리만 검사하도록 서버 판정과 맞췄습니다.",
       "why": "클릭 즉시 굴착하면 곡괭이를 휘두르는 선딜레이 동안 대상 칸이 사거리를 벗어나거나 칸이 사라져도 굴착이 실행되어, 대상 지정과 실행을 나누고 실행 순간에 유효성을 한 번 더 검사하도록 바꿨습니다.",
       "section": "2.3 핵심 기능 및 구현",
-      "image": null
+      "image": {
+        "src": "images/character_anim.gif",
+        "w": 560,
+        "h": 350,
+        "caption": "동굴 안에서 이동·점프하고 곡괭이로 굴착하는 캐릭터 애니메이션"
+      }
     },
     {
       "title": "균열 오버레이",
@@ -61,7 +66,12 @@
       "how": "`GetDamageStage`로 누적 손상률의 단계를 계산하고, 처음 손상된 칸만 풀에서 `SpriteRenderer` View를 빌려 균열 그림을 덧씌우며, 표시할 단계가 없으면 풀로 돌려보냅니다.",
       "why": "숫자 표시는 화면이 난잡해지고 타일 그림 교체는 타일 종류마다 균열 그림과 메시·외곽 Collider 재생성이 필요해, 팀원의 지형 렌더링을 그대로 두는 오버레이를 택했습니다.",
       "section": "3.3 핵심 기능 및 구현",
-      "image": null
+      "image": {
+        "src": "images/crack_overlay.gif",
+        "w": 640,
+        "h": 400,
+        "caption": "같은 칸을 거듭 치면 균열 그림이 단계별로 짙어지다가 타일이 부서지는 모습"
+      }
     },
     {
       "title": "타일 진동",
@@ -69,7 +79,12 @@
       "how": "`DOTween.Shake`의 값을 오브젝트 위치가 아닌 칸의 렌더링 이동량(`TrySetCellVisualOffset`)으로 넘기고, 같은 칸을 다시 치면 이전 Tween을 끝내고 이동량을 0으로 되돌린 뒤 새로 시작합니다.",
       "why": "타일 복제본을 흔들면 원본 가장자리가 겹쳐 보이고 박힌 광물이 따라 흔들리지 않아, 지형 메시에서 그 칸의 꼭짓점만 옮겨 타일 자체가 흔들리게 바꿨습니다.",
       "section": "4.3 핵심 기능 및 구현",
-      "image": null
+      "image": {
+        "src": "images/tile_hit.gif",
+        "w": 600,
+        "h": 376,
+        "caption": "곡괭이로 타일을 칠 때의 타격 피드백(가까이 확대)"
+      }
     },
     {
       "title": "사운드 품질 관리",
@@ -109,7 +124,44 @@
       "section": "2.4 고민과 선택"
     }
   ],
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "images/crack_overlay.gif",
+      "w": 640,
+      "h": 400,
+      "caption": "같은 칸을 거듭 치면 균열 그림이 단계별로 짙어지다가 타일이 부서지는 모습"
+    },
+    {
+      "src": "images/tile_hit.gif",
+      "w": 600,
+      "h": 376,
+      "caption": "곡괭이로 타일을 칠 때의 타격 피드백(가까이 확대)"
+    },
+    {
+      "src": "images/character_anim.gif",
+      "w": 560,
+      "h": 350,
+      "caption": "동굴 안에서 이동·점프하고 곡괭이로 굴착하는 캐릭터 애니메이션"
+    },
+    {
+      "src": "images/hud.png",
+      "w": 1920,
+      "h": 1080,
+      "caption": "지하 굴착 중 HUD — HP·남은 시간·미니맵·순위, 아래쪽 인벤토리 슬롯"
+    },
+    {
+      "src": "images/ui_screens.png",
+      "w": 1920,
+      "h": 1080,
+      "caption": "대기실(4/4)·조작 안내·상점·게임 종료 화면"
+    },
+    {
+      "src": "images/asana_board.png",
+      "w": 1658,
+      "h": 878,
+      "caption": "Asana 목록 보기 — 카드마다 에픽·타입과 팀원별 리뷰 칸(경희·수하·현진)"
+    }
+  ],
   "retro": {
     "section": "7. 구현 결과 및 기술적 회고",
     "achieved": [
@@ -402,6 +454,16 @@
             "kind": "code",
             "n": 1,
             "fp": "private void HandleMineStarted(float directionX)"
+          },
+          {
+            "kind": "image",
+            "src": "images/character_anim.gif",
+            "w": 560,
+            "h": 350,
+            "caption": {
+              "text": "동굴 안에서 이동·점프하고 곡괭이로 굴착하는 캐릭터 애니메이션",
+              "verbatim": true
+            }
           }
         ]
       },
@@ -504,6 +566,16 @@
             "kind": "code",
             "n": 1,
             "fp": "public static int GetDamageStage(int current, int maximum)"
+          },
+          {
+            "kind": "image",
+            "src": "images/crack_overlay.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {
+              "text": "같은 칸을 거듭 치면 균열 그림이 단계별로 짙어지다가 타일이 부서지는 모습",
+              "verbatim": true
+            }
           }
         ]
       },
@@ -584,6 +656,16 @@
               26
             ],
             "fp": "public void Play(TerrainGridWorld world, Vector2Int cell)"
+          },
+          {
+            "kind": "image",
+            "src": "images/tile_hit.gif",
+            "w": 600,
+            "h": 376,
+            "caption": {
+              "text": "곡괭이로 타일을 칠 때의 타격 피드백(가까이 확대)",
+              "verbatim": true
+            }
           }
         ]
       },
@@ -798,7 +880,28 @@
             "verbatim": true
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/hud.png",
+            "w": 1920,
+            "h": 1080,
+            "caption": {
+              "text": "지하 굴착 중 HUD — HP·남은 시간·미니맵·순위, 아래쪽 인벤토리 슬롯",
+              "verbatim": true
+            }
+          },
+          {
+            "kind": "image",
+            "src": "images/ui_screens.png",
+            "w": 1920,
+            "h": 1080,
+            "caption": {
+              "text": "대기실(4/4)·조작 안내·상점·게임 종료 화면",
+              "verbatim": true
+            }
+          }
+        ]
       },
       {
         "key": "backlog",
@@ -835,7 +938,18 @@
             "verbatim": true
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/asana_board.png",
+            "w": 1658,
+            "h": 878,
+            "caption": {
+              "text": "Asana 목록 보기 — 카드마다 에픽·타입과 팀원별 리뷰 칸(경희·수하·현진)",
+              "verbatim": true
+            }
+          }
+        ]
       },
       {
         "key": "lessons",
