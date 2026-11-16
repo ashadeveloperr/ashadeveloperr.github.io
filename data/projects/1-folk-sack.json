@@ -54,10 +54,10 @@
       "why": "클릭 즉시 굴착하면 곡괭이를 휘두르는 선딜레이 동안 대상 칸이 사거리를 벗어나거나 칸이 사라져도 굴착이 실행되어, 대상 지정과 실행을 나누고 실행 순간에 유효성을 한 번 더 검사하도록 바꿨습니다.",
       "section": "2.3 핵심 기능 및 구현",
       "image": {
-        "src": "images/character_anim.gif",
-        "w": 560,
-        "h": 350,
-        "caption": "동굴 안에서 이동·점프하고 곡괭이로 굴착하는 캐릭터 애니메이션"
+        "src": "images/dig_timing.gif",
+        "w": 640,
+        "h": 400,
+        "caption": "곡괭이를 휘두르기 시작해도 타일은 그대로이고, 곡괭이가 닿은 뒤에야 균열이 늘어나는 모습 (0.5배속)"
       }
     },
     {
@@ -82,8 +82,8 @@
       "image": {
         "src": "images/tile_hit.gif",
         "w": 600,
-        "h": 376,
-        "caption": "곡괭이로 타일을 칠 때의 타격 피드백(가까이 확대)"
+        "h": 440,
+        "caption": "곡괭이가 닿을 때마다 타일이 짧게 흔들리는 진동 (0.25배속, 확대)"
       }
     },
     {
@@ -126,6 +126,12 @@
   ],
   "screenshots": [
     {
+      "src": "images/dig_timing.gif",
+      "w": 640,
+      "h": 400,
+      "caption": "곡괭이를 휘두르기 시작해도 타일은 그대로이고, 곡괭이가 닿은 뒤에야 균열이 늘어나는 모습 (0.5배속)"
+    },
+    {
       "src": "images/crack_overlay.gif",
       "w": 640,
       "h": 400,
@@ -134,26 +140,20 @@
     {
       "src": "images/tile_hit.gif",
       "w": 600,
-      "h": 376,
-      "caption": "곡괭이로 타일을 칠 때의 타격 피드백(가까이 확대)"
-    },
-    {
-      "src": "images/character_anim.gif",
-      "w": 560,
-      "h": 350,
-      "caption": "동굴 안에서 이동·점프하고 곡괭이로 굴착하는 캐릭터 애니메이션"
-    },
-    {
-      "src": "images/hud.png",
-      "w": 1920,
-      "h": 1080,
-      "caption": "지하 굴착 중 HUD — HP·남은 시간·미니맵·순위, 아래쪽 인벤토리 슬롯"
+      "h": 440,
+      "caption": "곡괭이가 닿을 때마다 타일이 짧게 흔들리는 진동 (0.25배속, 확대)"
     },
     {
       "src": "images/ui_screens.png",
       "w": 1920,
       "h": 1080,
-      "caption": "대기실(4/4)·조작 안내·상점·게임 종료 화면"
+      "caption": "직접 만든 UI 그래픽 — 메인·대기실·상점·결과창"
+    },
+    {
+      "src": "images/hud.png",
+      "w": 1920,
+      "h": 1080,
+      "caption": "직접 만든 인게임 HUD 그래픽"
     },
     {
       "src": "images/asana_board.png",
@@ -457,11 +457,11 @@
           },
           {
             "kind": "image",
-            "src": "images/character_anim.gif",
-            "w": 560,
-            "h": 350,
+            "src": "images/dig_timing.gif",
+            "w": 640,
+            "h": 400,
             "caption": {
-              "text": "동굴 안에서 이동·점프하고 곡괭이로 굴착하는 캐릭터 애니메이션",
+              "text": "곡괭이를 휘두르기 시작해도 타일은 그대로이고, 곡괭이가 닿은 뒤에야 균열이 늘어나는 모습 (0.5배속)",
               "verbatim": true
             }
           }
@@ -661,9 +661,9 @@
             "kind": "image",
             "src": "images/tile_hit.gif",
             "w": 600,
-            "h": 376,
+            "h": 440,
             "caption": {
-              "text": "곡괭이로 타일을 칠 때의 타격 피드백(가까이 확대)",
+              "text": "곡괭이가 닿을 때마다 타일이 짧게 흔들리는 진동 (0.25배속, 확대)",
               "verbatim": true
             }
           }
@@ -880,28 +880,7 @@
             "verbatim": true
           }
         ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/hud.png",
-            "w": 1920,
-            "h": 1080,
-            "caption": {
-              "text": "지하 굴착 중 HUD — HP·남은 시간·미니맵·순위, 아래쪽 인벤토리 슬롯",
-              "verbatim": true
-            }
-          },
-          {
-            "kind": "image",
-            "src": "images/ui_screens.png",
-            "w": 1920,
-            "h": 1080,
-            "caption": {
-              "text": "대기실(4/4)·조작 안내·상점·게임 종료 화면",
-              "verbatim": true
-            }
-          }
-        ]
+        "visuals": []
       },
       {
         "key": "backlog",
