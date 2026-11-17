@@ -26,6 +26,28 @@
   color-scheme: var(--t-scheme, dark);
 }
 
+/* 밝은 화면(맨 위 오른쪽 해·달 버튼 → <html data-mode="light">). 색 값은 아래 @media print(흰 종이)와 같음.
+   강조색은 PF.applyTheme가 html에 직접 넣으므로 !important로 '-p' 값을 씀 */
+:root[data-mode="light"] {
+  --ink: #20233A; --body: #3B3F57; --muted: #5C6178; --line: #E7E9F4; --line-2: #D5D8E6;
+  --paper: #FFFFFF; --surface: #FFFFFF; color-scheme: light;
+  --accent-ink: var(--accent-ink-p, #2557B7) !important; --accent-fill: var(--accent-fill-p, var(--accent)) !important;
+  --accent-soft: var(--accent-soft-p, #ECF2FD) !important;
+  --grad: linear-gradient(90deg, var(--accent-ink-p, #2557B7), color-mix(in srgb, var(--accent-2) 80%, #000));
+  --fx: calc(var(--t-glow, 1) * .6);
+}
+:root[data-mode="light"] .pi, :root[data-mode="light"] .notice { box-shadow: 0 1px 2px rgb(20 24 60 / .04); }
+
+/* 어두운 화면(밝은 테마에서 해·달 버튼 → <html data-mode="dark">). 테마의 색 손잡이를 비워(initial) 위의 어두운 기본 색으로 되돌림.
+   테마 모양·글꼴·강조색은 그대로이고, theme.css에 :root[data-mode="dark"] 칸이 있으면 그 색이 이김. 인쇄는 늘 흰 종이라 화면에만 */
+@media screen {
+  :root[data-mode="dark"] {
+    --t-bg: initial; --t-surface: initial; --t-ink: initial; --t-body: initial; --t-muted: initial; --t-faint: initial;
+    --t-line: initial; --t-line-2: initial; --t-shadow: initial; --t-diagram: initial; --t-code-bg: initial;
+    color-scheme: dark;
+  }
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { font-family: var(--sans); background: var(--paper); color: var(--ink); line-height: 1.6;
@@ -90,6 +112,14 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .top nav a { font-size: 13.5px; font-weight: 600; color: var(--muted); text-decoration: none; white-space: nowrap; transition: color .15s; }
 .top nav a:hover { color: var(--accent-ink); }
 .top .pdf { padding: 8px 16px; font-size: 13px; }
+.top .mode-btn { margin-left: -12px; }
+/* 화면 밝기 전환 아이콘 버튼(맨 위 오른쪽, PF.modeButton) — 어두울 때 해, 밝을 때 달 */
+.mode-btn { flex: none; display: inline-grid; place-items: center; width: 38px; height: 38px; padding: 0; border-radius: var(--pill);
+            border: 1px solid var(--line-2); background: transparent; color: var(--ink); cursor: pointer;
+            transition: border-color .15s, background .15s, color .15s; }
+.mode-btn:hover { border-color: var(--accent-ink); color: var(--accent-ink); background: var(--accent-soft); }
+.mode-btn svg { display: block; }
+
 
 /* ① 머리: 뒤에 크게 깔린 영문 이름(장식) · 광채 */
 .hero { position: relative; overflow-x: clip; padding: clamp(96px, 14vw, 176px) 0 clamp(64px, 9vw, 112px);

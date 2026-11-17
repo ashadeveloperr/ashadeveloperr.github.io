@@ -138,7 +138,7 @@
     root.innerHTML = `<header class="top no-print"><div class="wrap top-in">
         <a class="top-name" href="#cover">${esc(nameT)}</a>
         <nav aria-label="절 이동"><ul>${nav.map(([id, label]) => `<li><a href="#${esc(id)}">${esc(label)}</a></li>`).join('')}</ul></nav>
-        <button type="button" class="btn primary pdf" data-pdf>${T('ui.pdf')}</button></div></header>
+        <button type="button" class="btn primary pdf" data-pdf>${T('ui.pdf')}</button>${PF.modeButton()}</div></header>
       <main id="main">${out.join('')}</main>`;
     root.querySelectorAll('img').forEach((i) => { if (!i.hasAttribute('loading')) i.loading = 'lazy'; i.decoding = 'async'; });
     info.sections = [...root.querySelectorAll('main > section[id], main > footer[id]')].map((s) => s.id);
@@ -203,6 +203,7 @@
     root.addEventListener('mouseout', (e) => pair(e.target, false));
     root.addEventListener('focusin', (e) => pair(e.target, true));
     root.addEventListener('focusout', (e) => pair(e.target, false));
+    PF.bindMode(root);
     root.querySelector('[data-pdf]')?.addEventListener('click', async (e) => {
       const b = e.currentTarget, label = b.textContent;
       b.disabled = true; b.textContent = t('ui.preparing');

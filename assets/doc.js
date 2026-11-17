@@ -76,6 +76,7 @@
           ${deckBtn}${ext.join('')}
           <span class="newtab-note">${T('ui.newtab')}</span>
         </nav>
+        ${PF.modeButton()}
       </div>
     </header>
     <div class="print-only print-urls"></div>
@@ -109,6 +110,7 @@
     <dialog class="toc-dialog" aria-label="문서 목차"><div class="toc-dialog-head"><p class="toc-title">${T('name.toc')}</p><button type="button" class="btn dlg-close">${T('ui.close')}</button></div><div class="toc-links"></div></dialog>
     ${nextHtml}
     <footer class="doc-foot"><span>© ${esc(name)}</span>${link({ href: 'index.html', label: T('ui.back'), kind: 'page' })}</footer>`;
+  PF.bindMode(root);
 
   // 좁은 화면(< 720px)에서는 "한눈에" 상자를 접어 둠
   document.getElementById('glance').open = !matchMedia('(max-width: 719.98px)').matches;
@@ -211,27 +213,39 @@
     };
     markPrintWide();
     document.fonts?.addEventListener('loadingdone', markPrintWide);
-    if (window.mermaid && figs.length) {
+    // 다이어그램 그리기. 화면 밝기를 바꾸면(PF.setMode → 'pf-modechange') 원문에서 새 밝기의 테마로 다시 그림
+    const drawDiagrams = async () => {
+      if (!window.mermaid || !figs.length) return;
       // 어두운 페이지면 다이어그램도 어두운 테마(밝은 판이 화면에서 튀지 않게). 문서가 %%{init}%%으로 직접 테마를 정했으면 그 색이 읽히게 밝은 판 그대로
       const darkPage = /dark/.test(getComputedStyle(html).colorScheme) && ![...figs].some((f) => /%%\{\s*init/.test(f.querySelector('.mmd-src code')?.textContent || ''));
-      if (darkPage) html.dataset.mmdDark = '1';
-      mermaid.initialize({ startOnLoad: false, theme: darkPage ? 'dark' : 'neutral', class: { hideEmptyMembersBox: true }, securityLevel: 'loose', fontFamily: 'Pretendard, sans-serif' });
+      if (darkPage) html.dataset.mmdDark = '1'; else delete html.dataset.mmdDark;
+      const elk = await PF.mermaidElk();
+      mermaid.initialize({ startOnLoad: false, theme: darkPage ? 'dark' : 'neutral', class: { hideEmptyMembersBox: true }, securityLevel: 'loose', fontFamily: 'Pretendard, sans-serif', ...(elk ? PF.ELK_CONFIG : {}) });
+      figs.forEach((fig) => {                                               // 다시 그릴 때: 그린 SVG를 원문 글로 되돌림
+        const div = fig.querySelector('.mermaid');
+        if (!div.dataset.processed) return;
+        div.removeAttribute('data-processed'); div.classList.remove('pf-mmd-error');
+        div.textContent = fig.querySelector('.mmd-src code')?.textContent || '';
+      });
       try { await mermaid.run({ nodes: doc.querySelectorAll('.mermaid') }); }
       catch (err) { console.warn('[doc] Mermaid 렌더 오류:', err); }
-    }
-    figs.forEach((fig) => {
-      const svg = fig.querySelector('.mermaid svg');
-      if (!svg) { fig.querySelector('.mermaid')?.classList.add('pf-mmd-error'); return; }
-      const natural = svg.viewBox?.baseVal?.width || parseFloat(svg.style.maxWidth) || 0;
-      if (natural) { svg.setAttribute('width', String(Math.ceil(natural))); svg.style.maxWidth = '100%'; svg.removeAttribute('height'); }
-      svg.dataset.naturalWidth = String(natural);
-      svg.setAttribute('role', 'img');
-      svg.setAttribute('aria-label', fig.dataset.label);
-      svg.querySelectorAll('a[href], a[*|href]').forEach((a) => {           // Mermaid click 링크에도 같은 분류
-        const h = a.getAttribute('href') || a.getAttribute('xlink:href') || '';
-        if (/^https?:/i.test(h)) { a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
+      figs.forEach((fig) => {
+        const svg = fig.querySelector('.mermaid svg');
+        if (!svg) { fig.querySelector('.mermaid')?.classList.add('pf-mmd-error'); return; }
+        const natural = svg.viewBox?.baseVal?.width || parseFloat(svg.style.maxWidth) || 0;
+        if (natural) { svg.setAttribute('width', String(Math.ceil(natural))); svg.style.maxWidth = '100%'; svg.removeAttribute('height'); }
+        svg.dataset.naturalWidth = String(natural);
+        svg.setAttribute('role', 'img');
+        svg.setAttribute('aria-label', fig.dataset.label);
+        svg.querySelectorAll('a[href], a[*|href]').forEach((a) => {           // Mermaid click 링크에도 같은 분류
+          const h = a.getAttribute('href') || a.getAttribute('xlink:href') || '';
+          if (/^https?:/i.test(h)) { a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
+        });
       });
-    });
+    };
+    await drawDiagrams();
+    let redraw = Promise.resolve();                                         // 버튼을 빨리 여러 번 눌러도 차례로 한 번씩
+    document.addEventListener('pf-modechange', () => { redraw = redraw.then(drawDiagrams); });
 
     // ⑧ 코드 하이라이트 + 접근성 (다이어그램 원문 pre는 제외)
     const LANG = { csharp: 'C#', cs: 'C#', js: 'JavaScript', javascript: 'JavaScript', ts: 'TypeScript', json: 'JSON', yaml: 'YAML', yml: 'YAML', xml: 'XML', html: 'HTML', css: 'CSS', python: 'Python', py: 'Python', bash: 'Shell', sh: 'Shell', powershell: 'PowerShell', hlsl: 'HLSL', shader: 'Shader', cpp: 'C++', c: 'C', lua: 'Lua' };

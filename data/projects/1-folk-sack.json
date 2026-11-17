@@ -39,7 +39,7 @@
   ],
   "links": {
     "github": "",
-    "video": "",
+    "video": "https://youtu.be/e2lY36N8coE",
     "extra": []
   },
   "intent": {
@@ -378,7 +378,7 @@
           {
             "kind": "mermaid",
             "n": 1,
-            "fp": "flowchart LR"
+            "fp": "flowchart TB"
           }
         ]
       },

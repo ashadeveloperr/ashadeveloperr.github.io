@@ -147,12 +147,50 @@ const PF = (() => {
   }
   // theme/theme.css의 테마 손잡이(없으면 빈 글자)
   const themeVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  let lastAccent;                                                         // 밝기를 바꿀 때 같은 강조색으로 다시 계산
   function applyTheme(hex) {
+    lastAccent = hex;
     const accent = themeVar('--t-accent');
     const t = themeTokens(isHex(accent) ? accent : hex, { bg: themeVar('--t-bg'), a2: themeVar('--t-accent-2'), a3: themeVar('--t-accent-3') });
     if (t) Object.entries(t).forEach(([k, v]) => document.documentElement.style.setProperty(k, v));
     return t;
   }
+
+  // ── 화면 밝기(테마 기본 ↔ 반대쪽): 테마의 기본 밝기(--t-scheme, 비어 있으면 어두움)와 다른 쪽을 고르면 <html data-mode="light|dark"> ──
+  //   포트폴리오 문서·상세 문서 맨 위 오른쪽 아이콘 버튼(PF.modeButton). 고른 값은 이 브라우저에만 기억(localStorage 'pf-mode')
+  //   · 어두운 테마 → 밝게: portfolio.css·doc.css의 :root[data-mode="light"](인쇄와 같은 값)
+  //   · 밝은 테마 → 어둡게: portfolio.css·doc.css의 :root[data-mode="dark"]가 테마의 색 손잡이를 비워 기본 어두운 색으로.
+  //     theme.css에 :root[data-mode="dark"] 칸이 있으면 그 색(테마에 맞춘 어두운 판). --t-scheme은 바꾸지 않음(테마 기본 밝기를 읽는 값)
+  //   바꾸면 강조색을 새 바탕에 맞춰 다시 계산하고 'pf-modechange' 이벤트를 보냄(상세 문서는 다이어그램을 새 밝기로 다시 그림)
+  //   발표 덱은 장면 그대로(PPTX·PDF가 화면을 재서 만들기 때문에) 테마 기본 밝기만 씀. 인쇄(제출 PDF)는 어느 쪽이든 흰 종이
+  const MODE_KEY = 'pf-mode';
+  const baseMode = () => themeVar('--t-scheme') === 'light' ? 'light' : 'dark';
+  const getMode = () => document.documentElement.dataset.mode || baseMode();
+  function setMode(m, save = true) {
+    const root = document.documentElement, before = getMode();
+    if (m === baseMode()) delete root.dataset.mode; else root.dataset.mode = m;
+    if (save) { try { localStorage.setItem(MODE_KEY, m); } catch {} }
+    if (lastAccent !== undefined) applyTheme(lastAccent);
+    document.querySelectorAll('[data-mode-toggle]').forEach(syncModeButton);
+    if (getMode() !== before) document.dispatchEvent(new CustomEvent('pf-modechange', { detail: { mode: getMode() } }));
+  }
+  const SUN = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>';
+  const MOON = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.8 6.8 0 0 0 10.7 10.7z"/></svg>';
+  function syncModeButton(b) {
+    const light = getMode() === 'light', label = PFStr.t(light ? 'ui.mode-dark' : 'ui.mode-light');
+    b.innerHTML = light ? MOON : SUN;                                       // 누르면 갈 쪽의 아이콘(어두울 때 해, 밝을 때 달)
+    b.setAttribute('aria-label', label); b.title = label; b.setAttribute('aria-pressed', String(light));
+  }
+  // 버튼 HTML(그린 뒤 PF.bindMode(root)로 연결)
+  const modeButton = () => '<button type="button" class="mode-btn no-print" data-mode-toggle></button>';
+  function bindMode(root = document) {
+    root.querySelectorAll('[data-mode-toggle]').forEach((b) => {
+      syncModeButton(b);
+      if (!b.dataset.bound) { b.dataset.bound = '1'; b.addEventListener('click', () => setMode(getMode() === 'light' ? 'dark' : 'light')); }
+    });
+  }
+  // 페이지를 그리기 전에 기억한 값을 적용(깜빡임 줄이기). 발표 덱은 이 값을 쓰지 않음
+  if (!/project(\.html)?$/i.test(location.pathname)) { try { const m = localStorage.getItem(MODE_KEY); if (m === 'light' || m === 'dark') setMode(m, false); } catch {} }
 
   // ── 안내 문구(옛 렌더러와 같은 글) ──
   const FILE_HELP = `<p>이 페이지는 <code>data/</code>와 기술 문서를 불러와 그리기 때문에, 파일을 더블클릭해서는 열리지 않습니다.</p>
@@ -180,7 +218,20 @@ const PF = (() => {
   // ── 문구 표(assets/strings.js): t(키, 값) · tab(data의 탭 값) · label(data의 카드 라벨 값) · 페이지 시작 때 loadStrings()로 theme/strings.tsv를 읽음 ──
   const { t, tab, label, load: loadStrings, report: stringsReport } = PFStr;
 
+  // ── Mermaid ELK 배치(상세 문서·발표 덱 공용): 선이 덜 겹치고 상자가 고르게 놓임. 받지 못하면 기본 배치(dagre) 그대로 ──
+  // layout-elk 0.1.7 = mermaid 11.4.1과 같은 시기 판. 문서의 %%{init}%%·--- config ---에서 layout을 정하면 그쪽이 이김
+  let elkReady = null;
+  function mermaidElk() {
+    if (!window.mermaid?.registerLayoutLoaders) return Promise.resolve(false);
+    elkReady ??= import('https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.7/dist/mermaid-layout-elk.esm.min.mjs')
+      .then((m) => { mermaid.registerLayoutLoaders(m.default); return true; })
+      .catch((err) => { console.warn('[PF] Mermaid ELK 배치를 불러오지 못해 기본 배치로 그립니다:', err); return false; });
+    return elkReady;
+  }
+  // initialize()에 덧붙일 설정. 계층을 고르게(NETWORK_SIMPLEX) 놓고, 같은 방향 선은 따로 그려 화살표 라벨이 겹치지 않게
+  const ELK_CONFIG = { layout: 'elk', elk: { nodePlacementStrategy: 'NETWORK_SIMPLEX', mergeEdges: false } };
+
   return { esc, inline, isUrl, shortUrl, loadJSON, loadText, encodePath, srcPath, projectUrl, docUrl, siteBase, visibleUrl, metaValue, teamLabel,
            slugger, normTitle, resolveHeading, keyOk, deckSceneFor, headingsOf, ICON, NEWTAB, link, markNewTab, themeTokens, applyTheme, contrast, hexRgb,
-           FILE_HELP, noDataHtml, isFile, notice, guardFileProtocol, noData, t, tab, label, loadStrings, stringsReport };
+           getMode, setMode, modeButton, bindMode, FILE_HELP, noDataHtml, isFile, notice, guardFileProtocol, noData, t, tab, label, loadStrings, stringsReport, mermaidElk, ELK_CONFIG };
 })();

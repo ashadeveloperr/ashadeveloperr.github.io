@@ -115,7 +115,8 @@
     const root = document.documentElement;
     const darkDeck = /dark/.test(getComputedStyle(root).colorScheme) && !els.some((el) => /%%\{\s*init/.test(el.querySelector('code')?.textContent || ''));
     if (darkDeck) root.dataset.mmdDark = '1';
-    mermaid.initialize({ startOnLoad: false, theme: darkDeck ? 'dark' : 'neutral', class: { hideEmptyMembersBox: true }, securityLevel: 'loose', fontFamily: 'Pretendard, sans-serif', suppressErrorRendering: true });
+    const elk = await PF.mermaidElk();
+    mermaid.initialize({ startOnLoad: false, theme: darkDeck ? 'dark' : 'neutral', class: { hideEmptyMembersBox: true }, securityLevel: 'loose', fontFamily: 'Pretendard, sans-serif', suppressErrorRendering: true, ...(elk ? PF.ELK_CONFIG : {}) });
     if (!mmdHost) { mmdHost = document.createElement('div'); mmdHost.setAttribute('aria-hidden', 'true'); Object.assign(mmdHost.style, { position: 'absolute', left: '-20000px', top: '0', width: '1280px', visibility: 'hidden' }); document.body.appendChild(mmdHost); }
     let n = 0;
     for (const el of els) {
