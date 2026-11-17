@@ -106,6 +106,13 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .mode-btn:hover { border-color: var(--accent-ink); color: var(--accent-ink); background: var(--accent-soft); }
 .mode-btn svg { display: block; }
 
+/* ── 대표 이미지(머리 막대 아래, 좌우 꽉 채움) — data/projects/<폴더>.json의 cover. 아래로 갈수록 페이지 바탕색으로 사라짐 ── */
+.doc-hero { position: relative; height: clamp(200px, 36vw, 520px); overflow: hidden; background: var(--paper); }
+.doc-hero img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center; }
+.doc-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+                   background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--paper) 35%, transparent) 45%, var(--paper) 100%); }
+.doc-hero ~ .doc-page { margin-top: clamp(-96px, -6vw, -32px); position: relative; }   /* 제목이 사라지는 끝자락에 살짝 겹치게 */
+
 /* ── 공통 틀 ─────────────────────────────── */
 .doc-page { max-width: var(--page-max); margin: 0 auto; padding-inline: var(--pad);
             display: grid; column-gap: var(--gap); align-items: start;
@@ -305,7 +312,8 @@ dialog.lightbox::backdrop { background: rgba(10, 11, 14, .82); }
   .doc-intro .eyebrow { background: none; -webkit-text-fill-color: currentColor; }
   html { scroll-behavior: auto; }
   body { background: #fff; }
-  .toc, .rail, .doc-head, .pf-newtab-icon, .pf-newtab-sr, dialog, .skip-link, .doc-fab, .glance, .mmd-bar, .doc-foot, .doc-next { display: none !important; }
+  .doc-hero ~ .doc-page { margin-top: 0; }
+  .toc, .rail, .doc-head, .doc-hero, .pf-newtab-icon, .pf-newtab-sr, dialog, .skip-link, .doc-fab, .glance, .mmd-bar, .doc-foot, .doc-next { display: none !important; }
   .print-only { display: block; }
   sup.print-only { display: inline; font-size: 7pt; color: #555; margin-left: 1px; }
   .print-urls { font-size: 8.5pt; color: #555; border-bottom: 1px solid #ccc; padding-bottom: 6px; margin-bottom: 10px; }

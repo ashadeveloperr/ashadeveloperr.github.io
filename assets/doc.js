@@ -79,6 +79,7 @@
         ${PF.modeButton()}
       </div>
     </header>
+    ${p.cover ? `<div class="doc-hero" aria-hidden="true"><img src="${esc(srcPath(p.cover))}" alt="" decoding="async" onerror="this.parentElement.remove()"></div>` : ''}
     <div class="print-only print-urls"></div>
     <div class="doc-page">
       <nav class="toc" id="toc" aria-label="문서 목차"><p class="toc-title">${T('name.toc')}</p><div class="toc-links" id="toc-links"></div></nav>
