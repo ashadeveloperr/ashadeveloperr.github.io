@@ -365,7 +365,12 @@
           {
             "kind": "mermaid",
             "n": 1,
-            "fp": "flowchart TB"
+            "fp": "flowchart LR"
+          },
+          {
+            "kind": "mermaid",
+            "n": 2,
+            "fp": "flowchart LR"
           }
         ]
       },

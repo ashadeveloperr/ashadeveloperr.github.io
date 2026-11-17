@@ -405,6 +405,38 @@
         ]
       },
       {
+        "key": "arch-core",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "1.4 개발 환경 및 전체 구조",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "② 캠페인과 정착지 규칙 (Core)",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.4 개발 환경 및 전체 구조"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": ".NET 시뮬레이터(`Tools/SettlementSim`)가 Core 폴더의 소스(시계를 맡은 Timing 제외)를 그대로 링크해 봇 플레이를 돌림",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 2,
+            "fp": "classDiagram"
+          }
+        ]
+      },
+      {
         "key": "tick-structure",
         "chapter": "tick",
         "layout": "overview",
