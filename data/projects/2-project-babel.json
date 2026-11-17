@@ -191,10 +191,10 @@
     "chapters": [
       {"key": "overview", "title": "프로젝트 개요", "sectionPath": ["1. 프로젝트 개요"]},
       {"key": "base", "title": "공통 기반 — 게임 루프 및 상태 관리", "sectionPath": ["2. 공통 기반 — 게임 루프 및 상태 관리"]},
-      {"key": "throw", "title": "기능 A — 화물 투척 및 환경 시스템", "sectionPath": ["3. 기능 A — 화물 투척 및 환경 시스템"]},
-      {"key": "buoyancy", "title": "기능 B — 선박 부력 및 침수 시스템", "sectionPath": ["4. 기능 B — 선박 부력 및 침수 시스템"]},
-      {"key": "cargo", "title": "기능 C — 특수 화물 상호작용 시스템", "sectionPath": ["5. 기능 C — 특수 화물 상호작용 시스템"]},
-      {"key": "feedback", "title": "기능 D — 카메라 및 UI 피드백 시스템", "sectionPath": ["6. 기능 D — 카메라 및 UI 피드백 시스템"]},
+      {"key": "throw", "title": "기능 A — 화물 투척 및 환경 시스템", "sectionPath": ["3. 기능 A — 화물 투척 및 환경 시스템: 바람이 조금씩 바뀌어 조준을 익힐 수 있다"]},
+      {"key": "buoyancy", "title": "기능 B — 선박 부력 및 침수 시스템", "sectionPath": ["4. 기능 B — 선박 부력 및 침수 시스템: 더 깊이 잠긴 쪽이 더 큰 부력을 받아 균형을 되찾는다"]},
+      {"key": "cargo", "title": "기능 C — 특수 화물 상호작용 시스템", "sectionPath": ["5. 기능 C — 특수 화물 상호작용 시스템: 폭탄이 닭을 치킨으로 바꿔 위험이 보상도 된다"]},
+      {"key": "feedback", "title": "기능 D — 카메라 및 UI 피드백 시스템", "sectionPath": ["6. 기능 D — 카메라 및 UI 피드백 시스템: 지금 봐야 할 것을 따라 화면이 바뀐다"]},
       {"key": "result", "title": "구현 결과 및 기술적 회고", "sectionPath": ["7. 구현 결과 및 기술적 회고"]}
     ],
     "slides": [
