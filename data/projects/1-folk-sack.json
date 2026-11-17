@@ -85,19 +85,6 @@
         "h": 400,
         "caption": "곡괭이가 닿을 때마다 석탄 타일이 짧게 흔들리는 진동 (0.25배속, 확대)"
       }
-    },
-    {
-      "title": "사운드 품질 관리",
-      "what": "효과음 재생 구조처럼 잘 알려진 부분은 AI에 구현을 맡기고, 직접 플레이하며 들리는 문제를 찾아 판정하는 데 집중한 사운드 작업",
-      "how": "효과음마다 위치를 가진 `AudioSource`를 만들어 선형 거리 감쇠를 적용하고, `ResolveEffectPosition`에서 효과음 위치의 z값을 리스너와 같은 평면에 맞춥니다.",
-      "why": "곡괭이 소리, 다이너마이트·지뢰 폭발음과 타이머가 거리와 관계없이 같은 크기로 들려, 위치 기반 거리 감쇠를 적용했습니다.",
-      "section": "5.3 핵심 기능 및 구현",
-      "image": {
-        "src": "images/dodge.gif",
-        "w": 640,
-        "h": 400,
-        "caption": "다이너마이트를 피해 도망치는 장면 — 폭발음은 거리에 비례해 작아짐"
-      }
     }
   ],
   "troubleshooting": [
@@ -108,7 +95,7 @@
       "solution": "켜져 있고 실제로 동작 중인 리스너만 골라 기준으로 쓰도록 바꾸고, 찾은 리스너는 저장해 다시 쓰며 없으면 경고를 한 번만 남깁니다.",
       "result": "직접 플레이하며 발소리가 거리에 따라 자연스럽게 커지고 작아지는 것을 확인했습니다.",
       "lesson": "",
-      "section": "5.5 트러블슈팅 — 발소리가 거리에 맞게 커지지 않던 문제"
+      "section": "5.2 발소리가 거리에 맞게 커지지 않던 문제"
     },
     {
       "title": "통합 단계의 씬 충돌과 프리팹 분리",
@@ -216,9 +203,9 @@
       },
       {
         "key": "sound",
-        "title": "기능 D — 사운드 품질 관리",
+        "title": "사운드 QA — 직접 들어서 찾은 문제",
         "sectionPath": [
-          "5. 기능 D — 사운드 품질 관리: 직접 들어 보고 거리감을 바로잡는다"
+          "5. 사운드 QA — 직접 들어서 찾은 문제"
         ]
       },
       {
@@ -385,8 +372,8 @@
       {
         "key": "dig-structure",
         "chapter": "dig",
-        "layout": "overview",
-        "tab": "구조",
+        "layout": "visual",
+        "tab": "흐름",
         "title": {
           "text": "2.2 시스템 구조",
           "verbatim": true
@@ -398,26 +385,22 @@
         "points": [
           {
             "label": "",
-            "text": "`ItemController`: 클릭 시 `PickaxeItem.PrepareUse`로 대상 칸을 예약하고 `MineStarted` 이벤트로 애니메이션 시작을 알림",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "`CharacterAnimationController`: 굴착 애니메이션 재생, 곡괭이가 닿는 프레임의 애니메이션 이벤트를 `ItemController`로 전달",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "`PickaxeItem.ExecutePreparedUse`: 이번 휘두르기의 타격 기회를 소비하고, 예약한 칸이 아직 유효할 때만 굴착 실행",
-            "verbatim": true
-          },
-          {
-            "label": "",
             "text": "대상 칸 선정 규칙(`TryGetNearestTargetCell`, 마우스 방향에서 가장 가깝고 가로막히지 않은 칸)은 팀원 작성(처음 작성 `c4993d9`, 이후 수정 `2ce78cd`·`4747325`·`b435691`)",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "서버로 굴착을 요청하는 경로(`RequestExcavation`)는 팀원 커밋에서 추가",
             "verbatim": true
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "sequenceDiagram"
+          }
+        ]
       },
       {
         "key": "dig-impact",
@@ -442,16 +425,6 @@
             "label": "",
             "text": "곡괭이가 닿는 프레임에 걸린 애니메이션 이벤트 `AnimationEvent_MineImpact`가 실행 단계를 호출하고, 끝 프레임의 `AnimationEvent_MineFinished`가 굴착 상태를 정리",
             "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "실행 단계(`ExecutePreparedUse`)에서는 예약한 칸에 지형이 남아 있는지, 현재 위치에서 칸까지가 사거리 안인지 다시 확인하고, 조건이 맞지 않으면 그 휘두르기를 헛손질로 처리",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "이후 팀원과 의논해 재검사 기준을 서버 판정과 맞춤: 지형 확인은 서버 요청 단계로 넘기고, 실행 순간에는 칸 중심과 플레이어 사이 거리만 검사",
-            "verbatim": true
           }
         ],
         "visuals": [
@@ -469,6 +442,48 @@
               "text": "곡괭이를 들어 올리는 동안 타일은 그대로이고, 내리찍은 뒤에야 균열이 생기며 다음 타격에 깨지는 모습 (0.5배속)",
               "verbatim": true
             }
+          }
+        ]
+      },
+      {
+        "key": "dig-recheck",
+        "chapter": "dig",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "2.3 핵심 기능 및 구현",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "2.3 핵심 기능 및 구현"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "검사보다 먼저 `hasPendingDig`를 꺼서, 대상이 무효여도 한 번 휘두르면 판정은 한 번만 일어남",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "실행 단계(`ExecutePreparedUse`)에서는 예약한 칸에 지형이 남아 있는지, 현재 위치에서 칸까지가 사거리 안인지 다시 확인하고, 조건이 맞지 않으면 그 휘두르기를 헛손질로 처리",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "이후 팀원과 의논해 재검사 기준을 서버 판정과 맞춤: 지형 확인은 서버 요청 단계로 넘기고, 실행 순간에는 칸 중심과 플레이어 사이 거리만 검사",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 2,
+            "lines": [
+              9,
+              24
+            ],
+            "fp": "public void ExecutePreparedUse(Vector3 currentOwnerPos)"
           }
         ]
       },
@@ -707,36 +722,68 @@
         "visuals": []
       },
       {
-        "key": "sound-source",
+        "key": "sound-role",
         "chapter": "sound",
-        "layout": "code",
-        "tab": "구현",
+        "layout": "overview",
+        "tab": "개요",
         "title": {
-          "text": "5.3 핵심 기능 및 구현",
+          "text": "5. 사운드 QA — 직접 들어서 찾은 문제",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "5.3 핵심 기능 및 구현"
+          "5. 사운드 QA — 직접 들어서 찾은 문제"
         ],
         "points": [
           {
             "label": "",
-            "text": "효과음마다 위치를 가진 `AudioSource`를 만들어 거리 감쇠를 적용 → 폭발음이 거리와 관계없이 어디서나 같은 크기로 들리던 문제 해결(`e09ea2c`)",
+            "text": "효과음 재생 구조(정적 클래스 `GameSound`, 효과음 9종 `SoundCue`)는 잘 알려진 부분이라 AI에 구현을 맡기고, 본인은 리소스 선정과 직접 플레이하며 들리는 문제를 찾아 판정하는 일을 맡음",
             "verbatim": true
           },
           {
             "label": "",
-            "text": "2D 게임이지만 소리 크기는 리스너와의 3D 거리로 계산되므로, `ResolveEffectPosition`에서 효과음 위치의 z값을 리스너와 같은 평면에 맞춤",
+            "text": "거리감·음량 같은 문제는 코드만 봐서는 드러나지 않고 직접 들어 봐야 알 수 있었음. 원인을 코드에서 찾지 못한 경우에는 AI에 검토를 맡겨 확인함",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "흐름 : 직접 들어서 발견 → AI로 원인 확인 → 수정 → 직접 듣고 확인",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
+        "key": "sound-source",
+        "chapter": "sound",
+        "layout": "visual",
+        "tab": "문제 해결",
+        "title": {
+          "text": "5.1 폭발음이 거리와 관계없이 같은 크기로 들리던 문제",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5.1 폭발음이 거리와 관계없이 같은 크기로 들리던 문제"
+        ],
+        "points": [
+          {
+            "label": "문제",
+            "text": "곡괭이 소리, 다이너마이트·지뢰 폭발음과 타이머가 거리와 관계없이 같은 크기로 들림",
+            "verbatim": true
+          },
+          {
+            "label": "해결",
+            "text": "효과음마다 위치를 가진 `AudioSource`를 만들어 2~18 범위의 선형 거리 감쇠를 적용(`e09ea2c`)",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "2D 게임이지만 소리 크기는 리스너와의 3D 거리로 계산되므로, 효과음 위치의 z값을 리스너와 같은 평면에 맞춤",
             "verbatim": true
           }
         ],
         "visuals": [
-          {
-            "kind": "code",
-            "n": 1,
-            "fp": "GameObject voice = new GameObject(\"Sound_\" + Names[index]);"
-          },
           {
             "kind": "image",
             "src": "images/dodge.gif",
@@ -750,44 +797,17 @@
         ]
       },
       {
-        "key": "sound-choice",
-        "chapter": "sound",
-        "layout": "overview",
-        "tab": "선택",
-        "title": {
-          "text": "5.4 고민과 선택",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "5.4 고민과 선택"
-        ],
-        "points": [
-          {
-            "label": "구현은 AI에, 들리는 품질은 직접",
-            "text": "거리감·음량 같은 문제는 코드만 봐서는 드러나지 않아 직접 들어 보며 찾고, 원인을 코드에서 찾지 못한 경우는 AI에 검토를 맡겨 확인",
-            "verbatim": false
-          },
-          {
-            "label": "폭발음과 타이머에 거리 감쇠",
-            "text": "곡괭이 소리, 다이너마이트·지뢰 폭발음과 타이머가 거리와 관계없이 같은 크기로 들려, 위치 기반 거리 감쇠를 적용(`e09ea2c`)",
-            "verbatim": true
-          }
-        ],
-        "visuals": []
-      },
-      {
         "key": "sound-listener",
         "chapter": "sound",
         "layout": "problem",
         "tab": "문제 해결",
         "title": {
-          "text": "5.5 트러블슈팅 — 발소리가 거리에 맞게 커지지 않던 문제",
+          "text": "5.2 발소리가 거리에 맞게 커지지 않던 문제",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "5.5 트러블슈팅 — 발소리가 거리에 맞게 커지지 않던 문제"
+          "5.2 발소리가 거리에 맞게 커지지 않던 문제"
         ],
         "points": [
           {
@@ -1004,7 +1024,7 @@
           },
           {
             "label": "보이는 것과 판정되는 것의 분리",
-            "text": "진동 이동량을 렌더링에만 쓰고 Collider·데이터는 건드리지 않아, 피드백을 바꿔도 게임 판정이 흔들리지 않게 하는 구조의 중요성 확인",
+            "text": "굴착은 곡괭이가 닿는 것이 보이는 프레임에 판정을 맞추고(2장), 균열은 서버 판정이 끝난 뒤에만 그리며(3장), 진동은 렌더링 이동량으로만 흔들어 Collider·데이터는 건드리지 않음(4장). 피드백을 바꾸거나 더해도 게임 판정이 흔들리지 않게 하는 구조의 중요성 확인",
             "verbatim": true
           },
           {
