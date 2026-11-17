@@ -21,7 +21,7 @@
     },
     {
       "label": "인원",
-      "value": "1인 개발 (제공된 예제 코드 일부를 바탕으로 응용)"
+      "value": "1인 개발 — 제공된 예제 코드(블록 생성·낙하·합치기 뼈대 `Block`·`GameManager`·`StageManager`)에서 출발해, 투척·부력·침수·특수 화물·카메라·UI·상점은 직접 구현"
     },
     {
       "label": "환경",
@@ -43,7 +43,7 @@
     "extra": []
   },
   "intent": {
-    "text": "첫 프로젝트로서 규모를 늘리기보다 초기 기획을 최대한 완성도 있게 다듬는 것. 코어 게임 루프와 필수 요소부터 구현하고 버그가 생기지 않게 만드는 데 집중",
+    "text": "규모를 늘리기보다 초기 기획을 최대한 완성도 있게 다듬는 것. 코어 게임 루프와 필수 요소부터 구현하고 버그가 생기지 않게 만드는 데 집중",
     "verbatim": true
   },
   "highlights": [
@@ -102,13 +102,13 @@
   ],
   "troubleshooting": [
     {
-      "title": "일시정지 버튼 클릭이 화물 발사로 이어지는 문제",
-      "problem": "일시정지 버튼을 클릭한 뒤 게임을 재개하면 화물이 발사되었습니다.",
-      "cause": "`PlayerController`에서도 같은 마우스 입력을 받았고, 기존에는 일시정지 상태만 확인했습니다.",
-      "solution": "`EventSystem.current.IsPointerOverGameObject()`로 마우스가 UI 위에 있는지 검사해, UI 클릭이 화물 드래그의 시작 입력으로 처리되지 않도록 수정했습니다.",
-      "result": "",
+      "title": "조준 궤적과 실제 발사가 다른 문제",
+      "problem": "짧게 당기거나 뒤로 당기면 조준 궤적과 실제로 날아가는 방향이 달랐습니다.",
+      "cause": "같은 드래그 보정을 두 곳에 따로 써서, 궤적(`OnDragging`)은 x < 0 → 0, 발사(`FireBlock`)는 x < 10 → 10으로 기준이 달랐습니다.",
+      "solution": "보정·계수·상한을 `CalculateLaunchForce` 하나로 모으고 궤적과 발사가 함께 쓰게 했습니다. 최소값은 실제 발사 기준(10)을 상수 `MinLaunchDragX`로 두었습니다.",
+      "result": "보이는 궤적이 곧 실제 발사 힘이 되고, 기준을 바꿀 곳도 한 곳이 되었습니다.",
       "lesson": "",
-      "section": "6.4 고민과 선택"
+      "section": "7.4 코드 점검으로 고친 문제"
     },
     {
       "title": "화면 비율에 따라 UI 배치가 어긋나는 문제",
@@ -175,15 +175,9 @@
       "폭탄과 치킨의 특수 상호작용, 조준·비행·침수 상황에 따른 카메라 및 UI 피드백을 통해 플레이어의 판단과 행동에 영향을 주는 게임 시스템 구성"
     ],
     "regrets": [
-      "조준 궤적 계산과 실제 발사에서 수평 드래그값의 최소 보정 기준이 달라 예측과 실제 움직임이 불일치할 수 있음",
-      "침수도 증가량에는 `Time.deltaTime`을 적용하지만 펌프 배수량에는 적용하지 않는 등 계산 기준이 일관되지 않음",
-      "하나의 `Rigidbody2D`에 여러 Collider가 연결된 경우 폭발 충격이 중복 적용될 수 있음",
       "`GameManager`와 `UIManager`가 여러 시스템의 상태와 표현을 직접 제어함"
     ],
     "plans": [
-      "발사력 계산과 보정 로직을 공통화해 예측 궤적과 실제 발사가 같은 보정 기준을 쓰도록 맞춤",
-      "시간 단위와 계산 방식을 통일",
-      "폭발 대상 탐색 결과를 `HashSet<Rigidbody2D>`로 관리해 이미 처리한 물리 객체에는 추가 충격을 적용하지 않음",
       "데이터 관리, 게임 규칙, 시각적 표현의 책임을 보다 명확히 분리"
     ]
   },
@@ -240,7 +234,7 @@
         "layout": "overview",
         "tab": "개요",
         "title": {"text": "1.2 목표", "verbatim": true},
-        "lead": {"text": "첫 프로젝트로서 규모를 늘리기보다 초기 기획을 최대한 완성도 있게 다듬는 것", "verbatim": true},
+        "lead": {"text": "규모를 늘리기보다 초기 기획을 최대한 완성도 있게 다듬는 것", "verbatim": true},
         "sectionPath": ["1.2 목표"],
         "points": [
           {"label": "", "text": "수면, 충격, 바람, 무게 등의 요소에 반응하는 선박과 화물의 자연스러운 움직임 구현", "verbatim": true},
@@ -394,12 +388,16 @@
           {"label": "", "text": "드래그 거리와 질량으로 보정된 발사 운동량", "verbatim": true},
           {
             "label": "",
-            "text": "드래그 벡터의 x가 10보다 작으면 10으로 보정하고, 질량 기반 계수(`forceMultiplier`)를 곱한 뒤 `maxForce`로 상한을 둠",
+            "text": "드래그 벡터의 x가 `MinLaunchDragX`(10)보다 작으면 10으로 보정하고, 질량 기반 계수(`forceMultiplier`)를 곱한 뒤 `maxForce`로 상한을 둠",
             "verbatim": true
           },
-          {"label": "", "text": "현재 풍속과 함께 `Block.Launch`에 넘기고, 발사 직후 카메라 타깃을 화물로 바꿈", "verbatim": true}
+          {
+            "label": "",
+            "text": "조준 궤적(`OnDragging`)도 같은 `CalculateLaunchForce`로 계산해, 궤적과 실제 발사가 같은 보정 기준을 씀(7.4)",
+            "verbatim": true
+          }
         ],
-        "visuals": [{"kind": "code", "n": 1, "lines": [8, 26], "fp": "private void FireBlock()"}]
+        "visuals": [{"kind": "code", "n": 1, "lines": [19, 35], "fp": "private void FireBlock()"}]
       },
       {
         "key": "throw-wind",
@@ -593,7 +591,7 @@
           {
             "kind": "code",
             "n": 1,
-            "lines": [8, 25],
+            "lines": [9, 26],
             "fp": "Collider2D[] targets = Physics2D.OverlapCircleAll(transform."
           }
         ]
@@ -690,7 +688,7 @@
           {
             "label": "고정 카메라에서 플레이 상태에 따른 시점 전환으로 변경",
             "text": "조준 중에는 화물과 예상 궤적을 보여주고, 발사 후에는 비행하는 화물을 확대해 추적하며, 충돌 이후에는 선박으로 시점을 복귀시키도록 변경함",
-            "verbatim": true
+            "verbatim": false
           },
           {
             "label": "게임 정보의 중요도에 따른 UI 표시 방식 구분",
@@ -745,6 +743,17 @@
           }
         ],
         "visuals": []
+      },
+      {
+        "key": "fixes",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "문제 해결",
+        "title": {"text": "7.4 코드 점검으로 고친 문제", "verbatim": true},
+        "lead": {"text": "회고(7.3)를 쓰며 코드를 다시 읽다가 찾은 문제 세 가지를, 원인을 확인한 뒤 원본 저장소에서 고침", "verbatim": true},
+        "sectionPath": ["7.4 코드 점검으로 고친 문제"],
+        "points": [],
+        "visuals": [{"kind": "table", "n": 1, "fp": "문제|원인|해결|결과"}]
       }
     ],
     "base": [
@@ -774,7 +783,7 @@
         "layout": "overview",
         "tab": "개요",
         "title": {"text": "1.2 목표", "verbatim": true},
-        "lead": {"text": "첫 프로젝트로서 규모를 늘리기보다 초기 기획을 최대한 완성도 있게 다듬는 것", "verbatim": true},
+        "lead": {"text": "규모를 늘리기보다 초기 기획을 최대한 완성도 있게 다듬는 것", "verbatim": true},
         "sectionPath": ["1.2 목표"],
         "points": [
           {"label": "", "text": "수면, 충격, 바람, 무게 등의 요소에 반응하는 선박과 화물의 자연스러운 움직임 구현", "verbatim": true},
@@ -926,12 +935,16 @@
           {"label": "", "text": "드래그 거리와 질량으로 보정된 발사 운동량", "verbatim": true},
           {
             "label": "",
-            "text": "드래그 벡터의 x가 10보다 작으면 10으로 보정하고, 질량 기반 계수(`forceMultiplier`)를 곱한 뒤 `maxForce`로 상한을 둠",
+            "text": "드래그 벡터의 x가 `MinLaunchDragX`(10)보다 작으면 10으로 보정하고, 질량 기반 계수(`forceMultiplier`)를 곱한 뒤 `maxForce`로 상한을 둠",
             "verbatim": true
           },
-          {"label": "", "text": "현재 풍속과 함께 `Block.Launch`에 넘기고, 발사 직후 카메라 타깃을 화물로 바꿈", "verbatim": true}
+          {
+            "label": "",
+            "text": "조준 궤적(`OnDragging`)도 같은 `CalculateLaunchForce`로 계산해, 궤적과 실제 발사가 같은 보정 기준을 씀(7.4)",
+            "verbatim": true
+          }
         ],
-        "visuals": [{"kind": "code", "n": 1, "lines": [8, 26], "fp": "private void FireBlock()"}]
+        "visuals": [{"kind": "code", "n": 1, "lines": [19, 35], "fp": "private void FireBlock()"}]
       },
       {
         "key": "throw-wind",
@@ -1125,7 +1138,7 @@
           {
             "kind": "code",
             "n": 1,
-            "lines": [8, 25],
+            "lines": [9, 26],
             "fp": "Collider2D[] targets = Physics2D.OverlapCircleAll(transform."
           }
         ]
@@ -1222,7 +1235,7 @@
           {
             "label": "고정 카메라에서 플레이 상태에 따른 시점 전환으로 변경",
             "text": "조준 중에는 화물과 예상 궤적을 보여주고, 발사 후에는 비행하는 화물을 확대해 추적하며, 충돌 이후에는 선박으로 시점을 복귀시키도록 변경함",
-            "verbatim": true
+            "verbatim": false
           },
           {
             "label": "게임 정보의 중요도에 따른 UI 표시 방식 구분",
@@ -1277,8 +1290,19 @@
           }
         ],
         "visuals": []
+      },
+      {
+        "key": "fixes",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "문제 해결",
+        "title": {"text": "7.4 코드 점검으로 고친 문제", "verbatim": true},
+        "lead": {"text": "회고(7.3)를 쓰며 코드를 다시 읽다가 찾은 문제 세 가지를, 원인을 확인한 뒤 원본 저장소에서 고침", "verbatim": true},
+        "sectionPath": ["7.4 코드 점검으로 고친 문제"],
+        "points": [],
+        "visuals": [{"kind": "table", "n": 1, "fp": "문제|원인|해결|결과"}]
       }
     ],
-    "applied": "3beba682f80cd86d"
+    "applied": "2f2fda14fbda362a"
   }
 }
