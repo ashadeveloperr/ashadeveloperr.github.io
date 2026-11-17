@@ -324,13 +324,12 @@
         "layout": "screens",
         "tab": "결과",
         "title": {"text": "2.2 점수·정산·업그레이드 시스템", "verbatim": true},
-        "lead": null,
+        "lead": {"text": "첫 충돌 시 점수를 얻고 물에 빠지면 점수가 차감되는 단순한 점수 환산 방법", "verbatim": true},
         "sectionPath": ["2.2 점수·정산·업그레이드 시스템"],
         "points": [
-          {"label": "점수", "text": "화물이 첫 충돌할 때 얻고, 물에 빠지면 차감", "verbatim": true},
-          {"label": "상점", "text": "선박 업그레이드와 펌프·알람·보험 장비. 장비 레벨에 따라 유지비가 늘어남", "verbatim": true},
-          {"label": "스테이지 결과", "text": "시간 종료까지 버티고 수익이 나면 SAIL!, 침몰하면 SUNK...", "verbatim": true},
-          {"label": "파산", "text": "정산 후 골드가 0 밑으로 떨어지면 파산 엔딩", "verbatim": true}
+          {"label": "상점", "text": "유지비·보험·업그레이드", "verbatim": true},
+          {"label": "스테이지 결과", "text": "침몰·시간 종료에 따른 스테이지 결과 처리", "verbatim": true},
+          {"label": "파산", "text": "파산 판정", "verbatim": true}
         ],
         "visuals": [
           {
@@ -857,13 +856,12 @@
         "layout": "screens",
         "tab": "결과",
         "title": {"text": "2.2 점수·정산·업그레이드 시스템", "verbatim": true},
-        "lead": null,
+        "lead": {"text": "첫 충돌 시 점수를 얻고 물에 빠지면 점수가 차감되는 단순한 점수 환산 방법", "verbatim": true},
         "sectionPath": ["2.2 점수·정산·업그레이드 시스템"],
         "points": [
-          {"label": "점수", "text": "화물이 첫 충돌할 때 얻고, 물에 빠지면 차감", "verbatim": true},
-          {"label": "상점", "text": "선박 업그레이드와 펌프·알람·보험 장비. 장비 레벨에 따라 유지비가 늘어남", "verbatim": true},
-          {"label": "스테이지 결과", "text": "시간 종료까지 버티고 수익이 나면 SAIL!, 침몰하면 SUNK...", "verbatim": true},
-          {"label": "파산", "text": "정산 후 골드가 0 밑으로 떨어지면 파산 엔딩", "verbatim": true}
+          {"label": "상점", "text": "유지비·보험·업그레이드", "verbatim": true},
+          {"label": "스테이지 결과", "text": "침몰·시간 종료에 따른 스테이지 결과 처리", "verbatim": true},
+          {"label": "파산", "text": "파산 판정", "verbatim": true}
         ],
         "visuals": [
           {
@@ -1281,6 +1279,6 @@
         "visuals": []
       }
     ],
-    "applied": "351dd5713021fc22"
+    "applied": "3beba682f80cd86d"
   }
 }
