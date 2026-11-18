@@ -129,3 +129,24 @@ ui.ov-hint	발표 덱 · 개요 창 안내 · 30자	화살표로 고르고 Enter
 ui.rotate	발표 덱 · 휴대폰 세로 화면 안내 · 24자	가로로 돌리면 더 크게 보입니다.	
 ui.close	상세 문서 · 목차 창 버튼 · 4자	닫기	
 ui.close-esc	상세 문서 · 크게 보기 창 버튼 · 8자	닫기 (Esc)	
+page.work	포트폴리오 페이지 · 대표 프로젝트(좌우로 넘기는 칸) 절 제목 · 12자	{page.nav-projects}	
+page.about	포트폴리오 페이지 · 자기소개 + 기술 스택 절 제목 · 12자	소개	
+page.prev-project	포트폴리오 페이지 · 대표 프로젝트 < 버튼(화면 읽기·툴팁) · 10자	이전 프로젝트	
+page.next-project	포트폴리오 페이지 · 대표 프로젝트 > 버튼(화면 읽기·툴팁) · 10자	다음 프로젝트	
+page.msg-title	포트폴리오 페이지 · 이메일을 누르면 펼쳐지는 메시지 칸 제목 · 16자	Contact	
+page.msg-name	포트폴리오 페이지 · 메시지 칸 항목 · 8자	이름	
+page.msg-name-ph	포트폴리오 페이지 · 메시지 칸 입력 안내(흐린 글) · 20자	이름 또는 회사명	
+page.msg-contact	포트폴리오 페이지 · 메시지 칸 항목 · 8자	연락처	
+page.msg-contact-ph	포트폴리오 페이지 · 메시지 칸 입력 안내(흐린 글) · 24자	답장받을 이메일 또는 전화번호	
+page.msg-body	포트폴리오 페이지 · 메시지 칸 항목 · 8자	메시지	
+page.msg-body-ph	포트폴리오 페이지 · 메시지 칸 입력 안내(흐린 글) · 30자	전하고 싶은 내용을 자유롭게 적어 주세요.	
+page.msg-send	포트폴리오 페이지 · 메시지 칸 버튼 · 6자	보내기	
+page.msg-sending	포트폴리오 페이지 · 메시지를 보내는 동안 · 10자	보내는 중…	
+page.msg-ok	포트폴리오 페이지 · 메시지를 보낸 뒤 · 30자	보냈습니다. 확인 후 답장드리겠습니다.	
+page.msg-empty	포트폴리오 페이지 · 빈칸이 있을 때 · 30자	이름·연락처·메시지를 모두 적어 주세요.	
+page.msg-fail	포트폴리오 페이지 · 보내지 못했을 때 · 50자	보내지 못했습니다. 잠시 뒤 다시 시도하시거나 {email}로 메일 주세요.	
+en.hero	포트폴리오 페이지 · 첫 화면 큰 제목(비워 두면 이름) · 영문 칸 · 24자		CLIENT DEVELOPER
+en.work	포트폴리오 페이지 · 대표 프로젝트 절 위 · 영문 칸 · 14자	SELECTED WORK	
+page.nav-features	포트폴리오 페이지 · 맨 위 메뉴 · 6자	{page.key-features}	
+page.key-features	포트폴리오 페이지 · 핵심 기능 절 제목(프로젝트 탭 + 기능 카드) · 12자	핵심 기능	
+en.key-features	포트폴리오 페이지 · 핵심 기능 절 위 · 영문 칸 · 14자	KEY FEATURES	

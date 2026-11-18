@@ -85,6 +85,19 @@
         "h": 400,
         "caption": "곡괭이가 닿을 때마다 석탄 타일이 짧게 흔들리는 진동 (0.25배속, 확대)"
       }
+    },
+    {
+      "title": "굴착 동작과 캐릭터 상태 연결",
+      "what": "굴착 동작이 중간에 끊기면 타격·정리 이벤트가 실행되지 않고, 공중에서 굴착과 매달리기를 번갈아 하면 허공에서 벽·천장을 뚫고 올라갈 수 있던 문제",
+      "how": "이동·점프·낙하·벽 매달리기·굴착·사망 상태를 Animator에 연결하고, 굴착이 끊기는 경로마다 끝까지 재생할지 즉시 끊고 코드로 정리할지를 정했습니다.",
+      "why": "이동으로 넘어가는 경로는 끝까지 재생해 판정과 보이는 품질을 지키고, 매달리는 경로는 즉시 끊어 갱도를 설계하며 굴착한다는 기획 의도를 지켰습니다.",
+      "section": "5.1 상태에 맞춰 움직이는 캐릭터",
+      "image": {
+        "src": "images/character_anim.gif",
+        "w": 560,
+        "h": 350,
+        "caption": "이동 애니메이션 적용과 점프·낙하·벽 매달리기 상태 규칙 설계"
+      }
     }
   ],
   "troubleshooting": [
@@ -95,7 +108,7 @@
       "solution": "켜져 있고 실제로 동작 중인 리스너만 골라 기준으로 쓰도록 바꾸고, 찾은 리스너는 저장해 다시 쓰며 없으면 경고를 한 번만 남깁니다.",
       "result": "직접 플레이하며 발소리가 거리에 따라 자연스럽게 커지고 작아지는 것을 확인했습니다.",
       "lesson": "",
-      "section": "5.2 발소리가 거리에 맞게 커지지 않던 문제"
+      "section": "6.2 발소리가 거리에 맞게 커지지 않던 문제"
     },
     {
       "title": "통합 단계의 씬 충돌과 프리팹 분리",
@@ -104,7 +117,7 @@
       "solution": "HUD와 상점 UI를 씬에서 꺼내 각각 별도 프리팹으로 분리했습니다.",
       "result": "같은 씬을 건드리지 않고 각자 맡은 프리팹만 수정합니다.",
       "lesson": "",
-      "section": "6.3 통합 단계의 씬 충돌과 프리팹 분리"
+      "section": "7.3 통합 단계의 씬 충돌과 프리팹 분리"
     },
     {
       "title": "선딜레이 동안 잘못된 굴착이 실행되는 문제",
@@ -136,36 +149,37 @@
       "caption": "곡괭이가 닿을 때마다 석탄 타일이 짧게 흔들리는 진동 (0.25배속, 확대)"
     },
     {
+      "src": "images/character_anim.gif",
+      "w": 560,
+      "h": 350,
+      "caption": "이동 애니메이션 적용과 점프·낙하·벽 매달리기 상태 규칙 설계"
+    },
+    {
       "src": "images/ui_screens.png",
       "w": 1920,
       "h": 1080,
       "caption": "게임 UI 및 전반적인 그래픽 디자인 및 게임 내 적용"
     },
     {
-      "src": "images/dynamite.gif",
+      "src": "images/dodge.gif",
       "w": 640,
       "h": 400,
-      "caption": "상호작용에 따른 시각적, 청각적 피드백 구현"
-    },
-    {
-      "src": "images/asana_board.png",
-      "w": 1658,
-      "h": 878,
-      "caption": "Asana 목록 보기 — 카드마다 에픽·타입과 팀원별 리뷰 칸(경희·수하·현진)"
+      "caption": "다이너마이트를 피해 도망치는 장면 — 폭발음은 거리에 비례해 작아짐"
     }
   ],
   "retro": {
-    "section": "7. 구현 결과 및 기술적 회고",
+    "section": "8. 구현 결과 및 기술적 회고",
     "achieved": [
+      "팀 프로젝트 발표에서 참가 5팀 투표로 '가장 좋은 경험을 준 게임' 부문 선정 — 목표한 경험(귀환 시점 판단)에 대해 받은 반응",
+      "무게 시스템으로 귀환을 강제해 여러 플레이어가 광산과 지상을 오가게 만든 점은 좋았음",
       "기간 안에 3인 팀의 작업을 합친 플레이 가능한 빌드 완성",
-      "클릭 → 애니메이션 타격 프레임 → 재검사로 이어지는 2단계 굴착 판정",
-      "즉시 반응하는 칸 단위 진동과 서버 확정 결과만 그리는 균열 오버레이로 역할을 나눈 굴착 피드백",
-      "팀 프로젝트 발표에서 참가 5팀 투표로 '가장 좋은 경험을 준 게임' 부문 선정"
+      "즉시 반응하는 칸 단위 진동과 서버 확정 결과만 그리는 균열 오버레이로 역할을 나눈 굴착 피드백"
     ],
     "regrets": [
       "성능 문제와 사운드 모두 체감과 직접 플레이로 판단했고 수치 기록이 없음",
-      "네트워크가 느리면 진동과 균열의 시간차가 길어지고, 서버가 굴착을 거절하면 진동만 나고 균열은 생기지 않을 수 있음",
-      "Play Mode 회귀 검증을 batchmode(화면 없음)로 실행해 시각적 품질은 확인하지 못했고, 두 클라이언트·서버 통합 플레이도 검증 범위 밖"
+      "광산과 지상의 오르내림을 플레이의 재미로 끌어내기보다 번거로움만 늘린 것 같아 아쉬움",
+      "플레이테스트에서는 무게를 가득 채운 상대 플레이어를 직접 노릴 수단이 부족하다는 의견이 많았음",
+      "네트워크가 느리면 진동과 균열의 시간차가 길어지고, 서버가 굴착을 거절하면 진동만 나고 균열은 생기지 않을 수 있음"
     ],
     "plans": [
       "변경 전후의 Unity Profiler 수치 기록"
@@ -202,17 +216,24 @@
         ]
       },
       {
+        "key": "anim",
+        "title": "굴착 동작과 캐릭터 상태 연결: 동작을 끊을지 말지를 경로마다 정한다",
+        "sectionPath": [
+          "5. 굴착 동작과 캐릭터 상태 연결: 동작을 끊을지 말지를 경로마다 정한다"
+        ]
+      },
+      {
         "key": "sound",
         "title": "사운드 QA — 직접 들어서 찾은 문제",
         "sectionPath": [
-          "5. 사운드 QA — 직접 들어서 찾은 문제"
+          "6. 사운드 QA — 직접 들어서 찾은 문제"
         ]
       },
       {
         "key": "collab",
         "title": "협업 — 팀장으로서의 판단과 통합 이슈",
         "sectionPath": [
-          "6. 협업 — 팀장으로서의 판단과 통합 이슈"
+          "7. 협업 — 팀장으로서의 판단과 통합 이슈"
         ]
       },
       {
@@ -220,13 +241,6 @@
         "title": "AI와 일한 방식",
         "sectionPath": [
           "AI와 일한 방식"
-        ]
-      },
-      {
-        "key": "result",
-        "title": "구현 결과 및 기술적 회고",
-        "sectionPath": [
-          "7. 구현 결과 및 기술적 회고"
         ]
       }
     ],
@@ -295,18 +309,18 @@
         ],
         "points": [
           {
+            "label": "목표한 경험",
+            "text": "무너지는 지형 속에서 더 내려가 비싼 광물을 캘지, 잃기 전에 돌아가 팔지 귀환 시점을 판단하는 재미",
+            "verbatim": true
+          },
+          {
+            "label": "기획 방향",
+            "text": "붕괴에 휘말리지 않으려면 갱도를 설계하며 굴착해야 하는 게임",
+            "verbatim": true
+          },
+          {
             "label": "",
             "text": "타일마다 내구도가 달라 곡괭이질만으로는 언제 부서질지 알 수 없는 문제 → 붕괴·매몰이 있는 게임에서 꼭 필요한 정보를 화면을 어지럽히지 않고 전달",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "플레이어가 원하는 칸에 굴착이 들어갔는지는 기다리지 않고 바로 알 수 있게 하고, 내구도처럼 중요한 정보는 서버가 확정한 결과로만 표시",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "곡괭이를 휘두르는 동안 상황이 바뀌었을 때 생기는 잘못된 굴착 방지",
             "verbatim": true
           },
           {
@@ -415,49 +429,6 @@
         ]
       },
       {
-        "key": "dig-impact",
-        "chapter": "dig",
-        "layout": "code",
-        "tab": "구현",
-        "title": {
-          "text": "2.3 타격 프레임의 애니메이션 이벤트와 재검사",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "2.3 타격 프레임의 애니메이션 이벤트와 재검사"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "클릭 시점에는 캐릭터 방향만 돌리고 굴착 애니메이션 트리거를 켬 → 실제 굴착은 아직 일어나지 않음",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "곡괭이가 닿는 프레임에 걸린 애니메이션 이벤트 `AnimationEvent_MineImpact`가 실행 단계를 호출하고, 끝 프레임의 `AnimationEvent_MineFinished`가 굴착 상태를 정리",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "code",
-            "n": 1,
-            "fp": "private void HandleMineStarted(float directionX)"
-          },
-          {
-            "kind": "image",
-            "src": "images/dig_timing.gif",
-            "w": 640,
-            "h": 400,
-            "caption": {
-              "text": "곡괭이를 들어 올리는 동안 타일은 그대로이고, 내리찍은 뒤에야 균열이 생기며 다음 타격에 깨지는 모습 (0.5배속)",
-              "verbatim": true
-            }
-          }
-        ]
-      },
-      {
         "key": "dig-recheck",
         "chapter": "dig",
         "layout": "code",
@@ -473,17 +444,17 @@
         "points": [
           {
             "label": "",
+            "text": "곡괭이가 닿는 프레임에 걸린 애니메이션 이벤트 `AnimationEvent_MineImpact`가 실행 단계를 호출하고, 끝 프레임의 `AnimationEvent_MineFinished`가 굴착 상태를 정리",
+            "verbatim": true
+          },
+          {
+            "label": "",
             "text": "검사보다 먼저 `hasPendingDig`를 꺼서, 대상이 무효여도 한 번 휘두르면 판정은 한 번만 일어남",
             "verbatim": true
           },
           {
             "label": "",
             "text": "실행 단계(`ExecutePreparedUse`)에서는 예약한 칸에 지형이 남아 있는지, 현재 위치에서 칸까지가 사거리 안인지 다시 확인하고, 조건이 맞지 않으면 그 휘두르기를 헛손질로 처리",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "이후 팀원과 의논해 재검사 기준을 서버 판정과 맞춤: 지형 확인은 서버 요청 단계로 넘기고, 실행 순간에는 칸 중심과 플레이어 사이 거리만 검사",
             "verbatim": true
           }
         ],
@@ -496,13 +467,23 @@
               24
             ],
             "fp": "public void ExecutePreparedUse(Vector3 currentOwnerPos)"
+          },
+          {
+            "kind": "image",
+            "src": "images/dig_timing.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {
+              "text": "곡괭이를 들어 올리는 동안 타일은 그대로이고, 내리찍은 뒤에야 균열이 생기며 다음 타격에 깨지는 모습 (0.5배속)",
+              "verbatim": true
+            }
           }
         ]
       },
       {
         "key": "dig-choice",
         "chapter": "dig",
-        "layout": "overview",
+        "layout": "full",
         "tab": "선택",
         "title": {
           "text": "2.4 클릭 즉시 굴착 대신 2단계 판정",
@@ -514,59 +495,23 @@
         ],
         "points": [
           {
-            "label": "클릭 즉시 굴착에서 2단계 판정으로",
-            "text": "휘두르는 선딜레이 동안 칸이 사거리를 벗어나거나 사라져도 굴착되는 문제 → 대상 지정(클릭)과 실행(타격 프레임)을 나누고 실행 순간 다시 검사",
-            "verbatim": false
+            "label": "최종 선택: 대안 B",
+            "text": "대상을 지정하는 단계(클릭)와 굴착을 실행하는 단계(곡괭이가 닿는 애니메이션 프레임)를 나누고, 실행하는 순간에 유효성을 한 번 더 검사하도록 변경",
+            "verbatim": true
           },
           {
             "label": "결과",
             "text": "휘두르는 사이 사거리를 벗어난 칸은 굴착되지 않고 헛손질로 끝나며, 한 번 휘두르면 판정도 한 번만 일어남",
             "verbatim": true
-          },
-          {
-            "label": "타격 프레임에 애니메이션 이벤트 연결",
-            "text": "캐릭터 굴착 동작의 프레임을 분석해 곡괭이가 타일에 닿는 프레임을 찾고, 그 프레임에 애니메이션 이벤트를 걸어 자연스러운 동작과 실제 굴착이 일어나는 시점을 맞춤",
-            "verbatim": true
           }
         ],
-        "visuals": []
-      },
-      {
-        "key": "crack-structure",
-        "chapter": "crack",
-        "layout": "overview",
-        "tab": "구조",
-        "title": {
-          "text": "3.2 손상된 칸에만 두는 균열 View",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "3.2 손상된 칸에만 두는 균열 View"
-        ],
-        "points": [
+        "visuals": [
           {
-            "label": "",
-            "text": "손상 단계에 도달한 살아 있는 칸만 균열 View(`SpriteRenderer`)를 가짐 (`Dictionary<Vector2Int, SpriteRenderer>`)",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "단계가 바뀌면 기존 View의 그림만 교체하고, 칸이 회복·파괴되면 `Stack` 풀에 반환해 재사용",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "균열 그림 4장은 처음 한 번만 `Resources`에서 읽어 캐싱",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "최대 내구도는 팀원의 지형 코드에 있던 맵 초기화용 계산을 그대로 불러 씀 → 정의 선택 로직을 중복 구현하지 않음",
-            "verbatim": true
+            "kind": "table",
+            "n": 1,
+            "fp": "|대안 A. 클릭 즉시 굴착 (초기 구현)|대안 B. 지정·실행 2단계 판정"
           }
-        ],
-        "visuals": []
+        ]
       },
       {
         "key": "crack-stage",
@@ -709,7 +654,7 @@
       {
         "key": "shake-choice",
         "chapter": "shake",
-        "layout": "overview",
+        "layout": "full",
         "tab": "선택",
         "title": {
           "text": "4.4 복제본 대신 지형 자체를 흔들기",
@@ -721,14 +666,9 @@
         ],
         "points": [
           {
-            "label": "복제본을 흔드는 방식에서 지형 자체를 흔드는 방식으로",
-            "text": "복제본은 원본 가장자리가 겹쳐 보이고 광물이 따라 흔들리지 않음 → 지형 메시에서 그 칸의 꼭짓점만 옮겨 타일 자체를 흔듦",
-            "verbatim": false
-          },
-          {
-            "label": "곡괭이 단위에서 칸 단위 관리로",
-            "text": "곡괭이에 묶으면 다른 칸을 칠 때 앞 칸 진동이 끊김 → 칸마다 독립적으로 재생",
-            "verbatim": false
+            "label": "최종 선택: 대안 B",
+            "text": "복제본을 없애고 지형 메시에서 해당 칸의 꼭짓점만 옮겨 타일 자체가 흔들리게 바꾸고(`4555c0a`), 광물 표시와 균열에도 같은 이동량을 적용",
+            "verbatim": true
           },
           {
             "label": "진동은 즉시, 균열은 서버 확정 뒤",
@@ -736,53 +676,161 @@
             "verbatim": true
           }
         ],
-        "visuals": []
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|대안 A. 복제본 흔들기 (8d8a69c)|대안 B. 지형 메시의 꼭짓점 이동 (4555c0a)"
+          }
+        ]
       },
       {
-        "key": "sound-source",
-        "chapter": "sound",
+        "key": "anim-intro",
+        "chapter": "anim",
         "layout": "visual",
-        "tab": "문제 해결",
+        "tab": "개요",
         "title": {
-          "text": "5.1 폭발음이 거리와 관계없이 같은 크기로 들리던 문제",
+          "text": "5.1 상태에 맞춰 움직이는 캐릭터",
           "verbatim": true
         },
-        "lead": null,
+        "lead": {
+          "text": "캐릭터 스프라이트와 애니메이션을 세팅하고, 이동·점프·낙하·벽 매달리기·굴착·사망 상태를 Animator에 연결",
+          "verbatim": true
+        },
         "sectionPath": [
-          "5.1 폭발음이 거리와 관계없이 같은 크기로 들리던 문제"
+          "5.1 상태에 맞춰 움직이는 캐릭터"
         ],
         "points": [
           {
-            "label": "문제",
-            "text": "곡괭이 소리, 다이너마이트·지뢰 폭발음과 타이머가 거리와 관계없이 같은 크기로 들림",
+            "label": "",
+            "text": "굴착 동작이 다른 상태에 의해 끊기는 경로마다, 끝까지 재생할지 즉시 끊고 코드로 정리할지를 정함",
             "verbatim": true
           },
           {
-            "label": "원인",
-            "text": "효과음을 재생할 때 소리가 난 위치를 받지 않고, `AudioSource`를 거리와 무관한 2D 소리(`spatialBlend = 0`)로만 만들었음",
+            "label": "",
+            "text": "플레이어별 색상 변경(`68a5066`)과 벽 잡기 이동(`58b20d2`)은 팀원 작업. 본인은 그 위에서 애니메이션 연결과 굴착 규칙을 맡음",
             "verbatim": true
           },
           {
-            "label": "해결",
-            "text": "효과음마다 위치를 가진 `AudioSource`를 만들어 2~18 범위의 선형 거리 감쇠를 적용(`e09ea2c`)",
-            "verbatim": true
-          },
-          {
-            "label": "결과",
-            "text": "폭발음·곡괭이 소리가 소리 난 곳에서 멀어질수록 작게 들리고, 18보다 멀면 들리지 않음",
+            "label": "",
+            "text": "상태 규칙은 직접 정하고, 연결 코드는 AI의 도움을 받아 구현",
             "verbatim": true
           }
         ],
         "visuals": [
           {
             "kind": "image",
-            "src": "images/dodge.gif",
-            "w": 640,
-            "h": 400,
+            "src": "images/character_anim.gif",
+            "w": 560,
+            "h": 350,
             "caption": {
-              "text": "다이너마이트를 피해 도망치는 장면 — 폭발음은 거리에 비례해 작아짐",
+              "text": "이동 애니메이션 적용과 점프·낙하·벽 매달리기 상태 규칙 설계",
               "verbatim": true
             }
+          }
+        ]
+      },
+      {
+        "key": "anim-states",
+        "chapter": "anim",
+        "layout": "visual",
+        "tab": "구조",
+        "title": {
+          "text": "5.2 Animator 상태 7개와 굴착 이벤트",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5.2 Animator 상태 7개와 굴착 이벤트"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "`Char.controller`: 상태 7개(Idle·Run·Jump·Fall·Climb·Mine·Dead)",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "`Mine.anim`(0.5초): 0.333초 `AnimationEvent_MineImpact`(굴착 실행, 2장) · 0.5초 `AnimationEvent_MineFinished`(굴착 중 상태 정리)",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "굴착(Mine)은 어느 상태에서든 들어감(Any State). 조건: `Mine` 트리거 · 매달리지 않음 · 죽지 않음",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "stateDiagram-v2"
+          }
+        ]
+      },
+      {
+        "key": "anim-climb",
+        "chapter": "anim",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "5.3 굴착 중 방향 고정과 매달릴 때의 정리",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5.3 굴착 중 방향 고정과 매달릴 때의 정리"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "굴착 중에는 이동해도 바라보는 방향을 바꾸지 않음 → 클릭할 때 정한 칸(2장) 쪽으로 곡괭이가 계속 향함",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "매달리면 남아 있던 굴착 트리거를 지워, 매달리기가 끝나자마자 굴착 동작이 튀어나오지 않게 함",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "매달리는 순간 진행 중이던 굴착을 취소하고 대상 칸 표시를 지움",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "if (itemController == null ||"
+          }
+        ]
+      },
+      {
+        "key": "anim-choice",
+        "chapter": "anim",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "5.4 끝까지 재생할 것인가, 즉시 끊을 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5.4 끝까지 재생할 것인가, 즉시 끊을 것인가"
+        ],
+        "points": [
+          {
+            "label": "최종 선택",
+            "text": "이동으로 넘어가는 경로는 끝까지 재생해 판정과 보이는 품질을 지키고, 매달리는 경로는 즉시 끊어 기획 의도를 지킴",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|이동·점프·낙하로 넘어갈 때|벽에 매달릴 때"
           }
         ]
       },
@@ -792,12 +840,12 @@
         "layout": "problem",
         "tab": "문제 해결",
         "title": {
-          "text": "5.2 발소리가 거리에 맞게 커지지 않던 문제",
+          "text": "6.2 발소리가 거리에 맞게 커지지 않던 문제",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "5.2 발소리가 거리에 맞게 커지지 않던 문제"
+          "6.2 발소리가 거리에 맞게 커지지 않던 문제"
         ],
         "points": [
           {
@@ -834,54 +882,17 @@
         ]
       },
       {
-        "key": "lead-server",
-        "chapter": "collab",
-        "layout": "problem",
-        "tab": "문제 해결",
-        "title": {
-          "text": "6.2 서버 작업을 넘기고 진척 관리에 집중한 판단",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "6.2 서버 작업을 넘기고 진척 관리에 집중한 판단"
-        ],
-        "points": [
-          {
-            "label": "상황",
-            "text": "일정이 촉박한 가운데 익숙하지 않은 분야는 팀장이 맡아야 한다고 판단하고, 학습 목적도 있어 서버 네트워크 연결 작업을 직접 진행함",
-            "verbatim": false
-          },
-          {
-            "label": "문제",
-            "text": "서버 작업에 시간을 쓰는 동안 팀원들에게 다음 할 일을 지시하고 프로젝트 전체를 확인하는 일에 소홀해짐",
-            "verbatim": true
-          },
-          {
-            "label": "선택",
-            "text": "서버는 멀티플레이 동기화에 강점을 보이던 팀원에게 맡기고, 진척 관리에 집중",
-            "verbatim": true
-          },
-          {
-            "label": "결과",
-            "text": "다음 업무를 기다리던 팀원들에게 바로 일을 배정할 수 있게 됨",
-            "verbatim": true
-          }
-        ],
-        "visuals": []
-      },
-      {
         "key": "scene-split",
         "chapter": "collab",
         "layout": "problem",
         "tab": "문제 해결",
         "title": {
-          "text": "6.3 통합 단계의 씬 충돌과 프리팹 분리",
+          "text": "7.3 통합 단계의 씬 충돌과 프리팹 분리",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "6.3 통합 단계의 씬 충돌과 프리팹 분리"
+          "7.3 통합 단계의 씬 충돌과 프리팹 분리"
         ],
         "points": [
           {
@@ -908,92 +919,6 @@
         "visuals": []
       },
       {
-        "key": "backlog",
-        "chapter": "collab",
-        "layout": "overview",
-        "tab": "",
-        "title": {
-          "text": "6.4 백로그와 검증 운영",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "6.4 백로그와 검증 운영"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "Asana 보드에 이용 가이드와 카드 템플릿(완료 조건 포함)을 마련하고, 카드마다 리뷰 칸을 두어 검증",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "버전별 일정과 검증 역할을 구분하고, 멀티플레이 검증 환경이 갖춰질 때까지의 작업 분담 규칙을 정함",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "검증 담당으로서 넓은 테스트 지형에서 프레임이 크게 떨어지는 성능 문제를 확인하고 팀에 공유. 해결(지형을 청크 단위 메시로 묶어 그리는 구조)은 팀원 담당",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "반복·예외 상황 검증(동일 위치 반복 굴착, 연쇄 붕괴, 매몰 → 지속 피해 → 탈출 루프 등 12개 대상) 담당",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/asana_board.png",
-            "w": 1658,
-            "h": 878,
-            "caption": {
-              "text": "Asana 목록 보기 — 카드마다 에픽·타입과 팀원별 리뷰 칸(경희·수하·현진)",
-              "verbatim": true
-            }
-          }
-        ]
-      },
-      {
-        "key": "scope",
-        "chapter": "collab",
-        "layout": "visual",
-        "tab": "결과",
-        "title": {
-          "text": "6.4 백로그와 검증 운영",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "6.4 백로그와 검증 운영"
-        ],
-        "points": [
-          {
-            "label": "계획 대비 실제",
-            "text": "시작 시점(8/24) 보드에 잡아 둔 작업 34개 중 30개(88%)를 완료. 진행하면서 작업 50개가 새로 생겼고, 주로 UI·게임 진행(2개 → 13개)과 자원·아이템 획득 루프(0개 → 11개)에서 늘어남",
-            "verbatim": true
-          },
-          {
-            "label": "단계별 일정",
-            "text": "처음 계획한 프로토타입([TP]) 작업에 8/28 목표일을 두고, 이후 상점·인벤토리·무게·엔딩 같은 MVP 단계 작업 17개([MVP]·[MVB])를 보드에 추가. 늘어난 50개 중 나머지는 대부분 통합 중 발견한 버그 수정·다듬기·발표 준비",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/asana_scope.png",
-            "w": 1760,
-            "h": 1170,
-            "caption": {
-              "text": "처음 계획한 일과 하면서 새로 생긴 일 — 처음 계획 34개 중 30개 완료, 진행 중 50개 추가 (Asana 기록 기준)",
-              "verbatim": true
-            }
-          }
-        ]
-      },
-      {
         "key": "ai-collab",
         "chapter": "ai",
         "layout": "full",
@@ -1009,7 +934,12 @@
         "points": [
           {
             "label": "잘 된 것",
-            "text": "발소리가 거리에 맞게 커지지 않던 문제(5.2)는 직접 들어서 찾았고, 원인(꺼져 있는 리스너가 기준으로 잡힘)은 AI 검토로 확인함",
+            "text": "발소리가 거리에 맞게 커지지 않던 문제(6.2)는 직접 들어서 찾았고, 원인(꺼져 있는 리스너가 기준으로 잡힘)은 AI 검토로 확인함",
+            "verbatim": true
+          },
+          {
+            "label": "바꾼 것",
+            "text": "타일 진동의 첫 구현(복제본 흔들기, `8d8a69c`)은 직접 플레이해 보고 가장자리 겹침과 광물이 따라 흔들리지 않는 문제를 찾아, 지형 자체를 흔드는 방식으로 바꿈(4.4)",
             "verbatim": true
           }
         ],
@@ -1020,38 +950,6 @@
             "fp": "맡긴 것|직접 판단한 것|확인한 방법"
           }
         ]
-      },
-      {
-        "key": "lessons",
-        "chapter": "result",
-        "layout": "overview",
-        "tab": "결과",
-        "title": {
-          "text": "7.2 개발 과정에서 얻은 판단",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "7.2 개발 과정에서 얻은 판단"
-        ],
-        "points": [
-          {
-            "label": "하고 싶은 일과 프로젝트가 필요로 하는 일의 구분",
-            "text": "팀장으로서 해야 한다고 생각하거나 하고 싶은 일과, 프로젝트를 위해 실제로 필요한 일은 다를 수 있다는 것을 서버 작업 인계(6.2)에서 확인",
-            "verbatim": true
-          },
-          {
-            "label": "보이는 것과 판정되는 것의 분리",
-            "text": "굴착은 곡괭이가 닿는 것이 보이는 프레임에 판정을 맞추고(2장), 균열은 서버 판정이 끝난 뒤에만 그리며(3장), 진동은 렌더링 이동량으로만 흔들어 Collider·데이터는 건드리지 않음(4장). 피드백을 바꾸거나 더해도 게임 판정이 흔들리지 않게 하는 구조의 중요성 확인",
-            "verbatim": true
-          },
-          {
-            "label": "AI 구현물의 검증 책임",
-            "text": "구현을 AI에 맡긴 부분도 들리는 품질은 직접 플레이로만 판정할 수 있었고, 그 판정과 원인 확인이 내 몫이라는 것을 확인",
-            "verbatim": true
-          }
-        ],
-        "visuals": []
       }
     ]
   },
