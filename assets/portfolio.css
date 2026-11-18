@@ -287,7 +287,10 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .kf-tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
 .kf-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px 24px; }
 .kf-card { display: flex; flex-direction: column; min-width: 0; }
-.kf-media { aspect-ratio: 16 / 10; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--tint); border: 1px solid var(--line); }
+/* 기능 그림 패널: GIF마다 비율이 달라 contain으로 생기는 위아래·좌우 여백을, 패널 색(어두운 프러시안 블루)으로 액자처럼 보이게 함.
+   밝은 화면에서도 같은 색(게임 화면이 어두워 어울림). 인쇄는 아래 @media print에서 연한 바탕으로 */
+.kf-media { aspect-ratio: 16 / 10; display: flex; align-items: center; justify-content: center; overflow: hidden;
+            background: var(--kf-panel, #0E2A42); border: 1px solid color-mix(in srgb, var(--kf-panel, #0E2A42) 80%, #fff); }
 .kf-media img { width: 100%; height: 100%; object-fit: contain; }
 .kf-n { margin-top: 14px; font-family: var(--display); font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--muted); }
 .kf-proj { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; margin-bottom: clamp(18px, 2.6vh, 28px);
@@ -394,6 +397,7 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
   body { background: #fff; }
   .no-print, .top, .skip-link, .pf-newtab-icon, .pf-newtab-sr { display: none !important; }
   .print-only { display: block; }
+  .kf-media { background: var(--tint); border-color: var(--line); }
   .eyebrow, .hero h1 .en, .fk { background: none; -webkit-text-fill-color: currentColor; }
   .wrap { max-width: none; padding: 0; }
   .sec, .hero { padding: 0; border-top: 0; background: none !important; }
