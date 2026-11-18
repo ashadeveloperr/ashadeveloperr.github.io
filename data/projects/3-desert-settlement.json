@@ -49,10 +49,11 @@
   "highlights": [
     {
       "title": "검증 체계 — 시뮬레이터·테스트·유지보수성 검토",
+      "summary": "AI가 짠 코드와 수치를 직접 다 플레이해 보지 않고도 확인하는 봇 시뮬레이터·자동 테스트·유지보수성 검토",
       "what": "AI가 짠 코드와 수치를 사람이 직접 다 플레이해 보지 않고는 확인할 수 없던 문제",
       "how": "게임과 같은 Core 소스를 링크한 봇 시뮬레이터, EditMode·PlayMode 테스트, 시드 난수와 명령 기록 재실행으로 같은 입력이면 같은 결과를 보장합니다.",
       "why": "사람이 다 해 볼 수 없는 플레이 패턴을 수치로 보려 했고, 실제로 반복 플레이에서만 드러나는 시작 자금 폭주(정착지마다 +28%)를 찾아 고쳤습니다.",
-      "section": "5.3 유지보수성 검토로 고친 것",
+      "section": "6.3 유지보수성 검토로 고친 것",
       "image": {
         "src": "images/verification.png",
         "w": 966,
@@ -62,10 +63,11 @@
     },
     {
       "title": "건설 착공 시각과 경제 틱",
+      "summary": "경제는 정각마다 정산하고, 건설은 명령한 분 단위 시각에 바로 착공·완공하는 시간 처리",
       "what": "1시 1분에 짓든 1시 59분에 짓든 2시 정각에 착공되어 명령 시각이 결과에 반영되지 않던 문제",
       "how": "정산은 정각마다 `AdvanceHour`가 맡고, 매 프레임 `AdvanceTo`가 분 단위로 따라가 완공 시각이 된 공사만 바로 끝내도록 두 갈래로 나눴습니다.",
       "why": "구현 비용을 이유로 한 AI의 비추천을 처음엔 따랐지만, 같은 문제가 플레이테스트에서 세 번 나와 타협할 수 없는 핵심 경험으로 보고 바꿨습니다.",
-      "section": "2.3 정산과 분 단위 진행의 두 갈래",
+      "section": "3.3 정산과 분 단위 진행의 두 갈래",
       "image": {
         "src": "images/construction_queue_minutes.png",
         "w": 1620,
@@ -75,10 +77,11 @@
     },
     {
       "title": "경매와 입찰자 영구 모디파이어",
+      "summary": "정착지를 판 보상으로, 경매에 온 입찰자마다 내미는 영구 모디파이어 중 하나를 고르는 보상 구조",
       "what": "장비 상점에서는 정답 장비가 굳고, 경매도 최고가에 팔면 끝이라 단조롭던 문제",
       "how": "입찰자마다 최대 중첩에 닿지 않은 모디파이어를 하나씩 뽑아 제시하고, 팔린 입찰자의 모디파이어를 다음 정착지 규칙에 곱으로 쌓습니다.",
       "why": "높은 입찰가와 원하는 보상 사이에 선택을 만들려 했고, 합연산의 −100% 같은 상태를 막으려 곱연산과 최대 중첩을 택했습니다.",
-      "section": "3.3 모디파이어 뽑기와 다음 정착지 적용",
+      "section": "4.3 모디파이어 뽑기와 다음 정착지 적용",
       "image": {
         "src": "images/auction_bidders.png",
         "w": 1620,
@@ -87,16 +90,17 @@
       }
     },
     {
-      "title": "주택·노동력과 전염병",
-      "what": "시설이 식량을 먹고 전염병이 \"효율 −%\"로만 나타나 원인과 결과가 직관적이지 않던 문제",
-      "how": "주민이 식량·물을 먹고 마시게 하고 부족하면 그 주택에서 주민이 떠나게 했으며, 전염병은 감염·회복 모형으로 아픈 주민이 일하지 못하게 합니다.",
-      "why": "플레이해 보니 기존 규칙이 직관적이지 않아 기획서의 \"인구/노동력 [확정]: 삭제\"를 뒤집고 눈에 보이는 원인과 결과로 바꿨습니다.",
-      "section": "4.3 주민의 식량 소비와 감염·회복 모형",
+      "title": "절차 맵 생성과 맵 스케치 편집기",
+      "summary": "직접 정한 규칙과 예시 맵으로 만든, 검사를 통과한 플레이할 수 있는 맵만 내놓는 절차 맵 생성기",
+      "what": "단순 무작위 배치는 진행이 불가능한 맵을 만들고, 미리 조립한 구획 결합은 결합 로직을 설정하기 복잡하던 문제",
+      "how": "맵을 BSP로 나눈 구역마다 장애물 지형을 하나만 키우고, 트인 땅이 이어지는지·우물에서 광맥·암반까지 수로를 놓을 수 있는지 검사해 실패하면 다시 만듭니다.",
+      "why": "규칙을 글로만 넘기지 않고 맵 스케치 편집기로 그린 예시 맵과 함께 전달하는 멀티모달 방식으로, AI가 더 나은 생성 로직을 구성하게 했습니다.",
+      "section": "2.2 맵 스케치 편집기와 생성 순서",
       "image": {
-        "src": "images/labor_shortage.png",
-        "w": 1620,
-        "h": 914,
-        "caption": "두 번째 정착지 초반 — 시설 머리 위 일손 1/2·0/2와 왼쪽 '일손 부족' 알림"
+        "src": "images/map_sketch_paint.gif",
+        "w": 720,
+        "h": 560,
+        "caption": "맵 스케치 편집기로 예시 맵 sketch_01을 칠하는 과정 — 장애물 → 암반 → 광맥 → 수원 순서"
       }
     }
   ],
@@ -108,7 +112,7 @@
       "solution": "시뮬레이터로 후보를 비교해 설정 값 하나만 바꿔 최대 중첩을 1로 낮췄습니다(×1.05 중첩 1).",
       "result": "숙련 봇 캠페인 20개에서 파산 13/20 → 19/20, 끝까지 간 캠페인 끝 자금(중앙) 118,566 → 651로, 자금이 줄면 보너스도 같이 줄어 무한히 버티지 않게 되었습니다.",
       "lesson": "",
-      "section": "5.4 시뮬레이터를 만든 이유와 한계"
+      "section": "6.4 시뮬레이터를 만든 이유와 한계"
     },
     {
       "title": "명령 시각과 상관없이 정각에만 착공되는 문제",
@@ -117,7 +121,7 @@
       "solution": "4차 플레이테스트에서 \"12:30 → 17:30처럼 정확히\"를 기준으로 착공·완공을 분 단위로 바꾸고, 경제 정산은 정각마다 한 시간씩 그대로 두었습니다.",
       "result": "12:30에 명령한 5시간 건설이 12:30 착공 · 17:30 완공으로 정확히 5시간이 되었습니다. 숙련 봇 캠페인의 정착지 순이익은 거의 같았지만(D0~1 +1370 → +1379), 봇은 정각에만 명령하므로 분 단위 착공 자체의 영향은 확인하지 못했습니다.",
       "lesson": "",
-      "section": "2.4 AI의 비추천을 뒤집은 분 단위 착공"
+      "section": "3.4 AI의 비추천을 뒤집은 분 단위 착공"
     }
   ],
   "screenshots": [
@@ -159,7 +163,7 @@
     }
   ],
   "retro": {
-    "section": "6. 구현 결과 및 회고",
+    "section": "7. 구현 결과 및 회고",
     "achieved": [
       "건설·운영 → 경매 → 매각/보류 → 행선지 선택 → 다음 정착지(절차 생성 맵)로 이어지는 MVP 캠페인 루프",
       "동료 피드백의 좋은 점: 플레이 루프(완성 → 매각 → 영구 보너스 → 새 정착지)가 재미있음, 짜임새 있는 시뮬레이션, 복잡한 시스템을 알아 가는 재미",
@@ -181,10 +185,11 @@
   "deck": {
     "chapters": [
       { "key": "overview", "title": "프로젝트 개요", "sectionPath": ["1. 프로젝트 개요"] },
-      { "key": "tick", "title": "건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "sectionPath": ["2. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다"] },
-      { "key": "auction", "title": "경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "sectionPath": ["3. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다"] },
-      { "key": "residents", "title": "주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "sectionPath": ["4. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다"] },
-      { "key": "verify", "title": "검증 체계: 직접 다 플레이하지 않고도 확인한다", "sectionPath": ["5. 검증 체계: 직접 다 플레이하지 않고도 확인한다"] }
+      { "key": "map", "title": "절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다"] },
+      { "key": "tick", "title": "건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다"] },
+      { "key": "auction", "title": "경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다"] },
+      { "key": "residents", "title": "주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다"] },
+      { "key": "verify", "title": "검증 체계: 직접 다 플레이하지 않고도 확인한다", "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다"] }
     ],
     "slides": [
       {
@@ -286,34 +291,100 @@
       },
       {
         "key": "map-sketch",
-        "chapter": "overview",
+        "chapter": "map",
         "layout": "visual",
         "tab": "흐름",
-        "title": { "text": "1.5 절차 맵 — 예시 맵을 그려 생성 규칙을 전달", "verbatim": true },
-        "lead": null,
-        "sectionPath": ["1. 프로젝트 개요", "1.5 절차 맵 — 예시 맵을 그려 생성 규칙을 전달"],
+        "title": { "text": "2.2 맵 스케치 편집기와 생성 순서", "verbatim": true },
+        "lead": { "text": "직접 정한 생성 규칙과 맵 스케치 편집기로 그린 예시 맵을 함께 전달해 만든 절차 생성기. 생성한 뒤 검사해 통과한 맵만 내놓음", "verbatim": false },
+        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.2 맵 스케치 편집기와 생성 순서"],
         "points": [
-          { "label": "", "text": "규칙을 글로만 넘기지 않고, 예시 맵을 그리는 맵 스케치 편집기를 먼저 만들게 한 뒤(10/23 `7e9b411`, AI 구현) 직접 그린 예시 맵 `sketch_01`을 규칙과 함께 전달", "verbatim": true },
-          { "label": "편집기", "text": "저장 형식이 캠페인 맵과 같은 JSON이라, AI가 예시의 좌표·지형을 그대로 읽어 확인함", "verbatim": true },
-          { "label": "결과", "text": "시뮬레이터 프로토타입에서 난이도별 40장이 모두 첫 시도에 생성되었고 규칙 위반은 0", "verbatim": true }
+          { "label": "", "text": "맵 스케치 편집기: Unity 씬 뷰에서 헥스 타일을 클릭·드래그로 칠함(숫자키 1~5 = 사막·수원·광맥·암반·장애물, Shift = 지우기)", "verbatim": true },
+          { "label": "", "text": "저장 형식이 캠페인 맵과 같은 JSON이라, AI가 예시의 좌표·지형을 그대로 읽어 확인함", "verbatim": true },
+          { "label": "", "text": "편집기에는 '생성 맵 미리보기'(난이도 D·시드)를 더해, 예시를 그린 화면에서 생성 결과를 바로 비교", "verbatim": true }
         ],
         "visuals": [
           { "kind": "image", "src": "images/map_sketch_paint.gif", "w": 720, "h": 560, "caption": { "text": "맵 스케치 편집기로 예시 맵 sketch_01을 칠하는 과정 — 장애물 → 암반 → 광맥 → 수원 순서", "verbatim": true } }
         ]
       },
       {
-        "key": "map-rules",
-        "chapter": "overview",
+        "key": "map-flow",
+        "chapter": "map",
         "layout": "visual",
-        "tab": "구조",
-        "title": { "text": "1.5 절차 맵 — 예시 맵을 그려 생성 규칙을 전달", "verbatim": true },
+        "tab": "흐름",
+        "title": { "text": "2.2 맵 스케치 편집기와 생성 순서", "verbatim": true },
         "lead": null,
-        "sectionPath": ["1. 프로젝트 개요", "1.5 절차 맵 — 예시 맵을 그려 생성 규칙을 전달"],
+        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.2 맵 스케치 편집기와 생성 순서"],
+        "points": [
+          { "label": "", "text": "규칙을 만드는 동안 지키게 하는 부분(구역마다 장애물 지형 하나)과 만든 뒤 검사로 걸러 내는 부분(트인 땅 이어짐·수로 경로)이 나뉘어 있음 → 내놓는 맵은 항상 플레이할 수 있음", "verbatim": true }
+        ],
+        "visuals": [
+          { "kind": "mermaid", "n": 1, "fp": "flowchart LR" }
+        ]
+      },
+      {
+        "key": "map-generate",
+        "chapter": "map",
+        "layout": "code",
+        "tab": "구현",
+        "title": { "text": "2.3 구역마다 장애물 하나, 검사를 통과한 맵만", "verbatim": true },
+        "lead": null,
+        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.3 구역마다 장애물 하나, 검사를 통과한 맵만"],
+        "points": [
+          { "label": "", "text": "`TryGenerate`가 어느 단계에서든 실패하면 `null` → 같은 난수 흐름으로 다음 시도(최대 `MaxAttempts`번)", "verbatim": true },
+          { "label": "", "text": "난수는 시드로 만들어, 같은 시드면 Unity와 시뮬레이터가 같은 맵을 만듦", "verbatim": true }
+        ],
+        "visuals": [
+          { "kind": "code", "n": 1, "fp": "public static GeneratedMap Generate(DifficultyParams p, Gene" }
+        ]
+      },
+      {
+        "key": "map-check",
+        "chapter": "map",
+        "layout": "code",
+        "tab": "구현",
+        "title": { "text": "2.3 구역마다 장애물 하나, 검사를 통과한 맵만", "verbatim": true },
+        "lead": null,
+        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.3 구역마다 장애물 하나, 검사를 통과한 맵만"],
+        "points": [
+          { "label": "", "text": "장애물 지형은 자기 구역 안에서, 다른 지형과 맞닿지 않는 칸으로만 자람 → 지형끼리 이어져 맵을 가로막는 장벽이 생기지 않음", "verbatim": true },
+          { "label": "", "text": "그래도 막히는 경우를 위해 장애물이 아닌 땅이 하나로 이어져 있는지 한 번 더 검사", "verbatim": true },
+          { "label": "", "text": "마지막으로 수로 규칙(양쪽이 장애물인 변에는 수로 불가) 아래에서 우물 → 광맥, 우물 → 암반 경로를 찾고, 없으면 그 맵을 버림", "verbatim": true }
+        ],
+        "visuals": [
+          { "kind": "code", "n": 2, "fp": "bool Allowed(HexCoord c) => leafSet.Contains(c) && !owner.Co" }
+        ]
+      },
+      {
+        "key": "map-why",
+        "chapter": "map",
+        "layout": "visual",
+        "tab": "선택",
+        "title": { "text": "2.4 무작위 생성·구획 결합 대신 규칙과 예시 맵", "verbatim": true },
+        "lead": null,
+        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.4 무작위 생성·구획 결합 대신 규칙과 예시 맵"],
+        "points": [
+          { "label": "절차 맵이 꼭 필요했던 이유", "text": "파산할 때까지 점점 어려워지는 다음 정착지를 계속 플레이하는 콘텐츠라, 정착지마다 새 맵이 필요했음", "verbatim": true },
+          { "label": "검토한 두 방식의 한계", "text": "단순 무작위 배치는 게임 진행이 불가능한 시드도 생성되고, 미리 조립한 구획들을 결합하는 방식은 안정적이지만 구획을 결합하는 로직을 설정하기 복잡함", "verbatim": false },
+          { "label": "선택 — 규칙과 예시 맵을 함께 전달", "text": "규칙(글)과 예시 맵을 함께 주는 멀티모달 방식으로, AI가 더 나은 생성 로직을 구성하게 하는 과정을 만듦", "verbatim": true }
+        ],
+        "visuals": [
+          { "kind": "image", "src": "images/map_sketch_editor.png", "w": 1360, "h": 900, "caption": { "text": "맵 스케치 편집기 — 왼쪽 씬 뷰의 예시 맵 sketch_01(좌표 표시), 오른쪽 인스펙터의 붓·JSON 저장·생성 맵 미리보기", "verbatim": true } }
+        ]
+      },
+      {
+        "key": "map-rules",
+        "chapter": "map",
+        "layout": "visual",
+        "tab": "결과",
+        "title": { "text": "2.4 무작위 생성·구획 결합 대신 규칙과 예시 맵", "verbatim": true },
+        "lead": null,
+        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.4 무작위 생성·구획 결합 대신 규칙과 예시 맵"],
         "points": [
           { "label": "① 장애물", "text": "지형마다 산맥(선) 또는 고원(덩어리) 중 하나. 다른 장애물 지형과 이어져 맵을 가로막으면 안 됨", "verbatim": true },
           { "label": "② 광맥", "text": "난이도 수치만큼, 90% 확률로 장애물 근처", "verbatim": true },
           { "label": "③ 암반", "text": "90% 확률로 이미 놓인 장애물 칸을 대신", "verbatim": true },
-          { "label": "④ 우물(수원)", "text": "난이도 수치만큼, 사막 위에 한 칸씩, 반경 2 안에 다른 우물 없음", "verbatim": true }
+          { "label": "④ 우물(수원)", "text": "난이도 수치만큼, 사막 위에 한 칸씩, 반경 2 안에 다른 우물 없음", "verbatim": true },
+          { "label": "결과", "text": "시뮬레이터 프로토타입에서 난이도별 40장이 모두 첫 시도에 생성되었고 규칙 위반은 0", "verbatim": true }
         ],
         "visuals": [
           { "kind": "image", "src": "images/procedural_by_difficulty.png", "w": 1440, "h": 1216, "caption": { "text": "생성 맵 미리보기로 만든 맵(시드 1) — 난이도 D 0·1·2·3으로 갈수록 반경 3 → 6, 우물 2 → 1, 광맥 2 → 1, 장애물 20% → 40%", "verbatim": true } }
@@ -324,9 +395,9 @@
         "chapter": "tick",
         "layout": "overview",
         "tab": "구조",
-        "title": { "text": "2.2 시계·정산·분 단위 진행의 역할", "verbatim": true },
+        "title": { "text": "3.2 시계·정산·분 단위 진행의 역할", "verbatim": true },
         "lead": { "text": "경제는 정각마다 한 시간씩 정산하지만, 건설은 명령한 시각(분 단위)에 바로 착공하고 공사 시간만큼 지난 정확한 시각에 완공", "verbatim": false },
-        "sectionPath": ["2. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "2.2 시계·정산·분 단위 진행의 역할"],
+        "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.2 시계·정산·분 단위 진행의 역할"],
         "points": [
           { "label": "", "text": "`GameClock`: 실제 시간을 게임 시간으로 바꾸고 정각마다 `HourPassed` 발생", "verbatim": true },
           { "label": "", "text": "`Settlement.AdvanceHour()`: 지난 한 시간의 물·생산·소비·유지비를 정산하는 경제 틱", "verbatim": true },
@@ -334,7 +405,7 @@
           { "label": "", "text": "`GameSession`이 매 프레임 시계의 분을 정착지에 전달 → 시뮬레이터·테스트는 시계 없이 정각에 명령", "verbatim": true }
         ],
         "visuals": [
-          { "kind": "image", "sectionPath": ["2. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "2.3 정산과 분 단위 진행의 두 갈래"], "src": "images/construction_queue_minutes.png", "w": 1620, "h": 914, "caption": { "text": "공사 대기열 — 두 곳은 공사 중(남은 시간이 분 단위까지 표시), 나머지는 대기. 맵 위 공사 중인 시설에 진행률 51%", "verbatim": true } }
+          { "kind": "image", "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.3 정산과 분 단위 진행의 두 갈래"], "src": "images/construction_queue_minutes.png", "w": 1620, "h": 914, "caption": { "text": "공사 대기열 — 두 곳은 공사 중(남은 시간이 분 단위까지 표시), 나머지는 대기. 맵 위 공사 중인 시설에 진행률 51%", "verbatim": true } }
         ]
       },
       {
@@ -342,9 +413,9 @@
         "chapter": "tick",
         "layout": "visual",
         "tab": "흐름",
-        "title": { "text": "2.2 시계·정산·분 단위 진행의 역할", "verbatim": true },
+        "title": { "text": "3.2 시계·정산·분 단위 진행의 역할", "verbatim": true },
         "lead": null,
-        "sectionPath": ["2. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "2.2 시계·정산·분 단위 진행의 역할"],
+        "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.2 시계·정산·분 단위 진행의 역할"],
         "points": [
           { "label": "", "text": "분 단위로 따라가는 길(`AdvanceTo`)은 공사 완공만 처리하고, 물·생산·돈은 정각 한 번(`AdvanceHour`)에만 계산됨", "verbatim": true }
         ],
@@ -357,9 +428,9 @@
         "chapter": "tick",
         "layout": "code",
         "tab": "구현",
-        "title": { "text": "2.3 정산과 분 단위 진행의 두 갈래", "verbatim": true },
+        "title": { "text": "3.3 정산과 분 단위 진행의 두 갈래", "verbatim": true },
         "lead": null,
-        "sectionPath": ["2. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "2.3 정산과 분 단위 진행의 두 갈래"],
+        "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.3 정산과 분 단위 진행의 두 갈래"],
         "points": [
           { "label": "", "text": "정각 정산(`AdvanceHour`)과 분 단위 진행(`AdvanceTo`)을 두 갈래로 나눔 → 경제 계산 단위(1시간)는 그대로 두고 공사 시각만 분으로 정밀해짐", "verbatim": true },
           { "label": "", "text": "경매가 열려 있으면(`AcceptsWorldInput`이 false) 둘 다 멈춤", "verbatim": true }
@@ -373,9 +444,9 @@
         "chapter": "tick",
         "layout": "full",
         "tab": "선택",
-        "title": { "text": "2.4 AI의 비추천을 뒤집은 분 단위 착공", "verbatim": true },
+        "title": { "text": "3.4 AI의 비추천을 뒤집은 분 단위 착공", "verbatim": true },
         "lead": { "text": "12:30에 5시간짜리 건설을 명령했을 때", "verbatim": true },
-        "sectionPath": ["2. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "2.4 AI의 비추천을 뒤집은 분 단위 착공"],
+        "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.4 AI의 비추천을 뒤집은 분 단위 착공"],
         "points": [
           { "label": "같은 문제가 세 번 나온 뒤 AI의 '비추천'을 뒤집음", "text": "2차 플레이테스트에서는 구현 비용이 크다는 판단을 따라 AI의 타협안(JQ2)을 받아들였지만, 3·4차에서 같은 문제가 다시 나와 타협할 수 없는 핵심 플레이 경험으로 보고 분 단위로 바꿈(JQ4)", "verbatim": false },
           { "label": "테스트는 통과했지만 화면이 의도와 달랐던 경우", "text": "3차 \"여전히 정각에만 건설이 시작됨\"의 원인은 규칙이 아니라 화면 진행률 계산이 예전 '정각 착공'을 가정한 것이었음", "verbatim": true },
@@ -390,9 +461,9 @@
         "chapter": "auction",
         "layout": "overview",
         "tab": "구조",
-        "title": { "text": "3.2 경매·입찰자·캠페인의 역할", "verbatim": true },
+        "title": { "text": "4.2 경매·입찰자·캠페인의 역할", "verbatim": true },
         "lead": { "text": "정착지를 판 보상을, 입찰자마다 무작위로 내미는 영구 모디파이어 중 하나를 고르는 방식으로 바꾼 보상 구조", "verbatim": false },
-        "sectionPath": ["3. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "3.2 경매·입찰자·캠페인의 역할"],
+        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.2 경매·입찰자·캠페인의 역할"],
         "points": [
           { "label": "", "text": "`AuctionManager`: 정착지 시작 후 72시간이 지나면 첫 정기 경매, 입찰자 수 = 1 + 운영 중인 경매장 수(최대 7)", "verbatim": true },
           { "label": "", "text": "예고 때 입찰자마다 모디파이어 하나를 뽑아 둠 → 경매 카드·예고 알림·행선지 창에 표시", "verbatim": true },
@@ -400,8 +471,8 @@
           { "label": "", "text": "자금 0 이하일 때: 광산이 있으면 입찰가 −20%의 긴급 매각 경매, 없으면 바로 파산", "verbatim": true }
         ],
         "visuals": [
-          { "kind": "image", "sectionPath": ["3. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "3.3 모디파이어 뽑기와 다음 정착지 적용"], "src": "images/auction_bidders.png", "w": 1620, "h": 914, "caption": { "text": "정기 경매 — 입찰자 3명이 각자 다른 영구 모디파이어와 가치 내역을 내밀고, 판매 거부도 고를 수 있음", "verbatim": true } },
-          { "kind": "image", "sectionPath": ["3. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "3.3 모디파이어 뽑기와 다음 정착지 적용"], "src": "images/destination_select.png", "w": 1620, "h": 914, "caption": { "text": "매각 뒤 다음 지역 고르기 — 받은 영구 모디파이어(건설 석재 −6%)와 난이도·운영비가 표시된 다음 정착지 후보 2곳", "verbatim": true } }
+          { "kind": "image", "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.3 모디파이어 뽑기와 다음 정착지 적용"], "src": "images/auction_bidders.png", "w": 1620, "h": 914, "caption": { "text": "정기 경매 — 입찰자 3명이 각자 다른 영구 모디파이어와 가치 내역을 내밀고, 판매 거부도 고를 수 있음", "verbatim": true } },
+          { "kind": "image", "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.3 모디파이어 뽑기와 다음 정착지 적용"], "src": "images/destination_select.png", "w": 1620, "h": 914, "caption": { "text": "매각 뒤 다음 지역 고르기 — 받은 영구 모디파이어(건설 석재 −6%)와 난이도·운영비가 표시된 다음 정착지 후보 2곳", "verbatim": true } }
         ]
       },
       {
@@ -409,9 +480,9 @@
         "chapter": "auction",
         "layout": "code",
         "tab": "구현",
-        "title": { "text": "3.3 모디파이어 뽑기와 다음 정착지 적용", "verbatim": true },
+        "title": { "text": "4.3 모디파이어 뽑기와 다음 정착지 적용", "verbatim": true },
         "lead": null,
-        "sectionPath": ["3. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "3.3 모디파이어 뽑기와 다음 정착지 적용"],
+        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.3 모디파이어 뽑기와 다음 정착지 적용"],
         "points": [
           { "label": "", "text": "캠페인에서 이미 최대 중첩 수만큼 받은 모디파이어는 후보에서 뺌(결정 BM4)", "verbatim": true },
           { "label": "", "text": "설정 확률(지금 0.7)로 그 입찰자 전용 목록, 아니면 범용 목록에서 비중대로 하나 → 한쪽 목록이 비면 다른 목록, 둘 다 비면 모디파이어 없이 입찰", "verbatim": true },
@@ -426,9 +497,9 @@
         "chapter": "auction",
         "layout": "screens",
         "tab": "결과",
-        "title": { "text": "3.3 모디파이어 뽑기와 다음 정착지 적용", "verbatim": true },
+        "title": { "text": "4.3 모디파이어 뽑기와 다음 정착지 적용", "verbatim": true },
         "lead": null,
-        "sectionPath": ["3. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "3.3 모디파이어 뽑기와 다음 정착지 적용"],
+        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.3 모디파이어 뽑기와 다음 정착지 적용"],
         "points": [],
         "visuals": [
           { "kind": "image", "src": "images/emergency_auction.png", "w": 1620, "h": 914, "caption": { "text": "자금이 바닥나 열린 긴급 매각 경매 — 입찰가 −20%, 보류하면 자금이 음수인 채로 24시간 뒤 파산", "verbatim": true } },
@@ -440,9 +511,9 @@
         "chapter": "auction",
         "layout": "full",
         "tab": "선택",
-        "title": { "text": "3.4 상점 구매 대신 입찰자 선택", "verbatim": true },
+        "title": { "text": "4.4 상점 구매 대신 입찰자 선택", "verbatim": true },
         "lead": null,
-        "sectionPath": ["3. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "3.4 상점 구매 대신 입찰자 선택"],
+        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.4 상점 구매 대신 입찰자 선택"],
         "points": [
           { "label": "상점 구매에서 입찰자 선택으로", "text": "장비 상점은 정답 장비가 굳고 경매는 최고가에 팔면 끝이라 단조로웠음 → 입찰자마다 다른 영구 모디파이어를 제시해, 높은 입찰가와 원하는 모디파이어 사이에서 선택이 생김", "verbatim": false },
           { "label": "합연산 대신 곱연산", "text": "합연산이면 \"전염병 피해 −100%\"처럼 효과가 0이 되거나 음수로 넘어가는 상태가 생겨 곱연산으로 바꿈", "verbatim": true },
@@ -457,9 +528,9 @@
         "chapter": "residents",
         "layout": "overview",
         "tab": "구조",
-        "title": { "text": "4.2 주택·일터·전염병의 관계", "verbatim": true },
+        "title": { "text": "5.2 주택·일터·전염병의 관계", "verbatim": true },
         "lead": { "text": "시설이 식량을 먹고 전염병이 \"효율 −%\"로만 나타나던 규칙을, 주민이 먹고 마시고 아파서 일을 못 하는 원인과 결과로 바꿈", "verbatim": false },
-        "sectionPath": ["4. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "4.2 주택·일터·전염병의 관계"],
+        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.2 주택·일터·전염병의 관계"],
         "points": [
           { "label": "", "text": "주택: 수로에서 물을 받고, 정원만큼 주민이 시간당 조금씩 차오름(생활 수준이 높을수록 빨리)", "verbatim": true },
           { "label": "", "text": "일터(우물·농장·채석장·광산 등): 필요 인원 대비 배치된 인원 비율만큼 가동", "verbatim": true },
@@ -467,8 +538,8 @@
           { "label": "", "text": "전염병: 걸릴 수 있음 / 아픔 / 면역의 감염·회복 모형. 아픈 주민은 일을 못 하고, 병원 병상에서 더 빨리 회복", "verbatim": true }
         ],
         "visuals": [
-          { "kind": "image", "sectionPath": ["4. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "4.3 주민의 식량 소비와 감염·회복 모형"], "src": "images/labor_shortage.png", "w": 1620, "h": 914, "caption": { "text": "두 번째 정착지 초반 — 시설 머리 위 일손 1/2·0/2와 왼쪽 '일손 부족' 알림", "verbatim": true } },
-          { "kind": "image", "sectionPath": ["4. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "4.3 주민의 식량 소비와 감염·회복 모형"], "src": "images/epidemic_alert.png", "w": 1620, "h": 914, "caption": { "text": "전염병 확산 중 — 왼쪽 알림에 아픈 주민 수(일 못 함)·병원 병상·면역 인원이 표시됨", "verbatim": true } }
+          { "kind": "image", "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.3 주민의 식량 소비와 감염·회복 모형"], "src": "images/labor_shortage.png", "w": 1620, "h": 914, "caption": { "text": "두 번째 정착지 초반 — 시설 머리 위 일손 1/2·0/2와 왼쪽 '일손 부족' 알림", "verbatim": true } },
+          { "kind": "image", "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.3 주민의 식량 소비와 감염·회복 모형"], "src": "images/epidemic_alert.png", "w": 1620, "h": 914, "caption": { "text": "전염병 확산 중 — 왼쪽 알림에 아픈 주민 수(일 못 함)·병원 병상·면역 인원이 표시됨", "verbatim": true } }
         ]
       },
       {
@@ -476,9 +547,9 @@
         "chapter": "residents",
         "layout": "visual",
         "tab": "흐름",
-        "title": { "text": "4.2 주택·일터·전염병의 관계", "verbatim": true },
+        "title": { "text": "5.2 주택·일터·전염병의 관계", "verbatim": true },
         "lead": null,
-        "sectionPath": ["4. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "4.2 주택·일터·전염병의 관계"],
+        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.2 주택·일터·전염병의 관계"],
         "points": [
           { "label": "", "text": "정해진 피해 곡선이 아니라 세 무리 사이를 옮겨 가는 사람 수로 계산 → 아픈 사람이 많을수록 빨리 퍼지고, 면역이 늘면 저절로 수그러듦", "verbatim": true }
         ],
@@ -491,9 +562,9 @@
         "chapter": "residents",
         "layout": "code",
         "tab": "구현",
-        "title": { "text": "4.3 주민의 식량 소비와 감염·회복 모형", "verbatim": true },
+        "title": { "text": "5.3 주민의 식량 소비와 감염·회복 모형", "verbatim": true },
         "lead": null,
-        "sectionPath": ["4. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "4.3 주민의 식량 소비와 감염·회복 모형"],
+        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.3 주민의 식량 소비와 감염·회복 모형"],
         "points": [
           { "label": "", "text": "노동력이 켜지면 식량 수요 = (주민 + 기본 인부) × 1인당 식량 → 시설이 아니라 사람이 먹음", "verbatim": true },
           { "label": "", "text": "식량 충족률이 주민 목표 인원으로 이어져, 부족의 결과가 \"주민이 떠남\" 하나로 나타남(두 번 벌하지 않음, 결정 LB5)", "verbatim": true },
@@ -508,9 +579,9 @@
         "chapter": "residents",
         "layout": "full",
         "tab": "선택",
-        "title": { "text": "4.4 기획서의 확정 결정을 뒤집음", "verbatim": true },
+        "title": { "text": "5.4 기획서의 확정 결정을 뒤집음", "verbatim": true },
         "lead": null,
-        "sectionPath": ["4. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "4.4 기획서의 확정 결정을 뒤집음"],
+        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.4 기획서의 확정 결정을 뒤집음"],
         "points": [
           { "label": "기획서의 확정 결정을 뒤집음", "text": "플레이해 보니 시설이 식량을 먹는다는 규칙이 직관적이지 않아, 기획서의 \"인구/노동력 [확정]: 삭제\"를 뒤집고 노동력을 모으고 관리하는 체계로 바꿈", "verbatim": true },
           { "label": "같은 기준을 두 규칙에 더 적용", "text": "전염병은 \"효율 −%\"보다 \"주민이 아파서 일을 못 한다\"가 더 직관적이고 이해하기 쉽다고 판단해 모형을 바꿈", "verbatim": true },
@@ -525,9 +596,9 @@
         "chapter": "verify",
         "layout": "overview",
         "tab": "구조",
-        "title": { "text": "5.2 봇 시뮬레이터와 회귀값·테스트", "verbatim": true },
+        "title": { "text": "6.2 봇 시뮬레이터와 회귀값·테스트", "verbatim": true },
         "lead": { "text": "AI가 짠 코드와 수치를 직접 다 플레이해 보지 않고도 확인하기 위해 둔 세 가지 장치 — 봇 시뮬레이터, 자동 테스트, 유지보수성 검토", "verbatim": false },
-        "sectionPath": ["5. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "5.2 봇 시뮬레이터와 회귀값·테스트"],
+        "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "6.2 봇 시뮬레이터와 회귀값·테스트"],
         "points": [
           { "label": "", "text": "시뮬레이터(`Tools/SettlementSim`): Core 소스를 그대로 링크한 .NET 콘솔. 기준 봇·숙련 봇이 캠페인을 자동으로 돌리고 D 구간별 순이익·처음 적자·파산을 출력", "verbatim": true },
           { "label": "", "text": "원본 v0.8 회귀값: 노동력 등 나중에 추가된 규칙을 끈 상태에서 기획 단계 경제 계산과 같은 값이 나오는지 고정", "verbatim": true },
@@ -544,9 +615,9 @@
         "chapter": "verify",
         "layout": "full",
         "tab": "구현",
-        "title": { "text": "5.3 유지보수성 검토로 고친 것", "verbatim": true },
+        "title": { "text": "6.3 유지보수성 검토로 고친 것", "verbatim": true },
         "lead": { "text": "유지보수성 검토를 요청해 검토 항목 12개를 받아 처리. 대부분은 게임 동작을 바꾸지 않는 정리", "verbatim": true },
-        "sectionPath": ["5. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "5.3 유지보수성 검토로 고친 것"],
+        "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "6.3 유지보수성 검토로 고친 것"],
         "points": [
           { "label": "", "text": "확인 방법: 정리할 때마다 시뮬레이터 출력 전체가 바꾸기 전과 같은지, 테스트(EditMode 178~181 · PlayMode 10)가 통과하는지 확인", "verbatim": true }
         ],
@@ -559,9 +630,9 @@
         "chapter": "verify",
         "layout": "full",
         "tab": "선택",
-        "title": { "text": "5.4 시뮬레이터를 만든 이유와 한계", "verbatim": true },
+        "title": { "text": "6.4 시뮬레이터를 만든 이유와 한계", "verbatim": true },
         "lead": { "text": "시작 자금 모디파이어 후보(숙련 봇 캠페인 20개, 시뮬레이터 `-- bottleneck`)", "verbatim": true },
-        "sectionPath": ["5. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "5.4 시뮬레이터를 만든 이유와 한계"],
+        "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "6.4 시뮬레이터를 만든 이유와 한계"],
         "points": [
           { "label": "시뮬레이터를 만든 이유", "text": "사람의 플레이 경향이나 선호도가 반영되지 않은, 수치만으로 판단할 수 있는 객관적인 데이터가 필요했음", "verbatim": true },
           { "label": "시뮬레이터가 찾은 것 — 시작 자금 폭주", "text": "범용 모디파이어 \"시작 자금 ×1.05\"가 보유 자금 전체에 곱해져, 최대 중첩 5면 정착지를 하나 거칠 때마다 +28%씩 쌓임", "verbatim": false },

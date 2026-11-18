@@ -241,7 +241,7 @@
   }
 
   // 핵심 기능(화면만): 위에 프로젝트 탭, 아래에 그 프로젝트의 기능 카드(최대 4개 한 줄).
-  //   카드 = 그림(같은 크기 틀 안에 원래 비율 그대로 — 잘리거나 늘어나지 않음) · 번호 · 기능 이름 · What · [슬라이드 열기]
+  //   카드 = 그림(같은 크기 틀 안에 원래 비율 그대로 — 잘리거나 늘어나지 않음) · 번호 · 기능 이름 · 기능 요약(summary, 없으면 What) · [슬라이드 열기]
   function keyFeatures(projects) {
     const list = projects.filter((p) => (p.highlights || []).length);
     if (!list.length) return '';
@@ -253,7 +253,7 @@
         <h3 class="kf-proj">${esc(p.title)}<span>${esc(PF.teamLabel(p.team))}</span></h3><ol class="kf-grid">${hl.map((h, j) => {
         const im = h.image?.src ? `<img src="${esc(PF.srcPath(p.id, h.image.src))}" alt="${esc(capText(h.image.caption) || h.title)}"${h.image.w && h.image.h ? ` width="${h.image.w}" height="${h.image.h}"` : ''}>` : '';
         return `<li class="kf-card"><div class="kf-media${im ? '' : ' empty'}">${im}</div>
-          <p class="kf-n">${T('en.feature')} ${pad2(j + 1)}</p><h4>${inline(h.title)}</h4>${h.what ? `<p class="kf-what">${inline(h.what)}</p>` : ''}
+          <p class="kf-n">${T('en.feature')} ${pad2(j + 1)}</p><h4>${inline(h.title)}</h4>${h.summary || h.what ? `<p class="kf-what">${inline(h.summary || h.what)}</p>` : ''}
           ${link({ href: PF.projectUrl(p.id, PF.deckSceneFor(p, h.section)), label: T('page.see-in-deck'), kind: 'page', cls: 'kf-link',
             attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-deck')} (새 탭)"` })}</li>`;
       }).join('')}</ol></div>`;
@@ -440,7 +440,7 @@
   }
 
   // ── 절 넘기기: 머리 · 대표 프로젝트 · 소개 · 핵심 기능 · 연락처를 한 화면씩 ──
-  //   휠(또는 PageDown·PageUp·Space) 한 번 = 다음(이전) 절의 맨 위로 미끄러짐. 대표 프로젝트 안에서는 먼저 프로젝트를 넘기고, 마지막에서 다음 절로.
+  //   휠(또는 PageDown·PageUp·Space·↑·↓) 한 번 = 다음(이전) 절의 맨 위로 미끄러짐. 대표 프로젝트 안에서는 먼저 프로젝트를 넘기고, 마지막에서 다음 절로.
   //   절이 화면보다 길면(메시지 칸을 펼친 연락처 등) 그 안에서는 보통 스크롤, 끝에 닿으면 다음 절로. 트랙패드 관성 휠은 넘어가는 동안 삼킴
   function bindPaging(work) {
     const paged = () => !narrowView.matches;
@@ -486,11 +486,16 @@
       const dy = Math.abs(e.deltaY) * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? innerHeight : 1);
       if ((work && work.wheel(dir)) || step(dir, dy)) { e.preventDefault(); held = true; }
     }, { passive: false });
+    // 키보드: PageDown·PageUp·Space, ↑·↓도 휠 한 번과 같게(한 번 누를 때마다 한 절 · 대표 프로젝트 안에서는 한 프로젝트)
     addEventListener('keydown', (e) => {
       if (!paged() || e.altKey || e.ctrlKey || e.metaKey) return;
-      if (e.target.closest?.('input, textarea, select, button, a, [contenteditable], [role="tab"]')) return;
-      const dir = e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey) ? 1 : e.key === 'PageUp' || (e.key === ' ' && e.shiftKey) ? -1 : 0;
+      const arrow = e.key === 'ArrowDown' || e.key === 'ArrowUp';
+      // 입력칸에서는 그대로. Space는 버튼·링크를 누르는 키라 그 위에서는 그대로, ↑↓는 버튼·링크 위에서도 넘김
+      if (e.target.closest?.(arrow ? 'input, textarea, select, [contenteditable]' : 'input, textarea, select, button, a, [contenteditable], [role="tab"]')) return;
+      const dir = e.key === 'PageDown' || e.key === 'ArrowDown' || (e.key === ' ' && !e.shiftKey) ? 1
+        : e.key === 'PageUp' || e.key === 'ArrowUp' || (e.key === ' ' && e.shiftKey) ? -1 : 0;
       if (!dir) return;
+      if (anim) { e.preventDefault(); return; }                        // 넘어가는 중(키를 꾹 누른 반복 포함)이면 한 번만 넘기고 기다림
       if ((work && work.wheel(dir)) || step(dir, innerHeight * .9)) e.preventDefault();
     });
     // 스크롤바로 절 사이 어중간한 곳에 멈추면(화면보다 짧은 절일 때만) 가까운 절 맨 위로
