@@ -254,8 +254,9 @@
         const im = h.image?.src ? `<img src="${esc(PF.srcPath(p.id, h.image.src))}" alt="${esc(capText(h.image.caption) || h.title)}"${h.image.w && h.image.h ? ` width="${h.image.w}" height="${h.image.h}"` : ''}>` : '';
         return `<li class="kf-card"><div class="kf-media${im ? '' : ' empty'}">${im}</div>
           <p class="kf-n">${T('en.feature')} ${pad2(j + 1)}</p><h4>${inline(h.title)}</h4>${h.summary || h.what ? `<p class="kf-what">${inline(h.summary || h.what)}</p>` : ''}
-          ${link({ href: PF.projectUrl(p.id, PF.deckSceneFor(p, h.section)), label: T('page.see-in-deck'), kind: 'page', cls: 'kf-link',
-            attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-deck')} (새 탭)"` })}</li>`;
+          <div class="kf-links">${link({ href: PF.projectUrl(p.id, PF.deckSceneFor(p, h.section)), label: T('page.see-in-deck'), kind: 'page', cls: 'kf-link',
+            attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-deck')} (새 탭)"` })}${link({ href: PF.docUrl(p.id, h.section ? `sec=${encodeURIComponent(h.section)}` : ''), label: T('page.see-in-doc'), kind: 'page', cls: 'kf-link',
+            attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-doc')} (새 탭)"` })}</div></li>`;
       }).join('')}</ol></div>`;
     }).join('');
     return `<section id="features" class="sec kf no-print"><div class="wrap">
@@ -283,7 +284,8 @@
     }).join('');
     const rows = hl.map((h, i) => `<li data-fi="${i}"><div class="fr-t"><p class="fk">${T('en.feature')} ${pad2(i + 1)}</p><h3>${inline(h.title)}</h3>${whw(h)}</div>
       <div class="fr-a">${link({ href: PF.projectUrl(p.id, PF.deckSceneFor(p, h.section)), label: T('page.see-in-deck'), kind: 'page', cls: 'pill',
-        attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-deck')} (새 탭)"` })}</div></li>`).join('');
+        attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-deck')} (새 탭)"` })}${link({ href: PF.docUrl(p.id, h.section ? `sec=${encodeURIComponent(h.section)}` : ''), label: T('page.see-in-doc'), kind: 'page', cls: 'pill',
+        attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-doc')} (새 탭)"` })}</div></li>`).join('');
     const body = `<div class="fe${shots.length ? '' : ' noshot'}" style="--shots:${shots.length}">${shots.length ? `<div class="shots">${tiles}</div>` : ''}
       <div class="fe-r"><ol class="flist">${rows}</ol>
         <div class="btns end no-print">${btn(PF.projectUrl(p.id), T('page.deck-all'), 'page', 'btn primary')}${btn(PF.docUrl(p.id), T('name.doc'), 'page')}</div></div></div>`;

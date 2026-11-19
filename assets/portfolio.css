@@ -236,6 +236,8 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .whw .w-why dt { background: var(--accent-2); color: #241C02; }
 .pill { display: inline-flex; align-items: center; padding: 8px 14px; border-radius: var(--pill); border: 1px solid var(--line-2); background: transparent;
         font-size: 13px; font-weight: 700; color: var(--ink); text-decoration: none; white-space: nowrap; transition: border-color .15s, background .15s, color .15s; }
+.fr-a { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (min-width: 760px) { .fr-a { flex-direction: column; align-items: stretch; } .fr-a .pill { justify-content: center; } }
 .pill:hover, li.on .pill { border-color: var(--accent-ink); background: var(--accent-soft); color: var(--accent-ink); }
 .fe-r .btns { margin-top: 20px; }
 
@@ -298,7 +300,8 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .kf-proj span { font-size: 14px; font-weight: 600; letter-spacing: 0; color: var(--muted); }
 .kf-card h4 { margin-top: 4px; font-size: 17px; font-weight: 800; line-height: 1.35; }
 .kf-what { margin-top: 6px; font-size: 14px; line-height: 1.6; color: var(--body); }
-.kf-link { align-self: flex-start; margin-top: auto; padding-top: 12px; font-size: 13px; font-weight: 700; color: var(--accent-ink); text-decoration: none; }
+.kf-links { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: auto; padding-top: 12px; }
+.kf-link { font-size: 13px; font-weight: 700; color: var(--accent-ink); text-decoration: none; }
 .kf-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 1099px) { .kf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 559px) { .kf-grid { grid-template-columns: minmax(0, 1fr); } .kf-tabs { justify-content: flex-start; } }

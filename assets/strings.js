@@ -29,6 +29,7 @@ const PFStr = (() => {
     ['page.project-no', '{en.project} {no} / {total}', '포트폴리오 페이지 · 프로젝트 절 위 작은 글', 20],
     ['page.features', '기능 소개', '포트폴리오 페이지 · 기능 절 위 작은 글(프로젝트 번호 뒤)', 8],
     ['page.see-in-deck', '{name.deck} 열기', '포트폴리오 페이지 · 기능마다 버튼', 12],
+    ['page.see-in-doc', '{name.doc-short}에서 보기', '포트폴리오 페이지 · 기능마다 버튼(상세 문서의 그 단락으로)', 12],
     ['page.deck-all', '{name.deck} 전체', '포트폴리오 페이지 · 기능 절 아래 버튼', 10],
     ['page.glance', '프로젝트 요약', '포트폴리오 페이지 · 한눈에 보기 절 제목', 12],
     ['page.nav-intro', '소개', '포트폴리오 페이지 · 맨 위 메뉴', 6],
