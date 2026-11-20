@@ -198,10 +198,13 @@
         ${p.cover ? `<a class="w-shot" href="${esc(PF.docUrl(p.id))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">${coverMotion(p)}</a>`
           : '<div class="w-shot empty" aria-hidden="true"></div>'}
         <div class="w-info">
-          <div><h3>${link({ href: PF.projectUrl(p.id), label: esc(p.title), kind: 'page' })}</h3><p class="w-kind">${pad2(i + 1)} · ${esc(PF.teamLabel(p.team))}</p>
-            ${p.tagline ? `<p class="w-tag">${inline(p.tagline)}</p>` : ''}</div>
-          <dl>${p.team?.role ? `<div><dt>${T('name.role')}</dt><dd class="w-role">${inline(p.team.role)}</dd></div>` : ''}</dl>
-          <dl>${(p.tags || []).length ? `<div><dt>${T('en.skills')}</dt><dd class="w-tags">${esc(p.tags.join(' / '))}</dd></div>` : ''}<div class="w-links">${links.join('')}</div></dl>
+          <h3>${link({ href: PF.projectUrl(p.id), label: esc(p.title), kind: 'page' })}</h3>
+          <dl class="w-cols">
+            <div class="w-col"><dt class="w-kind">${pad2(i + 1)} · ${esc(PF.teamLabel(p.team))}</dt><dd class="w-tag">${p.tagline ? inline(p.tagline) : ''}</dd></div>
+            <div class="w-col"><dt>${p.team?.role ? T('name.role') : ''}</dt><dd class="w-role">${p.team?.role ? inline(p.team.role) : ''}</dd></div>
+            <div class="w-col"><dt>${(p.tags || []).length ? T('en.skills') : ''}</dt><dd class="w-tags">${esc((p.tags || []).join(' / '))}</dd></div>
+          </dl>
+          <div class="w-links">${links.join('')}</div>
         </div></div></article>`;
     };
     return `<section id="work" class="work no-print" aria-roledescription="carousel" aria-label="${T('page.work')}"><div class="w-frame">
