@@ -161,7 +161,8 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .w-col { display: grid; grid-row: span 2; grid-template-rows: subgrid; }
 .w-info .w-cols dt, .w-info .w-kind { margin: 0; font-family: var(--display); font-size: 12px; font-weight: 700; letter-spacing: .1em; line-height: 1.4; color: var(--muted); }
 .w-info .w-cols dd { font-size: 15px; line-height: 1.65; }
-.w-links { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 40px; margin-top: 24px; justify-items: start; align-items: end; }
+.w-links { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 20px; margin-top: 24px; align-items: end; }
+.w-links > .wl { display: block; padding-bottom: 8px; }   /* 밑줄을 글 길이가 아니라 칸 폭 전체로 → 가로 한 줄을 네 칸으로 나눈 모양 */
 .w-info h3 { font-size: clamp(24px, 2.6vw, 34px); font-weight: 800; line-height: 1.15; letter-spacing: -.02em; }
 .w-info h3 a { text-decoration: none; }
 .w-info h3 a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
