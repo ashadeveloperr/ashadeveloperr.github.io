@@ -623,7 +623,7 @@
         "lead": null,
         "sectionPath": ["5.3 폭발 범위 탐색과 치킨 변환"],
         "points": [
-          {"label": "", "text": "Coroutine을 이용한 폭탄의 첫 충돌 이후 대기 → 경고 → 폭발 시퀀스", "verbatim": false},
+          {"label": "", "text": "Coroutine을 이용한 폭탄의 첫 충돌 이후 멈춤 대기 → 무작위 대기 → 경고 → 폭발 시퀀스", "verbatim": false},
           {"label": "", "text": "`Physics2D.OverlapCircleAll()`을 이용한 폭발 범위 탐색", "verbatim": true},
           {"label": "", "text": "폭발 지점과의 거리에 따른 충격량 및 회전력 적용", "verbatim": true},
           {"label": "", "text": "폭발에 노출된 닭 화물의 스프라이트·물리 머티리얼 교체와 보너스 점수 처리", "verbatim": true}
@@ -1201,7 +1201,7 @@
         "lead": null,
         "sectionPath": ["5.3 폭발 범위 탐색과 치킨 변환"],
         "points": [
-          {"label": "", "text": "Coroutine을 이용한 폭탄의 첫 충돌 이후 대기 → 경고 → 폭발 시퀀스", "verbatim": false},
+          {"label": "", "text": "Coroutine을 이용한 폭탄의 첫 충돌 이후 멈춤 대기 → 무작위 대기 → 경고 → 폭발 시퀀스", "verbatim": false},
           {"label": "", "text": "`Physics2D.OverlapCircleAll()`을 이용한 폭발 범위 탐색", "verbatim": true},
           {"label": "", "text": "폭발 지점과의 거리에 따른 충격량 및 회전력 적용", "verbatim": true},
           {"label": "", "text": "폭발에 노출된 닭 화물의 스프라이트·물리 머티리얼 교체와 보너스 점수 처리", "verbatim": true}
@@ -1381,6 +1381,6 @@
         "visuals": []
       }
     ],
-    "applied": "eb0316d5770ebf77"
+    "applied": "2c14f293846f7b53"
   }
 }
