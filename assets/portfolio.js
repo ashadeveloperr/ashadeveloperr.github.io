@@ -1,6 +1,6 @@
 // 포트폴리오 페이지(index.html) — 아래로 읽는 한 페이지 + A4 인쇄(제출 PDF)
 //   순서(에디토리얼 · 2026-11-18 이 저장소에서 고침 — /portfolio-update 뒤 다시 넣기, 작업메모 참고):
-//     머리(큰 제목 en.hero · 연락처 목록) → 대표 프로젝트(화면만, 세로 스크롤·휠·화살표로 좌우 넘김) → 소개(자기소개 + 기술 스택)
+//     머리(큰 제목 en.hero · 연락처 목록) → 대표 프로젝트(화면만, 세로 스크롤·휠·화살표로 좌우 넘김) → 핵심 기능(화면만) → 소개(자기소개 + 기술 스택, 2026-11-20 핵심 기능 뒤로)
 //     → 프로젝트마다 소개 + 기능 소개 → 한눈에 보기(인쇄만) → 연락처(이메일을 누르면 메시지 칸이 펼쳐짐, Web3Forms)
 //   기능 소개: 화면(그 기능 절의 이미지 highlights[].image만)은 왼쪽에 모으고, 기능 설명과 [슬라이드 열기]는 오른쪽 목록에 한 열로 맞춤
 //   모든 글은 data/portfolio.json·data/projects/*.json 값 그대로입니다. 절 이름·버튼 같은 UI 문구는 문구 표(PF.t, assets/strings.js + theme/strings.tsv)에서 옵니다.
@@ -128,15 +128,15 @@
     // ② 대표 프로젝트(화면만): 세로 스크롤·휠·화살표로 좌우로 넘김. 인쇄에서는 아래 프로젝트 절이 대표 이미지까지 보여 줌
     if (projects.length) out.push(work(projects, total));
 
-    // ③ 소개: 자기소개(profile.intro를 줄바꿈까지 그대로) + 기술 스택(기술마다 evidence와 근거 프로젝트)
+    // ③ 핵심 기능(화면): 프로젝트 탭 + 기능 카드(그림은 비율 그대로). 한 화면 한 절 — 대표 프로젝트 바로 뒤에 이어 봄
+    const kf = keyFeatures(projects);
+    if (kf) out.push(kf);
+
+    // ④ 소개(핵심 기능 뒤 — 자기소개·기술 스택이 앞에서 본 기능을 근거로 정리): 자기소개(profile.intro를 줄바꿈까지 그대로) + 기술 스택(기술마다 evidence와 근거 프로젝트)
     const aboutB = prof.intro ? `<div class="ab-row"><p class="ab-k">${T('page.intro')}</p><div class="about">${prof.intro.split(/\n+/).filter((l) => l.trim()).map((l) => `<p>${inline(l)}</p>`).join('')}</div></div>` : '';
     const stackB = (pf.skills || []).length ? `<div class="ab-row" id="stack"><div class="ab-k"><p>${T('page.stack')}</p><p class="ab-note">${T('page.stack-note')}</p></div><ul class="skills">${pf.skills.map((s) => `<li class="skill">
       <h3>${esc(s.name)}</h3><ul>${(s.evidence || []).map((e) => `<li><span>${inline(e.text)}</span>${byId[e.project] ? link({ href: `#p-${e.project}`, label: esc(byId[e.project].title), kind: 'anchor', cls: 'chip' }) : ''}</li>`).join('')}</ul></li>`).join('')}</ul></div>` : '';
     if (aboutB || stackB) out.push(sec('intro', t('en.about'), t('page.about'), '', `<div class="ab-grid">${aboutB}${stackB}</div>`));
-
-    // ④ 핵심 기능(화면): 프로젝트 탭 + 기능 카드(그림은 비율 그대로). 한 화면 한 절
-    const kf = keyFeatures(projects);
-    if (kf) out.push(kf);
 
     // ⑤ 프로젝트마다 소개 + 기능 소개 — 제출 PDF에만(화면에서는 ② 대표 프로젝트 · ④ 핵심 기능이 같은 역할, 자세한 글은 슬라이드·상세 문서)
     projects.forEach((p, j) => {
@@ -167,7 +167,7 @@
           .map((l) => `<span class="ex">${esc(l.label)} ${link({ href: l.url, label: `<span class="url">${esc(shortUrl(l.url))}</span>` })}</span>`).join('')}</div>`).join('')}</div>
       </div></div></footer>`);
 
-    const nav = [['work', t('page.nav-projects'), projects.length], ['intro', t('page.nav-intro'), aboutB || stackB], ['features', t('page.nav-features'), kf],
+    const nav = [['work', t('page.nav-projects'), projects.length], ['features', t('page.nav-features'), kf], ['intro', t('page.nav-intro'), aboutB || stackB],
       ['contact', t('page.nav-contact'), true]].filter((x) => x[0] && x[2]);
     root.innerHTML = `<header class="top no-print"><div class="wrap top-in">
         <a class="top-name" href="#cover">${esc(nameT)}</a>
