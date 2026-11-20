@@ -269,7 +269,7 @@
             "text": "항목마다 고른 것 / 이유 / 다른 안 / 바꾸려면을 남기고, 본인이 고른 것은 [사용자 결정](164개), AI가 고른 것은 [자동](128개)으로 구분",
             "verbatim": true
           },
-          {"label": "", "text": "작업 단위: GitHub 이슈 하나씩 \"질문 → 구현 → 시뮬레이터·Unity 테스트 → 결정 기록 갱신\" 순서", "verbatim": true},
+          {"label": "", "text": "작업 단위: GitHub 이슈(비공개 원본 저장소) 하나씩 \"질문 → 구현 → 시뮬레이터·Unity 테스트 → 결정 기록 갱신\" 순서", "verbatim": true},
           {"label": "", "text": "검증 수단: 플레이테스트 4차례, EditMode·PlayMode 테스트, 봇이 자동으로 플레이하는 .NET 시뮬레이터", "verbatim": true}
         ],
         "visuals": []
@@ -807,7 +807,7 @@
         "layout": "full",
         "tab": "구현",
         "title": {"text": "6.3 유지보수성 검토로 고친 것", "verbatim": true},
-        "lead": {"text": "유지보수성 검토를 요청해 검토 항목 12개를 받아 처리. 대부분은 게임 동작을 바꾸지 않는 정리", "verbatim": true},
+        "lead": {"text": "유지보수성 검토를 요청해 검토 항목 22개(M1~M22)를 받아 이슈 12개로 나눠 처리. 대부분은 게임 동작을 바꾸지 않는 정리", "verbatim": true},
         "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "6.3 유지보수성 검토로 고친 것"],
         "points": [
           {
@@ -939,7 +939,7 @@
             "text": "항목마다 고른 것 / 이유 / 다른 안 / 바꾸려면을 남기고, 본인이 고른 것은 [사용자 결정](164개), AI가 고른 것은 [자동](128개)으로 구분",
             "verbatim": true
           },
-          {"label": "", "text": "작업 단위: GitHub 이슈 하나씩 \"질문 → 구현 → 시뮬레이터·Unity 테스트 → 결정 기록 갱신\" 순서", "verbatim": true},
+          {"label": "", "text": "작업 단위: GitHub 이슈(비공개 원본 저장소) 하나씩 \"질문 → 구현 → 시뮬레이터·Unity 테스트 → 결정 기록 갱신\" 순서", "verbatim": true},
           {"label": "", "text": "검증 수단: 플레이테스트 4차례, EditMode·PlayMode 테스트, 봇이 자동으로 플레이하는 .NET 시뮬레이터", "verbatim": true}
         ],
         "visuals": []
@@ -1477,7 +1477,7 @@
         "layout": "full",
         "tab": "구현",
         "title": {"text": "6.3 유지보수성 검토로 고친 것", "verbatim": true},
-        "lead": {"text": "유지보수성 검토를 요청해 검토 항목 12개를 받아 처리. 대부분은 게임 동작을 바꾸지 않는 정리", "verbatim": true},
+        "lead": {"text": "유지보수성 검토를 요청해 검토 항목 22개(M1~M22)를 받아 이슈 12개로 나눠 처리. 대부분은 게임 동작을 바꾸지 않는 정리", "verbatim": true},
         "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "6.3 유지보수성 검토로 고친 것"],
         "points": [
           {
