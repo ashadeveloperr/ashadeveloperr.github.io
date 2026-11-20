@@ -2,7 +2,7 @@
   "id": "2-project-babel",
   "doc": "기술문서.md",
   "schemaVersion": 2,
-  "generatedAt": "2026-11-18",
+  "generatedAt": "2026-11-20",
   "title": "SAIL OR SUNK",
   "tagline": "물 위에 뜬 배가 기울거나 가라앉지 않도록 균형을 잡으며 화물을 던져 쌓고, 제한 시간 안에 점수를 모으는 2D 물리 게임",
   "cover": "images/cover.png",
@@ -107,6 +107,15 @@
   ],
   "troubleshooting": [
     {
+      "title": "조준 궤적과 실제 발사 방향이 다른 문제",
+      "problem": "짧게 당기거나 뒤로 당기면 조준 궤적과 실제로 날아가는 방향이 달랐습니다.",
+      "cause": "같은 드래그 보정을 두 곳에 따로 써서, 궤적(`OnDragging`)은 x < 0 → 0, 발사(`FireBlock`)는 x < 10 → 10으로 기준이 달랐습니다.",
+      "solution": "보정·계수·상한을 `CalculateLaunchForce` 하나로 모으고 궤적과 발사가 함께 쓰게 했습니다.",
+      "result": "보이는 궤적이 곧 실제 발사 힘이 되고, 기준을 바꿀 곳도 한 곳이 되었습니다.",
+      "lesson": "",
+      "section": "7.1 조준 궤적·펌프 배수·폭발 충격의 원인과 해결"
+    },
+    {
       "title": "화면 비율에 따라 UI 배치가 어긋나는 문제",
       "problem": "창 크기와 비율이 달라지면 화면 밖에 있어야 할 패널이 노출되거나 버튼과 텍스트 배치가 어긋났습니다.",
       "cause": "고정된 좌표를 기준으로 UI를 배치했습니다.",
@@ -164,7 +173,7 @@
     }
   ],
   "retro": {
-    "section": "7. 구현 결과 및 기술적 회고",
+    "section": "8. 구현 결과 및 기술적 회고",
     "achieved": [
       "물과 배, 화물이 상호작용하는 움직임은 좋은 평을 받음(07.17~18 업데이트 기획서에 정리한 피드백)",
       "화물 투척부터 선박의 물리적 반응 및 움직임, 침수 및 침몰 판정, 스테이지 정산과 업그레이드까지 연결된 게임 루프 구현",
@@ -206,6 +215,11 @@
         "title": "카메라와 UI 피드백: 지금 봐야 할 것을 따라 화면이 바뀐다",
         "sectionPath": ["6. 카메라와 UI 피드백: 지금 봐야 할 것을 따라 화면이 바뀐다"]
       },
+      {
+        "key": "codefix",
+        "title": "코드 점검: 다시 읽은 코드에서 찾은 세 문제를 원인부터 고친다",
+        "sectionPath": ["7. 코드 점검: 다시 읽은 코드에서 찾은 세 문제를 원인부터 고친다"]
+      },
       {"key": "ai", "title": "AI와 일한 방식", "sectionPath": ["AI와 일한 방식"]}
     ],
     "slides": [
@@ -218,36 +232,21 @@
         "lead": null,
         "sectionPath": ["1.1 만든 것"],
         "points": [
-          {"label": "", "text": "제한 시간 안에 화물을 선박에 투척해 최대한 많이 적재하는 2D 물리 기반 게임", "verbatim": true},
-          {"label": "", "text": "화물의 무게와 위치에 따른 선박의 출렁임과 기울어짐, 침수 및 침몰", "verbatim": true},
           {"label": "", "text": "업그레이드와 난이도 상승으로 이어지는 무한 스테이지 게임 루프", "verbatim": true},
           {
             "label": "레퍼런스",
             "text": "수박 게임·테트리스·앵그리버드 — 이 게임들의 메커니즘을 답습하는 대신 '던져서 쌓고 균형을 잡는다'는 새로운 메커니즘을 채택",
             "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "항목|내용", "sectionPath": ["SAIL OR SUNK — 2D 물리 기반 화물 적재 게임의 시스템 설계와 구현"]}]
-      },
-      {
-        "key": "goal",
-        "chapter": "overview",
-        "layout": "overview",
-        "tab": "개요",
-        "title": {"text": "1.2 목표", "verbatim": true},
-        "lead": {"text": "배로 정한 기획을 규모를 늘리기보다 최대한 완성도 있게 다듬는 것", "verbatim": true},
-        "sectionPath": ["1.2 목표"],
-        "points": [
-          {"label": "목표한 경험", "text": "물 위에서 출렁이는 배의 균형을 지키며, 바람과 무게를 계산해 화물을 던져 쌓는 경험", "verbatim": true},
+          },
+          {"label": "목표한 경험", "text": "물 위에서 출렁이는 배의 균형을 지키며, 바람과 무게를 계산해 화물을 던져 쌓는 경험", "verbatim": false},
           {
             "label": "탑에서 배로",
             "text": "안정된 지반에 블록을 쌓기만 하는 것보다 흔들리는 선체의 균형까지 고려하게 하는 편이 더 재미있다는 것을 확인함",
-            "verbatim": true
-          },
-          {"label": "", "text": "수면, 충격, 바람, 무게 등의 요소에 반응하는 선박과 화물의 자연스러운 움직임 구현", "verbatim": true},
-          {"label": "", "text": "탄도 및 무게 균형 예측, 바람 같은 환경 요소를 포함한 플레이어의 물리적 계산 유도", "verbatim": true}
+            "verbatim": false
+          }
         ],
-        "visuals": []
+        "visuals": [{"kind": "table", "n": 1, "fp": "항목|내용", "sectionPath": ["SAIL OR SUNK — 2D 물리 기반 화물 적재 게임의 시스템 설계와 구현"]}],
+        "edited": true
       },
       {
         "key": "arch",
@@ -435,7 +434,7 @@
           },
           {
             "label": "",
-            "text": "조준 궤적(`OnDragging`)도 같은 `CalculateLaunchForce`로 계산해, 궤적과 실제 발사가 같은 보정 기준을 씀(7.4)",
+            "text": "조준 궤적(`OnDragging`)도 같은 `CalculateLaunchForce`로 계산해, 궤적과 실제 발사가 같은 보정 기준을 씀(7)",
             "verbatim": true
           }
         ],
@@ -624,7 +623,7 @@
         "lead": null,
         "sectionPath": ["5.3 폭발 범위 탐색과 치킨 변환"],
         "points": [
-          {"label": "", "text": "Coroutine을 이용한 폭탄의 첫 충돌 이후 대기 → 경고 → 폭발 시퀀스", "verbatim": true},
+          {"label": "", "text": "Coroutine을 이용한 폭탄의 첫 충돌 이후 대기 → 경고 → 폭발 시퀀스", "verbatim": false},
           {"label": "", "text": "`Physics2D.OverlapCircleAll()`을 이용한 폭발 범위 탐색", "verbatim": true},
           {"label": "", "text": "폭발 지점과의 거리에 따른 충격량 및 회전력 적용", "verbatim": true},
           {"label": "", "text": "폭발에 노출된 닭 화물의 스프라이트·물리 머티리얼 교체와 보너스 점수 처리", "verbatim": true}
@@ -770,6 +769,17 @@
         ]
       },
       {
+        "key": "fixes",
+        "chapter": "codefix",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {"text": "7.1 조준 궤적·펌프 배수·폭발 충격의 원인과 해결", "verbatim": true},
+        "lead": {"text": "회고(8.3)를 쓰며 코드를 다시 읽다가 찾은 문제 세 가지를, 원인을 확인한 뒤 원본 저장소에서 고침(2026.11.17 `29826ff`)", "verbatim": true},
+        "sectionPath": ["7.1 조준 궤적·펌프 배수·폭발 충격의 원인과 해결"],
+        "points": [],
+        "visuals": [{"kind": "table", "n": 1, "fp": "문제|원인|해결|결과"}]
+      },
+      {
         "key": "ai-work",
         "chapter": "ai",
         "layout": "overview",
@@ -784,7 +794,11 @@
             "text": "결과를 직접 확인해 보니 익숙하던 클래스들이 뒤섞이고 메서드가 어디로 옮겨졌는지 알기 어려워, 리팩토링은 직접 해야 한다고 판단함",
             "verbatim": true
           },
-          {"label": "코드 점검", "text": "이 문서를 쓰며 AI와 함께 코드를 다시 읽어 찾은 세 문제를 원인을 확인한 뒤 고침(7.4)", "verbatim": true}
+          {
+            "label": "코드 점검",
+            "text": "이 문서를 쓰며 AI와 함께 코드를 다시 읽어 찾은 세 문제를 원인을 확인한 뒤 고침(7). 컴파일 오류가 없는지 확인한 뒤 직접 플레이로 검증함",
+            "verbatim": true
+          }
         ],
         "visuals": []
       }
@@ -1014,7 +1028,7 @@
           },
           {
             "label": "",
-            "text": "조준 궤적(`OnDragging`)도 같은 `CalculateLaunchForce`로 계산해, 궤적과 실제 발사가 같은 보정 기준을 씀(7.4)",
+            "text": "조준 궤적(`OnDragging`)도 같은 `CalculateLaunchForce`로 계산해, 궤적과 실제 발사가 같은 보정 기준을 씀(7)",
             "verbatim": true
           }
         ],
@@ -1203,7 +1217,7 @@
         "lead": null,
         "sectionPath": ["5.3 폭발 범위 탐색과 치킨 변환"],
         "points": [
-          {"label": "", "text": "Coroutine을 이용한 폭탄의 첫 충돌 이후 대기 → 경고 → 폭발 시퀀스", "verbatim": true},
+          {"label": "", "text": "Coroutine을 이용한 폭탄의 첫 충돌 이후 대기 → 경고 → 폭발 시퀀스", "verbatim": false},
           {"label": "", "text": "`Physics2D.OverlapCircleAll()`을 이용한 폭발 범위 탐색", "verbatim": true},
           {"label": "", "text": "폭발 지점과의 거리에 따른 충격량 및 회전력 적용", "verbatim": true},
           {"label": "", "text": "폭발에 노출된 닭 화물의 스프라이트·물리 머티리얼 교체와 보너스 점수 처리", "verbatim": true}
@@ -1349,6 +1363,17 @@
         ]
       },
       {
+        "key": "fixes",
+        "chapter": "codefix",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {"text": "7.1 조준 궤적·펌프 배수·폭발 충격의 원인과 해결", "verbatim": true},
+        "lead": {"text": "회고(8.3)를 쓰며 코드를 다시 읽다가 찾은 문제 세 가지를, 원인을 확인한 뒤 원본 저장소에서 고침(2026.11.17 `29826ff`)", "verbatim": true},
+        "sectionPath": ["7.1 조준 궤적·펌프 배수·폭발 충격의 원인과 해결"],
+        "points": [],
+        "visuals": [{"kind": "table", "n": 1, "fp": "문제|원인|해결|결과"}]
+      },
+      {
         "key": "ai-work",
         "chapter": "ai",
         "layout": "overview",
@@ -1363,11 +1388,15 @@
             "text": "결과를 직접 확인해 보니 익숙하던 클래스들이 뒤섞이고 메서드가 어디로 옮겨졌는지 알기 어려워, 리팩토링은 직접 해야 한다고 판단함",
             "verbatim": true
           },
-          {"label": "코드 점검", "text": "이 문서를 쓰며 AI와 함께 코드를 다시 읽어 찾은 세 문제를 원인을 확인한 뒤 고침(7.4)", "verbatim": true}
+          {
+            "label": "코드 점검",
+            "text": "이 문서를 쓰며 AI와 함께 코드를 다시 읽어 찾은 세 문제를 원인을 확인한 뒤 고침(7). 컴파일 오류가 없는지 확인한 뒤 직접 플레이로 검증함",
+            "verbatim": true
+          }
         ],
         "visuals": []
       }
     ],
-    "applied": "41d472f93e031c3d"
+    "applied": "0b854435f1715acc"
   }
 }
