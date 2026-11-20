@@ -813,20 +813,36 @@
         "lead": null,
         "sectionPath": ["1.1 만든 것"],
         "points": [
+          {"label": "", "text": "제한 시간 안에 화물을 선박에 투척해 최대한 많이 적재하는 2D 물리 기반 게임", "verbatim": true},
+          {"label": "", "text": "화물의 무게와 위치에 따른 선박의 출렁임과 기울어짐, 침수 및 침몰", "verbatim": true},
           {"label": "", "text": "업그레이드와 난이도 상승으로 이어지는 무한 스테이지 게임 루프", "verbatim": true},
           {
             "label": "레퍼런스",
             "text": "수박 게임·테트리스·앵그리버드 — 이 게임들의 메커니즘을 답습하는 대신 '던져서 쌓고 균형을 잡는다'는 새로운 메커니즘을 채택",
             "verbatim": true
-          },
-          {"label": "목표한 경험", "text": "물 위에서 출렁이는 배의 균형을 지키며, 바람과 무게를 계산해 화물을 던져 쌓는 경험", "verbatim": false},
-          {
-            "label": "탑에서 배로",
-            "text": "안정된 지반에 블록을 쌓기만 하는 것보다 흔들리는 선체의 균형까지 고려하게 하는 편이 더 재미있다는 것을 확인함",
-            "verbatim": false
           }
         ],
         "visuals": [{"kind": "table", "n": 1, "fp": "항목|내용", "sectionPath": ["SAIL OR SUNK — 2D 물리 기반 화물 적재 게임의 시스템 설계와 구현"]}]
+      },
+      {
+        "key": "goal",
+        "chapter": "overview",
+        "layout": "overview",
+        "tab": "개요",
+        "title": {"text": "1.2 목표", "verbatim": true},
+        "lead": {"text": "배로 정한 기획을 규모를 늘리기보다 최대한 완성도 있게 다듬는 것", "verbatim": true},
+        "sectionPath": ["1.2 목표"],
+        "points": [
+          {"label": "목표한 경험", "text": "물 위에서 출렁이는 배의 균형을 지키며, 바람과 무게를 계산해 화물을 던져 쌓는 경험", "verbatim": true},
+          {
+            "label": "탑에서 배로",
+            "text": "안정된 지반에 블록을 쌓기만 하는 것보다 흔들리는 선체의 균형까지 고려하게 하는 편이 더 재미있다는 것을 확인함",
+            "verbatim": true
+          },
+          {"label": "", "text": "수면, 충격, 바람, 무게 등의 요소에 반응하는 선박과 화물의 자연스러운 움직임 구현", "verbatim": true},
+          {"label": "", "text": "탄도 및 무게 균형 예측, 바람 같은 환경 요소를 포함한 플레이어의 물리적 계산 유도", "verbatim": true}
+        ],
+        "visuals": []
       },
       {
         "key": "arch",
