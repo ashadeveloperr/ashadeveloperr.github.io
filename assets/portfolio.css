@@ -339,7 +339,7 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
   .ab-grid .about p { font-size: clamp(16px, 1.3vw, 19px); }
   .sec.kf { display: flex; flex-direction: column; }
   .sec.kf > .wrap { flex: 1; width: 100%; display: flex; flex-direction: column; }
-  .kf-panel:not([hidden]) { margin: auto 0; }                          /* 카드 줄을 남은 높이의 가운데에 */
+  .kf-panel:not([hidden]) { margin: clamp(18px, 3vh, 36px) 0 0; }     /* (직접 고침 11/20) 세 프로젝트 탭이 모두 같은 높이에서 시작(예전: 남은 높이의 가운데 → 카드 높이마다 시작점이 달랐음) */
 }
 .ct { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; margin-top: 18px; }
 .ct-name { font-size: clamp(32px, 4.6vw, 48px); font-weight: 800; letter-spacing: -.03em; line-height: 1.15; margin-bottom: 16px; }
