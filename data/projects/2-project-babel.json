@@ -290,7 +290,7 @@
           {"label": "", "text": "입력이 열리는 상태는 `Playing` 하나뿐", "verbatim": true},
           {
             "label": "",
-            "text": "게임 시간은 `Boot`·`PreDialogue`·`Tutorial`·`Paused`·`BeforeResultDialogue`에서 멈추고, 가라앉는 연출을 보여 줄 `GameOverEffect`부터 다시 흐름",
+            "text": "게임 시간은 `Boot`·`Tutorial`·`Paused`에서 멈추고, 게임 오버(`GameOverEffect`)부터 다시 흐름. 침몰이면 가라앉는 연출을 결과창 뒤에서 계속 재생하고 결과는 바로 띄움",
             "verbatim": true
           }
         ],
@@ -868,7 +868,7 @@
           {"label": "", "text": "입력이 열리는 상태는 `Playing` 하나뿐", "verbatim": true},
           {
             "label": "",
-            "text": "게임 시간은 `Boot`·`PreDialogue`·`Tutorial`·`Paused`·`BeforeResultDialogue`에서 멈추고, 가라앉는 연출을 보여 줄 `GameOverEffect`부터 다시 흐름",
+            "text": "게임 시간은 `Boot`·`Tutorial`·`Paused`에서 멈추고, 게임 오버(`GameOverEffect`)부터 다시 흐름. 침몰이면 가라앉는 연출을 결과창 뒤에서 계속 재생하고 결과는 바로 띄움",
             "verbatim": true
           }
         ],
@@ -1381,6 +1381,6 @@
         "visuals": []
       }
     ],
-    "applied": "74920b42b3cad1bd"
+    "applied": "eb0316d5770ebf77"
   }
 }
