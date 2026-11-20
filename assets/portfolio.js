@@ -193,7 +193,7 @@
     const slide = (p, i) => {
       const L = p.links || {};
       const links = [link({ href: PF.projectUrl(p.id), label: T('name.deck'), kind: 'page', cls: 'wl main' }), link({ href: PF.docUrl(p.id), label: T('name.doc'), kind: 'page', cls: 'wl main' }),
-        isUrl(L.video) && link({ href: L.video, label: T('name.video'), kind: 'external', cls: 'wl' }), isUrl(L.github) && link({ href: L.github, label: 'GitHub', kind: 'external', cls: 'wl' })].filter(Boolean);
+        isUrl(L.video) && link({ href: L.video, label: T('name.video'), kind: 'external', cls: 'wl main' }), isUrl(L.github) && link({ href: L.github, label: 'GitHub', kind: 'external', cls: 'wl main' })].filter(Boolean);
       return `<article class="slide" aria-roledescription="slide" aria-label="${i + 1} / ${projects.length} · ${esc(p.title)}"><div class="wrap">
         ${p.cover ? `<a class="w-shot" href="${esc(PF.docUrl(p.id))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">${coverMotion(p)}</a>`
           : '<div class="w-shot empty" aria-hidden="true"></div>'}
@@ -252,7 +252,8 @@
   }
 
   // 핵심 기능(화면만): 위에 프로젝트 탭, 아래에 그 프로젝트의 기능 카드(최대 4개 한 줄).
-  //   카드 = 그림(같은 크기 틀 안에 원래 비율 그대로 — 잘리거나 늘어나지 않음) · 번호 · 기능 이름 · 기능 요약(summary, 없으면 What) · [슬라이드 열기]
+  //   카드 = 그림(같은 크기 틀 안에 원래 비율 그대로 — 잘리거나 늘어나지 않음) · 번호 · 기능 이름 · 문제(What) · 기능(summary) · [슬라이드 열기]
+  //   (직접 고침 11/20) 문제·기능 두 칸을 라벨과 함께. 카드끼리 같은 줄에 오게 subgrid(빈 칸도 자리를 지킴)
   function keyFeatures(projects) {
     const list = projects.filter((p) => (p.highlights || []).length);
     if (!list.length) return '';
@@ -264,7 +265,9 @@
         <h3 class="kf-proj">${esc(p.title)}<span>${esc(PF.teamLabel(p.team))}</span></h3><ol class="kf-grid">${hl.map((h, j) => {
         const im = h.image?.src ? `<img src="${esc(PF.srcPath(p.id, h.image.src))}" alt="${esc(capText(h.image.caption) || h.title)}"${h.image.w && h.image.h ? ` width="${h.image.w}" height="${h.image.h}"` : ''}>` : '';
         return `<li class="kf-card"><div class="kf-media${im ? '' : ' empty'}">${im}</div>
-          <p class="kf-n">${T('en.feature')} ${pad2(j + 1)}</p><h4>${inline(h.title)}</h4>${h.summary || h.what ? `<p class="kf-what">${inline(h.summary || h.what)}</p>` : ''}
+          <p class="kf-n">${T('en.feature')} ${pad2(j + 1)}</p><h4>${inline(h.title)}</h4>
+          <p class="kf-lab">${h.what ? T('page.kf-problem') : ''}</p><p class="kf-txt">${h.what ? inline(h.what) : ''}</p>
+          <p class="kf-lab">${h.summary ? T('page.kf-solution') : ''}</p><p class="kf-txt">${h.summary ? inline(h.summary) : ''}</p>
           <div class="kf-links">${link({ href: PF.projectUrl(p.id, PF.deckSceneFor(p, h.section)), label: T('page.see-in-deck'), kind: 'page', cls: 'kf-link',
             attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-deck')} (새 탭)"` })}${link({ href: PF.docUrl(p.id, h.section ? `sec=${encodeURIComponent(h.section)}` : ''), label: T('page.see-in-doc'), kind: 'page', cls: 'kf-link',
             attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-doc')} (새 탭)"` })}</div></li>`;

@@ -294,8 +294,9 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .kf-tab { padding: 4px 0; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--muted); font: 700 15px/1.3 var(--sans); cursor: pointer; }
 .kf-tab:hover { color: var(--ink); }
 .kf-tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
-.kf-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px 24px; }
-.kf-card { display: flex; flex-direction: column; min-width: 0; }
+.kf-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 28px; }
+/* (직접 고침 11/20) 카드 안 8줄(그림·번호·제목·문제 라벨·문제·기능 라벨·기능·링크)을 subgrid로 → 한 줄의 카드끼리 같은 가로선 */
+.kf-card { display: grid; grid-row: span 8; grid-template-rows: subgrid; row-gap: 0; min-width: 0; }
 /* 기능 그림 패널: GIF마다 비율이 달라 contain으로 생기는 위아래·좌우 여백을, 패널 색(어두운 프러시안 블루)으로 액자처럼 보이게 함.
    밝은 화면에서도 같은 색(게임 화면이 어두워 어울림). 인쇄는 아래 @media print에서 연한 바탕으로 */
 .kf-media { aspect-ratio: 16 / 10; display: flex; align-items: center; justify-content: center; overflow: hidden;
@@ -306,8 +307,11 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
            font-size: clamp(22px, 2.2vw, 30px); font-weight: 800; line-height: 1.2; letter-spacing: -.02em; }
 .kf-proj span { font-size: 14px; font-weight: 600; letter-spacing: 0; color: var(--muted); }
 .kf-card h4 { margin-top: 4px; font-size: 17px; font-weight: 800; line-height: 1.35; }
-.kf-what { margin-top: 6px; font-size: 14px; line-height: 1.6; color: var(--body); }
-.kf-links { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: auto; padding-top: 12px; }
+.kf-lab { margin-top: 16px; font-size: 12px; font-weight: 700; letter-spacing: .04em; color: var(--accent-ink); }
+.kf-lab:empty { margin-top: 0; }
+.kf-txt { margin-top: 4px; font-size: 14px; line-height: 1.6; color: var(--body); }
+.kf-txt:empty { margin-top: 0; }
+.kf-links { display: flex; flex-wrap: wrap; gap: 4px 18px; padding-top: 16px; align-self: end; }
 .kf-link { font-size: 13px; font-weight: 700; color: var(--accent-ink); text-decoration: none; }
 .kf-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 1099px) { .kf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
