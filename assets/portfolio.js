@@ -181,7 +181,7 @@
   }
 
   // (직접 고침 11/20) 대표 프로젝트 칸만 움직이는 대표 그림: 대표 이미지 옆의 cover-motion.webp(_local/cover-motion.py로 만듦)를 보여 주고,
-  //   그 파일이 없으면 대표 이미지로 돌아감. '동작 줄이기'를 켠 사람에게는 처음부터 대표 이미지. 상세 문서·슬라이드·인쇄는 대표 이미지 그대로
+  //   (지연 로딩은 페이지가 모든 img에 이미 걸어 둠) 그 파일이 없으면 대표 이미지로 돌아감. '동작 줄이기'를 켠 사람에게는 처음부터 대표 이미지. 상세 문서·슬라이드·인쇄는 대표 이미지 그대로
   function coverMotion(p) {
     const still = PF.srcPath(p.id, p.cover);
     const motion = PF.srcPath(p.id, p.cover.replace(/[^/]*$/, 'cover-motion.webp'));
@@ -195,7 +195,7 @@
       const links = [link({ href: PF.projectUrl(p.id), label: T('name.deck'), kind: 'page', cls: 'wl main' }), link({ href: PF.docUrl(p.id), label: T('name.doc'), kind: 'page', cls: 'wl main' }),
         isUrl(L.video) && link({ href: L.video, label: T('name.video'), kind: 'external', cls: 'wl' }), isUrl(L.github) && link({ href: L.github, label: 'GitHub', kind: 'external', cls: 'wl' })].filter(Boolean);
       return `<article class="slide" aria-roledescription="slide" aria-label="${i + 1} / ${projects.length} · ${esc(p.title)}"><div class="wrap">
-        ${p.cover ? `<a class="w-shot" href="${esc(PF.projectUrl(p.id))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">${coverMotion(p)}</a>`
+        ${p.cover ? `<a class="w-shot" href="${esc(PF.docUrl(p.id))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">${coverMotion(p)}</a>`
           : '<div class="w-shot empty" aria-hidden="true"></div>'}
         <div class="w-info">
           <div><h3>${link({ href: PF.projectUrl(p.id), label: esc(p.title), kind: 'page' })}</h3><p class="w-kind">${pad2(i + 1)} · ${esc(PF.teamLabel(p.team))}</p>
@@ -598,7 +598,8 @@
     });
   }
 
-  const eager = () => document.querySelectorAll('img[loading="lazy"]').forEach((i) => { i.loading = 'eager'; });
+  // (직접 고침 11/20) 대표 프로젝트 칸(.w-shot)은 인쇄되지 않고 움직이는 그림이 2~3MB라 미리 받지 않음(화면에 올 때 받음)
+  const eager = () => document.querySelectorAll('img[loading="lazy"]:not(.w-shot img)').forEach((i) => { i.loading = 'eager'; });
   const loaded = (i) => (i.complete ? null : new Promise((r) => {     // decode()·rAF는 쓰지 않음: 가려진 창에서 끝나지 않음(슬라이드 키트와 같은 이유)
     i.addEventListener('load', r, { once: true }); i.addEventListener('error', r, { once: true }); }));
   async function loadAll(ms) {
