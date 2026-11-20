@@ -180,6 +180,14 @@
     projIds = projects.map((p) => p.id);
   }
 
+  // (직접 고침 11/20) 대표 프로젝트 칸만 움직이는 대표 그림: 대표 이미지 옆의 cover-motion.webp(_local/cover-motion.py로 만듦)를 보여 주고,
+  //   그 파일이 없으면 대표 이미지로 돌아감. '동작 줄이기'를 켠 사람에게는 처음부터 대표 이미지. 상세 문서·슬라이드·인쇄는 대표 이미지 그대로
+  function coverMotion(p) {
+    const still = PF.srcPath(p.id, p.cover);
+    const motion = PF.srcPath(p.id, p.cover.replace(/[^/]*$/, 'cover-motion.webp'));
+    return `<picture style="display:contents"><source media="(prefers-reduced-motion: reduce)" srcset="${esc(still)}"><img src="${esc(motion)}" alt="" onerror="this.onerror=null;this.previousElementSibling.remove();this.src='${esc(still)}'"></picture>`;
+  }
+
   // 대표 프로젝트: 한 장에 한 프로젝트(대표 이미지 — 모두 같은 높이, 비율이 다르면 잘라 냄 · 제목 · 소개 · 내 역할 · 기술 · 링크)
   function work(projects, total) {
     const slide = (p, i) => {
@@ -187,7 +195,7 @@
       const links = [link({ href: PF.projectUrl(p.id), label: T('name.deck'), kind: 'page', cls: 'wl main' }), link({ href: PF.docUrl(p.id), label: T('name.doc'), kind: 'page', cls: 'wl main' }),
         isUrl(L.video) && link({ href: L.video, label: T('name.video'), kind: 'external', cls: 'wl' }), isUrl(L.github) && link({ href: L.github, label: 'GitHub', kind: 'external', cls: 'wl' })].filter(Boolean);
       return `<article class="slide" aria-roledescription="slide" aria-label="${i + 1} / ${projects.length} · ${esc(p.title)}"><div class="wrap">
-        ${p.cover ? `<a class="w-shot" href="${esc(PF.projectUrl(p.id))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="${esc(PF.srcPath(p.id, p.cover))}" alt=""></a>`
+        ${p.cover ? `<a class="w-shot" href="${esc(PF.projectUrl(p.id))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">${coverMotion(p)}</a>`
           : '<div class="w-shot empty" aria-hidden="true"></div>'}
         <div class="w-info">
           <div><h3>${link({ href: PF.projectUrl(p.id), label: esc(p.title), kind: 'page' })}</h3><p class="w-kind">${pad2(i + 1)} · ${esc(PF.teamLabel(p.team))}</p>
