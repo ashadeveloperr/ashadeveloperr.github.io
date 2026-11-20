@@ -129,6 +129,10 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .hero-g { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; align-items: end; margin-top: 20px; }
 .hero h1 { font-size: clamp(44px, 8.4vw, 124px); font-weight: 800; line-height: .98; letter-spacing: -.04em; overflow-wrap: anywhere; }
 .hero h1[lang="en"] { font-family: var(--display); letter-spacing: -.035em; }
+/* 큰 제목 아래 부제(profile.md 한 줄 정체성) — 프러시안 블루. 어두운 화면에서는 읽히도록 밝힌 강조색 */
+.hero .headline { margin-top: clamp(14px, 1.8vw, 26px); font-size: clamp(20px, 2.3vw, 32px); font-weight: 700; line-height: 1.35; letter-spacing: -.02em;
+                  color: var(--headline-ink, #003153); }
+:root[data-mode="dark"] .hero .headline { color: color-mix(in srgb, #003153 40%, #fff); }
 .hero-ct { display: grid; font-size: 14px; }
 .hc-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; width: 100%; padding: 9px 0; border: 0; border-bottom: 1px solid var(--line);
           background: none; color: var(--ink); font: inherit; text-align: left; text-decoration: none; cursor: pointer; }

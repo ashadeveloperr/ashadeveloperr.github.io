@@ -120,7 +120,7 @@
       ...profLinks.map((l) => `<li>${link({ href: l.url, label: `<span>${esc(l.label)}</span>`, kind: 'external', cls: 'hc-row' })}</li>`)].filter(Boolean);
     out.push(`<section id="cover" class="hero"><div class="wrap">
       <div class="hero-top"><p class="eyebrow">${T('en.portfolio')} · ${esc(nameT)}</p>${pf.generatedAt ? `<p class="upd">${T('page.updated', { date: pf.generatedAt })}</p>` : ''}</div>
-      <div class="hero-g"><h1${heroT !== nameT ? ' lang="en"' : ''}>${esc(heroT)}</h1>${hc.length ? `<ul class="hero-ct no-print">${hc.join('')}</ul>` : ''}</div>
+      <div class="hero-g"><div class="hero-t"><h1${heroT !== nameT ? ' lang="en"' : ''}>${esc(heroT)}</h1>${prof.headline ? `<p class="headline">${esc(prof.headline)}</p>` : ''}</div>${hc.length ? `<ul class="hero-ct no-print">${hc.join('')}</ul>` : ''}</div>
       ${printUrls([prof.email && [t('page.print-email'), prof.email, `mailto:${prof.email}`, 'mail'], isUrl(prof.github) && ['GitHub', shortUrl(prof.github), prof.github, 'external'],
         ...profLinks.map((l) => [l.label, shortUrl(l.url), l.url, 'external']), [t('page.print-web'), PF.visibleUrl('')]].filter(Boolean))}
     </div></section>`);
