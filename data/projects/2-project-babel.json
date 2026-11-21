@@ -54,7 +54,7 @@
       "what": "환경과 조건이 매번 같으면 어느 화물을 어떻게 던질지에 대한 경험이 단순해지는 문제",
       "how": "드래그 거리에 질량 비례 계수를 곱해 무게와 관계없이 같은 드래그면 같은 궤적으로 던지고, 비행 중에는 바람 힘을 가하며, 풍속은 한 번 던질 때마다 최대 풍속의 10% 안에서만 바꿉니다.",
       "why": "바람이 급격히 바뀌면 조준 경험을 쌓기 어려워, 스테이지마다 최대 풍속을 올리되 투척당 변화는 10%로 제한했습니다.",
-      "section": "3.3 발사력 계산과 바람 변화",
+      "section": "3.3 구현",
       "image": {
         "src": "images/launch_throw.gif",
         "w": 640,
@@ -68,7 +68,7 @@
       "what": "단일 부력 지점에서는 한번 균형이 무너지면 선체가 걷잡을 수 없이 회전해 뒤집히던 문제",
       "how": "좌우 부력 지점마다 잠긴 깊이에 비례한 부력과 감쇠를 `AddForceAtPosition`으로 가해, 깊이 차이가 복원 회전력이 되게 했습니다.",
       "why": "정밀한 유체 재현보다 충격에 반응하고 균형을 되찾는 움직임이 중요해, 좌우 두 지점 부력과 가장 단순한 해결인 높이별 중력 스케일을 택했습니다.",
-      "section": "4.3 수심에 비례한 부력과 중력 보정",
+      "section": "4.3 구현",
       "image": {
         "src": "images/ship_prefab_pivots.png",
         "w": 1224,
@@ -82,7 +82,7 @@
       "what": "폭탄이 적재물을 무너뜨리고 침몰 위험만 높이는 일방적인 페널티가 될 수 있던 문제",
       "how": "`BombBlock`·`ChickenBlock`을 `Block`의 상속으로 나누고, 폭발 범위의 물체에 거리별 충격을 주며 닭 화물은 `Fry()`로 치킨이 되어 추가 점수를 줍니다.",
       "why": "특수 기능을 `Block`에 더하면 갓 클래스가 될 위험이 있어 상속으로 분리했고, 폭탄의 위험이 보상도 되게 해 어디에 둘지 판단하게 했습니다.",
-      "section": "5.3 폭발 범위 탐색과 치킨 변환",
+      "section": "5.2 선택",
       "image": {
         "src": "images/bomb_explosion.gif",
         "w": 640,
@@ -96,7 +96,7 @@
       "what": "조준·비행·적재 순간마다 봐야 할 대상이 다른데 고정 카메라가 같은 화면만 보여 주던 문제",
       "how": "화물 상태에 맞춰 카메라 타깃·줌을 `Lerp()`로 바꾸고, 침수 게이지 같은 조건부 UI는 위험이 생길 때만 슬라이드시켜 등장시킵니다.",
       "why": "모든 UI를 늘 띄우면 화면을 차지해, 위험이 생겼다는 사실 자체를 UI의 등장으로 전달하고 시점은 보간해 갑자기 튀지 않게 했습니다.",
-      "section": "6.3 시점 보간과 UI 슬라이드",
+      "section": "6.2 선택",
       "image": {
         "src": "images/camera_follow.gif",
         "w": 640,
@@ -122,7 +122,7 @@
       "solution": "Canvas Scaler와 UI별 앵커를 조정하고, 화면 밖 대기 위치를 고정 좌표 대신 Canvas의 너비와 높이를 기준으로 계산하도록 바꿨습니다.",
       "result": "서로 다른 화면 비율에서도 UI의 등장 및 퇴장 방향과 화면 배치를 유지합니다.",
       "lesson": "",
-      "section": "6.4 고정 카메라 대신 시점 전환"
+      "section": "6.3 구현"
     },
     {
       "title": "단일 부력 지점에서 선체가 뒤집히는 문제",
@@ -131,7 +131,7 @@
       "solution": "선체의 좌우에 부력 적용 지점을 나눠 배치했습니다.",
       "result": "화물이 한쪽에 실려 선체가 기울면 더 깊이 잠긴 쪽이 더 큰 부력을 받아, 회전과 역회전을 반복하다 다시 균형을 잡습니다.",
       "lesson": "",
-      "section": "4.4 단일 부력 지점 대신 좌우 두 지점"
+      "section": "4.2 선택"
     }
   ],
   "screenshots": [
@@ -389,13 +389,35 @@
         "visuals": [{"kind": "code", "n": 1, "fp": "int baseClosing = InStageLootValue - maintenanceCost;"}]
       },
       {
+        "key": "throw-choice",
+        "chapter": "throw",
+        "layout": "full",
+        "tab": "선택",
+        "title": {"text": "3.2 선택", "verbatim": true},
+        "lead": {"text": "바람이 급격히 강해지거나 방향이 바뀌면 플레이어가 조준 경험을 분석·축적하기 어려웠음", "verbatim": false},
+        "sectionPath": ["3.2 선택"],
+        "points": [
+          {
+            "label": "랜덤 요소를 통한 게임 플레이 단순화 방지",
+            "text": "던질 때마다 풍속이 바뀌어 매번 탄도를 다시 읽게 하고, 화물의 크기와 질량은 정해진 범위 안에서 무작위로 바뀌어 어디에 실을지(부딪힘·쌓임·선체 기울기)를 다시 판단하도록 설계",
+            "verbatim": true
+          },
+          {
+            "label": "구름을 시각적 피드백 요소로 활용",
+            "text": "풍향·풍속을 수치로만 표시하는 대신 구름의 이동 방향과 속도로 표현하게 되면서 플레이어가 직관적으로 바람을 감지할 수 있는 피드백 요소로 재설계",
+            "verbatim": false
+          }
+        ],
+        "visuals": [{"kind": "table", "n": 1, "fp": "|대안 A. 제한 없는 무작위 바람|대안 B. 스테이지별 최대 풍속 + 투척당 10% 이내 변화 (선택)"}]
+      },
+      {
         "key": "throw-structure",
         "chapter": "throw",
         "layout": "overview",
         "tab": "구조",
-        "title": {"text": "3.2 입력과 물리의 역할 분리", "verbatim": true},
+        "title": {"text": "3.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["3.2 입력과 물리의 역할 분리"],
+        "sectionPath": ["3.3 구현"],
         "points": [
           {"label": "", "text": "`PlayerController`는 입력, `Block`은 물리를 처리하도록 역할 및 책임 분리", "verbatim": true},
           {
@@ -411,7 +433,7 @@
             "w": 836,
             "h": 464,
             "caption": {"text": "1스테이지 투척 — 예상 궤적과 풍향·풍속 표시", "verbatim": true},
-            "sectionPath": ["3.1 질량 보정·탄도 예측·바람을 묶은 발사"]
+            "sectionPath": ["3.2 선택"]
           }
         ]
       },
@@ -420,11 +442,15 @@
         "chapter": "throw",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "3.3 발사력 계산과 바람 변화", "verbatim": true},
+        "title": {"text": "3.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["3.3 발사력 계산과 바람 변화"],
+        "sectionPath": ["3.3 구현"],
         "points": [
-          {"label": "", "text": "드래그 거리에 질량 비례 계수를 곱한 발사 충격량 — 무게가 달라도 같은 드래그면 같은 초기 속도", "verbatim": true},
+          {
+            "label": "발사 힘을 질량으로 보정",
+            "text": "발사 힘을 질량에 비례하게 보정해 같은 드래그면 같은 궤적으로 날아가게 하고, 무게는 날아갈 때보다 부딪히고 실린 뒤에 영향을 주도록 디자인함",
+            "verbatim": true
+          },
           {
             "label": "",
             "text": "드래그 벡터의 x가 `MinLaunchDragX`(10)보다 작으면 10으로 보정하고, 질량 비례 계수(`forceMultiplier` = 질량/1.5, 충격량에서 질량이 상쇄돼 초기 속도는 드래그로만 정해짐)를 곱한 뒤 `maxForce`로 상한을 둠",
@@ -443,9 +469,9 @@
         "chapter": "throw",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "3.3 발사력 계산과 바람 변화", "verbatim": true},
+        "title": {"text": "3.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["3.3 발사력 계산과 바람 변화"],
+        "sectionPath": ["3.3 구현"],
         "points": [
           {
             "label": "",
@@ -458,56 +484,34 @@
         "visuals": [{"kind": "code", "n": 3, "fp": "public void ChangeWindForNextThrow()"}]
       },
       {
-        "key": "throw-choice",
-        "chapter": "throw",
-        "layout": "overview",
+        "key": "buoy-choice",
+        "chapter": "buoyancy",
+        "layout": "full",
         "tab": "선택",
-        "title": {"text": "3.4 무작위 바람 대신 점진적 변화", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["3.4 무작위 바람 대신 점진적 변화"],
+        "title": {"text": "4.2 선택", "verbatim": true},
+        "lead": {"text": "선체가 z축으로 회전과 역회전을 반복하며 균형을 잡는 복원 움직임이 반드시 필요했음", "verbatim": false},
+        "sectionPath": ["4.2 선택"],
         "points": [
-          {
-            "label": "랜덤 요소를 통한 게임 플레이 단순화 방지",
-            "text": "던질 때마다 풍속이 바뀌어 매번 탄도를 다시 읽게 하고, 화물의 크기와 질량은 정해진 범위 안에서 무작위로 바뀌어 어디에 실을지(부딪힘·쌓임·선체 기울기)를 다시 판단하도록 설계",
-            "verbatim": true
-          },
-          {
-            "label": "구름을 시각적 피드백 요소로 활용",
-            "text": "풍향·풍속을 수치로만 표시하는 대신 구름의 이동 방향과 속도로 표현하게 되면서 플레이어가 직관적으로 바람을 감지할 수 있는 피드백 요소로 재설계",
-            "verbatim": true
-          },
-          {
-            "label": "무작위 바람과 점진적 변화 방식의 선택",
-            "text": "스테이지가 올라갈 때마다 최대 풍속을 늘리되, 한 스테이지 안에서는 투척할 때마다 풍속의 무작위 변화량을 최대 풍속의 10% 이내로 제한",
-            "verbatim": true
-          }
+          {"label": "결과", "text": "화물이 한쪽에 실려 선체가 기울면 더 깊이 잠긴 쪽이 더 큰 부력을 받아, 회전과 역회전을 반복하다 다시 균형을 잡음", "verbatim": true},
+          {"label": "", "text": "뒤집히는 대신 갑판이 물에 잠겨 침수 게이지가 차는 것이 실패로 이어지는 흐름이 됨", "verbatim": true}
         ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/launch_throw.gif",
-            "w": 640,
-            "h": 400,
-            "caption": {"text": "바람 6.7m/s에서 예상 궤적을 따라 상자를 던져 범선에 싣는 모습", "verbatim": true},
-            "sectionPath": ["3.3 발사력 계산과 바람 변화"]
-          }
-        ]
+        "visuals": [{"kind": "table", "n": 1, "fp": "|대안 A. 단일 부력 지점|대안 B. 좌우 2개 부력 지점 (선택)"}]
       },
       {
         "key": "buoy-structure",
         "chapter": "buoyancy",
         "layout": "overview",
         "tab": "구조",
-        "title": {"text": "4.2 부력 지점과 침수 판정 지점", "verbatim": true},
+        "title": {"text": "4.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["4.2 부력 지점과 침수 판정 지점"],
+        "sectionPath": ["4.3 구현"],
         "points": [
           {"label": "", "text": "Rigidbody2D 기반 선체와 가상 수면 구현", "verbatim": true},
           {"label": "", "text": "좌우 2개 부력 적용 지점 : 부력으로 물 위에 떠 있는 선박의 움직임 구현", "verbatim": true},
           {"label": "", "text": "갑판 3개 침수 판정 지점 : 침수 게이지와 게임 오버 판정으로 연결", "verbatim": true},
           {
             "label": "",
-            "text": "중력 스케일(`rb.gravityScale`)을 상황에 따라 바꿈: 평소에는 수면 위로 올라간 높이에 따라 0.1~0.5(4.3), 침몰 시에는 점점 키워 부력을 압도해 서서히 가라앉게 함",
+            "text": "중력 스케일(`rb.gravityScale`)을 상황에 따라 바꿈: 평소에는 수면 위로 올라간 높이에 따라 0.1~0.5, 침몰 시에는 점점 키워 부력을 압도해 서서히 가라앉게 함",
             "verbatim": true
           }
         ],
@@ -518,7 +522,7 @@
             "w": 640,
             "h": 400,
             "caption": {"text": "화물을 계속 싣자 침수 게이지가 나타나 차오르고, 카누가 가라앉아 SUNK... 결과창이 뜨는 모습", "verbatim": true},
-            "sectionPath": ["4.3 수심에 비례한 부력과 중력 보정"]
+            "sectionPath": ["4.2 선택"]
           }
         ]
       },
@@ -527,21 +531,25 @@
         "chapter": "buoyancy",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "4.3 수심에 비례한 부력과 중력 보정", "verbatim": true},
+        "title": {"text": "4.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["4.3 수심에 비례한 부력과 중력 보정"],
+        "sectionPath": ["4.3 구현"],
         "points": [
           {
             "label": "",
-            "text": "좌우 부력 적용 지점마다 수심에 비례한 부력을 가해, 더 깊이 잠긴 쪽이 더 큰 힘을 받으면서 생기는 회전력으로 선박의 복원력 구현",
+            "text": "부력 지점마다 수심(`depth`)에 비례한 부력에 그 지점의 세로 속도로 감쇠를 더해 `AddForceAtPosition`으로 가함 → 좌우 깊이 차이가 회전력이 되어 복원 움직임이 생김",
             "verbatim": true
           },
           {
-            "label": "",
-            "text": "선체가 가상의 수면 높이에 머무르도록, 수심에 따라 바뀌는 중력 계수(0.1~0.5)와 선체 질량에 비례한 기본 부력 값을 찾아 균형을 맞춤",
+            "label": "상황에 따라 선체에 유동적인 `rb.gravityScale` 값 적용",
+            "text": "높이에 따라 중력 스케일을 바꿔, 부력으로 인해 선체가 하늘로 날아오르는 현상을 막음",
             "verbatim": true
           },
-          {"label": "", "text": "갑판의 침수 여부에 따른 침수도의 상승과 하강으로 플레이어에게 게임 오버 위험을 직관적으로 전달", "verbatim": true}
+          {
+            "label": "선박 업그레이드로 인한 선체의 크기와 형태, 질량 변화에 대응",
+            "text": "업그레이드 단계별 선박을 개별 프리팹으로 구성하고, 각 선체의 형태에 맞게 부력 적용 지점과 침수 판정 지점을 조정함",
+            "verbatim": false
+          }
         ],
         "visuals": [
           {
@@ -555,54 +563,39 @@
         ]
       },
       {
-        "key": "buoy-choice",
-        "chapter": "buoyancy",
-        "layout": "overview",
+        "key": "cargo-choice",
+        "chapter": "cargo",
+        "layout": "full",
         "tab": "선택",
-        "title": {"text": "4.4 단일 부력 지점 대신 좌우 두 지점", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["4.4 단일 부력 지점 대신 좌우 두 지점"],
+        "title": {"text": "5.2 선택", "verbatim": true},
+        "lead": {"text": "일반 화물에 폭발이나 상태 변화 등의 기능을 추가하면 `Block`이 갓 클래스가 될 위험이 있었음", "verbatim": false},
+        "sectionPath": ["5.2 선택"],
         "points": [
           {
-            "label": "침몰을 스테이지 실패 조건으로 삼은 이유",
-            "text": "실패 조건을 직관적으로 정하기 어렵고 물 위에 뜬 선박의 움직임도 부자연스러워, 이 제약을 없애고 침몰을 스테이지 실패의 직접적인 조건으로 바꿈",
-            "verbatim": true
-          },
-          {
-            "label": "단일 부력 지점에서 좌우 2지점 구조로 변경",
-            "text": "화물이 한쪽에 실려 선체가 기울면 더 깊이 잠긴 쪽이 더 큰 부력을 받아, 회전과 역회전을 반복하다 다시 균형을 잡음",
-            "verbatim": true
-          },
-          {
-            "label": "상황에 따라 선체에 유동적인 `rb.gravityScale` 값 적용",
-            "text": "높이에 따라 중력 스케일을 바꿔(4.3), 부력으로 인해 선체가 하늘로 날아오르는 현상을 막음",
-            "verbatim": true
-          },
-          {
-            "label": "선박 업그레이드로 인한 선체의 크기와 형태, 질량 변화에 대응",
-            "text": "업그레이드 단계별 선박을 개별 프리팹으로 구성하고, 각 선체의 형태에 맞게 부력 적용 지점과 침수 판정 지점을 조정함",
+            "label": "",
+            "text": "컨셉 기획서에서 정한 공통 블록 + 상호작용 블록 상속 구조(기획서에서는 `BaseBlock`·`InteractionBlock`이라 부름)를 실제 구현으로 옮긴 것",
             "verbatim": true
           }
         ],
-        "visuals": []
+        "visuals": [{"kind": "table", "n": 1, "fp": "|대안 A. Block 하나에 조건문 추가|대안 B. Block 상속 클래스로 분리 (선택)"}]
       },
       {
         "key": "cargo-structure",
         "chapter": "cargo",
-        "layout": "overview",
-        "tab": "구조",
-        "title": {"text": "5.2 Block을 상속한 폭탄과 닭", "verbatim": true},
+        "layout": "visual",
+        "tab": "결과",
+        "title": {"text": "5.2 선택", "verbatim": true},
         "lead": null,
-        "sectionPath": ["5.2 Block을 상속한 폭탄과 닭"],
+        "sectionPath": ["5.2 선택"],
         "points": [
           {
-            "label": "",
-            "text": "`BombBlock`과 `ChickenBlock`을 `Block`의 상속 클래스로 분리하여 `Block`의 기능을 유지한 채로 폭발 및 상태 변화 등 독립적인 기능 추가",
+            "label": "폭탄의 위험을 보상으로 연결하는 게임플레이 설계",
+            "text": "이 규칙을 발견한 플레이어에게는 위험한 폭탄이 단순한 페널티가 아니라, 어디에 배치하는 것이 최선일지 판단하는 요소가 됨",
             "verbatim": true
           },
           {
-            "label": "",
-            "text": "`BombBlock`의 폭발 범위 내에서 `ChickenBlock`을 탐색해 `Fry()`를 호출하고, 닭 화물의 상태 변화 및 점수 추가 처리",
+            "label": "일부러 알려 주지 않은 이스터에그",
+            "text": "시범 플레이에서 이를 발견한 테스터가 상상도 못 했다며 즐거워했고, 이런 것이 또 있지 않을까 하는 기대감이 들었다고 함",
             "verbatim": true
           }
         ],
@@ -615,8 +608,7 @@
             "caption": {
               "text": "폭탄이 빨갛게 흔들리며 경고한 뒤 터지면, 범위 안의 상자는 튕겨 나가고 닭 화물은 치킨으로 바뀌는 모습 (0.5배속, 폭발 대기 시간을 5초로 고정해 촬영)",
               "verbatim": true
-            },
-            "sectionPath": ["5.3 폭발 범위 탐색과 치킨 변환"]
+            }
           }
         ]
       },
@@ -625,13 +617,16 @@
         "chapter": "cargo",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "5.3 폭발 범위 탐색과 치킨 변환", "verbatim": true},
+        "title": {"text": "5.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["5.3 폭발 범위 탐색과 치킨 변환"],
+        "sectionPath": ["5.3 구현"],
         "points": [
-          {"label": "", "text": "Coroutine을 이용한 폭탄의 첫 충돌 이후 멈춤 대기 → 무작위 대기 → 경고 → 폭발 시퀀스", "verbatim": false},
-          {"label": "", "text": "`Physics2D.OverlapCircleAll()`을 이용한 폭발 범위 탐색", "verbatim": true},
-          {"label": "", "text": "폭발 지점과의 거리에 따른 충격량 및 회전력 적용", "verbatim": true},
+          {"label": "", "text": "Coroutine을 이용한 폭탄의 첫 충돌 이후 무작위 대기 → 경고 → 폭발 시퀀스", "verbatim": true},
+          {
+            "label": "",
+            "text": "폭발 범위의 물체마다 거리에 따라 충격량을 줄이되 `minimumForceRatio` 이상은 보장하고, 무작위 회전력을 더함",
+            "verbatim": true
+          },
           {"label": "", "text": "폭발에 노출된 닭 화물의 스프라이트·물리 머티리얼 교체와 보너스 점수 처리", "verbatim": true}
         ],
         "visuals": [
@@ -644,45 +639,33 @@
         ]
       },
       {
-        "key": "cargo-choice",
-        "chapter": "cargo",
-        "layout": "overview",
+        "key": "fb-choice",
+        "chapter": "feedback",
+        "layout": "full",
         "tab": "선택",
-        "title": {"text": "5.4 조건문 추가 대신 상속 분리", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["5.4 조건문 추가 대신 상속 분리"],
-        "points": [
+        "title": {"text": "6.2 선택", "verbatim": true},
+        "lead": {"text": "화물을 조준하는 순간과 발사된 화물의 비행 과정, 선박에 적재된 결과를 확인하는 순간에 플레이어가 집중해야 할 대상이 서로 달랐음", "verbatim": false},
+        "sectionPath": ["6.2 선택"],
+        "points": [{"label": "", "text": "시점이 갑자기 이동하는 대신 위치와 줌을 보간하여 자연스럽게 연결되도록 구현", "verbatim": true}],
+        "visuals": [
+          {"kind": "table", "n": 1, "fp": "|대안 A. 고정 카메라 (초기 구현)|대안 B. 플레이 상태에 따른 시점 전환 (선택)"},
           {
-            "label": "공통 화물의 동작을 유지하면서 특수 기능 확장",
-            "text": "`Block`에 특수 기능을 더하면 갓 클래스가 될 위험 → 공통 기능은 `Block`에서, 폭탄의 폭발 시퀀스와 치킨의 상태 변화는 각각의 상속 클래스에서 처리",
-            "verbatim": false
-          },
-          {
-            "label": "최종 선택: 대안 B",
-            "text": "컨셉 기획서에서 정한 공통 블록 + 상호작용 블록 상속 구조(기획서에서는 `BaseBlock`·`InteractionBlock`이라 부름)를 실제 구현으로 옮긴 것",
-            "verbatim": true
-          },
-          {
-            "label": "폭탄의 위험을 보상으로 연결하는 게임플레이 설계",
-            "text": "이 규칙을 발견한 플레이어에게는 위험한 폭탄이 단순한 페널티가 아니라, 어디에 배치하는 것이 최선일지 판단하는 요소가 됨",
-            "verbatim": true
-          },
-          {
-            "label": "일부러 알려 주지 않은 이스터에그",
-            "text": "시범 플레이에서 이를 발견한 테스터가 상상도 못 했다며 즐거워했고, 이런 것이 또 있지 않을까 하는 기대감이 들었다고 함",
-            "verbatim": true
+            "kind": "image",
+            "src": "images/camera_follow.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {"text": "조준할 때는 화물과 궤적을, 날아가는 동안에는 화물을 따라가고, 착지하면 선박으로 돌아오는 카메라 시점 전환", "verbatim": true}
           }
-        ],
-        "visuals": []
+        ]
       },
       {
         "key": "fb-structure",
         "chapter": "feedback",
         "layout": "overview",
         "tab": "구조",
-        "title": {"text": "6.2 카메라 타깃과 UI 패널의 역할", "verbatim": true},
+        "title": {"text": "6.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["6.2 카메라 타깃과 UI 패널의 역할"],
+        "sectionPath": ["6.3 구현"],
         "points": [
           {
             "label": "",
@@ -692,8 +675,13 @@
           {"label": "", "text": "`GameManager`의 침수도와 게임 진행 상태를 참조하여 인게임 UI와 결과 화면의 표시 상태 제어", "verbatim": true},
           {
             "label": "",
-            "text": "위치와 기능에 따라 분할된 UI 패널마다 `RectTransform`의 포지션을 조정하는 방식으로 등장·퇴장 시점과 연출 관리",
+            "text": "`RectTransform.anchoredPosition`과 `Lerp()`를 이용한 인게임 UI, 침수 게이지, 결과 화면의 슬라이드 전환 연출",
             "verbatim": true
+          },
+          {
+            "label": "화면 비율 변경에 따른 UI 배치 문제 해결",
+            "text": "Canvas Scaler와 UI별 앵커를 조정하고, 화면 밖 대기 위치를 고정 좌표 대신 Canvas의 너비와 높이를 기준으로 계산하도록 변경함",
+            "verbatim": false
           }
         ],
         "visuals": [
@@ -702,8 +690,7 @@
             "src": "images/flood_gauge.png",
             "w": 838,
             "h": 468,
-            "caption": {"text": "3스테이지 — 침수가 시작되면 오른쪽에 나타나는 침수 게이지와 CAUTION 표시", "verbatim": true},
-            "sectionPath": ["6.3 시점 보간과 UI 슬라이드"]
+            "caption": {"text": "3스테이지 — 침수가 시작되면 오른쪽에 나타나는 침수 게이지와 CAUTION 표시", "verbatim": true}
           }
         ]
       },
@@ -712,11 +699,10 @@
         "chapter": "feedback",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "6.3 시점 보간과 UI 슬라이드", "verbatim": true},
+        "title": {"text": "6.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["6.3 시점 보간과 UI 슬라이드"],
+        "sectionPath": ["6.3 구현"],
         "points": [
-          {"label": "", "text": "`Block`의 조준, 비행, 적재 상태에 따른 카메라 타깃과 줌 변경 및 `Lerp()`를 이용한 부드러운 시점 전환", "verbatim": true},
           {
             "label": "",
             "text": "`SetCameraTarget`은 타깃·오프셋·줌 목표만 바꾸고, `CameraWork`가 매 프레임 위치와 `orthographicSize`를 `Lerp`로 따라감",
@@ -730,47 +716,6 @@
             "n": 1,
             "lines": [18, 33],
             "fp": "public void SetCameraTarget(Transform newTarget, Vector3 off"
-          }
-        ]
-      },
-      {
-        "key": "fb-choice",
-        "chapter": "feedback",
-        "layout": "overview",
-        "tab": "선택",
-        "title": {"text": "6.4 고정 카메라 대신 시점 전환", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["6.4 고정 카메라 대신 시점 전환"],
-        "points": [
-          {
-            "label": "고정 카메라에서 플레이 상태에 따른 시점 전환으로 변경",
-            "text": "조준 중에는 화물과 예상 궤적을 보여주고, 발사 후에는 비행하는 화물을 확대해 추적하며, 충돌 이후에는 선박으로 시점을 복귀시키도록 변경함",
-            "verbatim": false
-          },
-          {
-            "label": "게임 정보의 중요도에 따른 UI 표시 방식 구분",
-            "text": "침수 게이지는 침수가 진행될 때만 화면 오른쪽에서 등장시켜, 위험이 발생했다는 사실 자체를 UI의 등장으로 전달",
-            "verbatim": false
-          },
-          {
-            "label": "화면 비율 변경에 따른 UI 배치 문제 해결",
-            "text": "Canvas Scaler와 UI별 앵커를 조정하고, 화면 밖 대기 위치를 고정 좌표 대신 Canvas의 너비와 높이를 기준으로 계산하도록 변경함",
-            "verbatim": true
-          },
-          {
-            "label": "UI 조작과 화물 투척 입력이 충돌하는 문제 해결",
-            "text": "`IsPointerOverGameObject()`로 UI 위 클릭을 드래그 시작에서 빼, 일시정지 버튼을 누르고 재개해도 화물이 발사되지 않음",
-            "verbatim": false
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/camera_follow.gif",
-            "w": 640,
-            "h": 400,
-            "caption": {"text": "조준할 때는 화물과 궤적을, 날아가는 동안에는 화물을 따라가고, 착지하면 선박으로 돌아오는 카메라 시점 전환", "verbatim": true},
-            "sectionPath": ["6.3 시점 보간과 UI 슬라이드"]
           }
         ]
       },
@@ -831,6 +776,26 @@
             "text": "안정된 지반에 블록을 쌓기만 하는 것보다 흔들리는 선체의 균형까지 고려하게 하는 편이 더 재미있다는 것을 확인함",
             "verbatim": false
           }
+        ],
+        "visuals": []
+      },
+      {
+        "key": "goal",
+        "chapter": "overview",
+        "layout": "overview",
+        "tab": "개요",
+        "title": {"text": "1.2 목표", "verbatim": true},
+        "lead": {"text": "배로 정한 기획을 규모를 늘리기보다 최대한 완성도 있게 다듬는 것", "verbatim": true},
+        "sectionPath": ["1.2 목표"],
+        "points": [
+          {"label": "목표한 경험", "text": "물 위에서 출렁이는 배의 균형을 지키며, 바람과 무게를 계산해 화물을 던져 쌓는 경험", "verbatim": true},
+          {
+            "label": "탑에서 배로",
+            "text": "안정된 지반에 블록을 쌓기만 하는 것보다 흔들리는 선체의 균형까지 고려하게 하는 편이 더 재미있다는 것을 확인함",
+            "verbatim": true
+          },
+          {"label": "구현 목표", "text": "수면·충격·바람·무게에 반응해 출렁이다 균형을 되찾는 선박과 화물(4장)", "verbatim": true},
+          {"label": "구현 목표", "text": "예상 궤적과 바람 표시로 플레이어가 탄도와 무게 균형을 계산하게 함(3장)", "verbatim": true}
         ],
         "visuals": []
       },
@@ -973,13 +938,35 @@
         "visuals": [{"kind": "code", "n": 1, "fp": "int baseClosing = InStageLootValue - maintenanceCost;"}]
       },
       {
+        "key": "throw-choice",
+        "chapter": "throw",
+        "layout": "full",
+        "tab": "선택",
+        "title": {"text": "3.2 선택", "verbatim": true},
+        "lead": {"text": "바람이 급격히 강해지거나 방향이 바뀌면 플레이어가 조준 경험을 분석·축적하기 어려웠음", "verbatim": false},
+        "sectionPath": ["3.2 선택"],
+        "points": [
+          {
+            "label": "랜덤 요소를 통한 게임 플레이 단순화 방지",
+            "text": "던질 때마다 풍속이 바뀌어 매번 탄도를 다시 읽게 하고, 화물의 크기와 질량은 정해진 범위 안에서 무작위로 바뀌어 어디에 실을지(부딪힘·쌓임·선체 기울기)를 다시 판단하도록 설계",
+            "verbatim": true
+          },
+          {
+            "label": "구름을 시각적 피드백 요소로 활용",
+            "text": "풍향·풍속을 수치로만 표시하는 대신 구름의 이동 방향과 속도로 표현하게 되면서 플레이어가 직관적으로 바람을 감지할 수 있는 피드백 요소로 재설계",
+            "verbatim": false
+          }
+        ],
+        "visuals": [{"kind": "table", "n": 1, "fp": "|대안 A. 제한 없는 무작위 바람|대안 B. 스테이지별 최대 풍속 + 투척당 10% 이내 변화 (선택)"}]
+      },
+      {
         "key": "throw-structure",
         "chapter": "throw",
         "layout": "overview",
         "tab": "구조",
-        "title": {"text": "3.2 입력과 물리의 역할 분리", "verbatim": true},
+        "title": {"text": "3.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["3.2 입력과 물리의 역할 분리"],
+        "sectionPath": ["3.3 구현"],
         "points": [
           {"label": "", "text": "`PlayerController`는 입력, `Block`은 물리를 처리하도록 역할 및 책임 분리", "verbatim": true},
           {
@@ -995,7 +982,7 @@
             "w": 836,
             "h": 464,
             "caption": {"text": "1스테이지 투척 — 예상 궤적과 풍향·풍속 표시", "verbatim": true},
-            "sectionPath": ["3.1 질량 보정·탄도 예측·바람을 묶은 발사"]
+            "sectionPath": ["3.2 선택"]
           }
         ]
       },
@@ -1004,11 +991,15 @@
         "chapter": "throw",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "3.3 발사력 계산과 바람 변화", "verbatim": true},
+        "title": {"text": "3.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["3.3 발사력 계산과 바람 변화"],
+        "sectionPath": ["3.3 구현"],
         "points": [
-          {"label": "", "text": "드래그 거리에 질량 비례 계수를 곱한 발사 충격량 — 무게가 달라도 같은 드래그면 같은 초기 속도", "verbatim": true},
+          {
+            "label": "발사 힘을 질량으로 보정",
+            "text": "발사 힘을 질량에 비례하게 보정해 같은 드래그면 같은 궤적으로 날아가게 하고, 무게는 날아갈 때보다 부딪히고 실린 뒤에 영향을 주도록 디자인함",
+            "verbatim": true
+          },
           {
             "label": "",
             "text": "드래그 벡터의 x가 `MinLaunchDragX`(10)보다 작으면 10으로 보정하고, 질량 비례 계수(`forceMultiplier` = 질량/1.5, 충격량에서 질량이 상쇄돼 초기 속도는 드래그로만 정해짐)를 곱한 뒤 `maxForce`로 상한을 둠",
@@ -1027,9 +1018,9 @@
         "chapter": "throw",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "3.3 발사력 계산과 바람 변화", "verbatim": true},
+        "title": {"text": "3.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["3.3 발사력 계산과 바람 변화"],
+        "sectionPath": ["3.3 구현"],
         "points": [
           {
             "label": "",
@@ -1042,56 +1033,34 @@
         "visuals": [{"kind": "code", "n": 3, "fp": "public void ChangeWindForNextThrow()"}]
       },
       {
-        "key": "throw-choice",
-        "chapter": "throw",
-        "layout": "overview",
+        "key": "buoy-choice",
+        "chapter": "buoyancy",
+        "layout": "full",
         "tab": "선택",
-        "title": {"text": "3.4 무작위 바람 대신 점진적 변화", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["3.4 무작위 바람 대신 점진적 변화"],
+        "title": {"text": "4.2 선택", "verbatim": true},
+        "lead": {"text": "선체가 z축으로 회전과 역회전을 반복하며 균형을 잡는 복원 움직임이 반드시 필요했음", "verbatim": false},
+        "sectionPath": ["4.2 선택"],
         "points": [
-          {
-            "label": "랜덤 요소를 통한 게임 플레이 단순화 방지",
-            "text": "던질 때마다 풍속이 바뀌어 매번 탄도를 다시 읽게 하고, 화물의 크기와 질량은 정해진 범위 안에서 무작위로 바뀌어 어디에 실을지(부딪힘·쌓임·선체 기울기)를 다시 판단하도록 설계",
-            "verbatim": true
-          },
-          {
-            "label": "구름을 시각적 피드백 요소로 활용",
-            "text": "풍향·풍속을 수치로만 표시하는 대신 구름의 이동 방향과 속도로 표현하게 되면서 플레이어가 직관적으로 바람을 감지할 수 있는 피드백 요소로 재설계",
-            "verbatim": true
-          },
-          {
-            "label": "무작위 바람과 점진적 변화 방식의 선택",
-            "text": "스테이지가 올라갈 때마다 최대 풍속을 늘리되, 한 스테이지 안에서는 투척할 때마다 풍속의 무작위 변화량을 최대 풍속의 10% 이내로 제한",
-            "verbatim": true
-          }
+          {"label": "결과", "text": "화물이 한쪽에 실려 선체가 기울면 더 깊이 잠긴 쪽이 더 큰 부력을 받아, 회전과 역회전을 반복하다 다시 균형을 잡음", "verbatim": true},
+          {"label": "", "text": "뒤집히는 대신 갑판이 물에 잠겨 침수 게이지가 차는 것이 실패로 이어지는 흐름이 됨", "verbatim": true}
         ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/launch_throw.gif",
-            "w": 640,
-            "h": 400,
-            "caption": {"text": "바람 6.7m/s에서 예상 궤적을 따라 상자를 던져 범선에 싣는 모습", "verbatim": true},
-            "sectionPath": ["3.3 발사력 계산과 바람 변화"]
-          }
-        ]
+        "visuals": [{"kind": "table", "n": 1, "fp": "|대안 A. 단일 부력 지점|대안 B. 좌우 2개 부력 지점 (선택)"}]
       },
       {
         "key": "buoy-structure",
         "chapter": "buoyancy",
         "layout": "overview",
         "tab": "구조",
-        "title": {"text": "4.2 부력 지점과 침수 판정 지점", "verbatim": true},
+        "title": {"text": "4.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["4.2 부력 지점과 침수 판정 지점"],
+        "sectionPath": ["4.3 구현"],
         "points": [
           {"label": "", "text": "Rigidbody2D 기반 선체와 가상 수면 구현", "verbatim": true},
           {"label": "", "text": "좌우 2개 부력 적용 지점 : 부력으로 물 위에 떠 있는 선박의 움직임 구현", "verbatim": true},
           {"label": "", "text": "갑판 3개 침수 판정 지점 : 침수 게이지와 게임 오버 판정으로 연결", "verbatim": true},
           {
             "label": "",
-            "text": "중력 스케일(`rb.gravityScale`)을 상황에 따라 바꿈: 평소에는 수면 위로 올라간 높이에 따라 0.1~0.5(4.3), 침몰 시에는 점점 키워 부력을 압도해 서서히 가라앉게 함",
+            "text": "중력 스케일(`rb.gravityScale`)을 상황에 따라 바꿈: 평소에는 수면 위로 올라간 높이에 따라 0.1~0.5, 침몰 시에는 점점 키워 부력을 압도해 서서히 가라앉게 함",
             "verbatim": true
           }
         ],
@@ -1102,7 +1071,7 @@
             "w": 640,
             "h": 400,
             "caption": {"text": "화물을 계속 싣자 침수 게이지가 나타나 차오르고, 카누가 가라앉아 SUNK... 결과창이 뜨는 모습", "verbatim": true},
-            "sectionPath": ["4.3 수심에 비례한 부력과 중력 보정"]
+            "sectionPath": ["4.2 선택"]
           }
         ]
       },
@@ -1111,21 +1080,25 @@
         "chapter": "buoyancy",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "4.3 수심에 비례한 부력과 중력 보정", "verbatim": true},
+        "title": {"text": "4.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["4.3 수심에 비례한 부력과 중력 보정"],
+        "sectionPath": ["4.3 구현"],
         "points": [
           {
             "label": "",
-            "text": "좌우 부력 적용 지점마다 수심에 비례한 부력을 가해, 더 깊이 잠긴 쪽이 더 큰 힘을 받으면서 생기는 회전력으로 선박의 복원력 구현",
+            "text": "부력 지점마다 수심(`depth`)에 비례한 부력에 그 지점의 세로 속도로 감쇠를 더해 `AddForceAtPosition`으로 가함 → 좌우 깊이 차이가 회전력이 되어 복원 움직임이 생김",
             "verbatim": true
           },
           {
-            "label": "",
-            "text": "선체가 가상의 수면 높이에 머무르도록, 수심에 따라 바뀌는 중력 계수(0.1~0.5)와 선체 질량에 비례한 기본 부력 값을 찾아 균형을 맞춤",
+            "label": "상황에 따라 선체에 유동적인 `rb.gravityScale` 값 적용",
+            "text": "높이에 따라 중력 스케일을 바꿔, 부력으로 인해 선체가 하늘로 날아오르는 현상을 막음",
             "verbatim": true
           },
-          {"label": "", "text": "갑판의 침수 여부에 따른 침수도의 상승과 하강으로 플레이어에게 게임 오버 위험을 직관적으로 전달", "verbatim": true}
+          {
+            "label": "선박 업그레이드로 인한 선체의 크기와 형태, 질량 변화에 대응",
+            "text": "업그레이드 단계별 선박을 개별 프리팹으로 구성하고, 각 선체의 형태에 맞게 부력 적용 지점과 침수 판정 지점을 조정함",
+            "verbatim": false
+          }
         ],
         "visuals": [
           {
@@ -1139,54 +1112,39 @@
         ]
       },
       {
-        "key": "buoy-choice",
-        "chapter": "buoyancy",
-        "layout": "overview",
+        "key": "cargo-choice",
+        "chapter": "cargo",
+        "layout": "full",
         "tab": "선택",
-        "title": {"text": "4.4 단일 부력 지점 대신 좌우 두 지점", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["4.4 단일 부력 지점 대신 좌우 두 지점"],
+        "title": {"text": "5.2 선택", "verbatim": true},
+        "lead": {"text": "일반 화물에 폭발이나 상태 변화 등의 기능을 추가하면 `Block`이 갓 클래스가 될 위험이 있었음", "verbatim": false},
+        "sectionPath": ["5.2 선택"],
         "points": [
           {
-            "label": "침몰을 스테이지 실패 조건으로 삼은 이유",
-            "text": "실패 조건을 직관적으로 정하기 어렵고 물 위에 뜬 선박의 움직임도 부자연스러워, 이 제약을 없애고 침몰을 스테이지 실패의 직접적인 조건으로 바꿈",
-            "verbatim": true
-          },
-          {
-            "label": "단일 부력 지점에서 좌우 2지점 구조로 변경",
-            "text": "화물이 한쪽에 실려 선체가 기울면 더 깊이 잠긴 쪽이 더 큰 부력을 받아, 회전과 역회전을 반복하다 다시 균형을 잡음",
-            "verbatim": true
-          },
-          {
-            "label": "상황에 따라 선체에 유동적인 `rb.gravityScale` 값 적용",
-            "text": "높이에 따라 중력 스케일을 바꿔(4.3), 부력으로 인해 선체가 하늘로 날아오르는 현상을 막음",
-            "verbatim": true
-          },
-          {
-            "label": "선박 업그레이드로 인한 선체의 크기와 형태, 질량 변화에 대응",
-            "text": "업그레이드 단계별 선박을 개별 프리팹으로 구성하고, 각 선체의 형태에 맞게 부력 적용 지점과 침수 판정 지점을 조정함",
+            "label": "",
+            "text": "컨셉 기획서에서 정한 공통 블록 + 상호작용 블록 상속 구조(기획서에서는 `BaseBlock`·`InteractionBlock`이라 부름)를 실제 구현으로 옮긴 것",
             "verbatim": true
           }
         ],
-        "visuals": []
+        "visuals": [{"kind": "table", "n": 1, "fp": "|대안 A. Block 하나에 조건문 추가|대안 B. Block 상속 클래스로 분리 (선택)"}]
       },
       {
         "key": "cargo-structure",
         "chapter": "cargo",
-        "layout": "overview",
-        "tab": "구조",
-        "title": {"text": "5.2 Block을 상속한 폭탄과 닭", "verbatim": true},
+        "layout": "visual",
+        "tab": "결과",
+        "title": {"text": "5.2 선택", "verbatim": true},
         "lead": null,
-        "sectionPath": ["5.2 Block을 상속한 폭탄과 닭"],
+        "sectionPath": ["5.2 선택"],
         "points": [
           {
-            "label": "",
-            "text": "`BombBlock`과 `ChickenBlock`을 `Block`의 상속 클래스로 분리하여 `Block`의 기능을 유지한 채로 폭발 및 상태 변화 등 독립적인 기능 추가",
+            "label": "폭탄의 위험을 보상으로 연결하는 게임플레이 설계",
+            "text": "이 규칙을 발견한 플레이어에게는 위험한 폭탄이 단순한 페널티가 아니라, 어디에 배치하는 것이 최선일지 판단하는 요소가 됨",
             "verbatim": true
           },
           {
-            "label": "",
-            "text": "`BombBlock`의 폭발 범위 내에서 `ChickenBlock`을 탐색해 `Fry()`를 호출하고, 닭 화물의 상태 변화 및 점수 추가 처리",
+            "label": "일부러 알려 주지 않은 이스터에그",
+            "text": "시범 플레이에서 이를 발견한 테스터가 상상도 못 했다며 즐거워했고, 이런 것이 또 있지 않을까 하는 기대감이 들었다고 함",
             "verbatim": true
           }
         ],
@@ -1199,8 +1157,7 @@
             "caption": {
               "text": "폭탄이 빨갛게 흔들리며 경고한 뒤 터지면, 범위 안의 상자는 튕겨 나가고 닭 화물은 치킨으로 바뀌는 모습 (0.5배속, 폭발 대기 시간을 5초로 고정해 촬영)",
               "verbatim": true
-            },
-            "sectionPath": ["5.3 폭발 범위 탐색과 치킨 변환"]
+            }
           }
         ]
       },
@@ -1209,13 +1166,16 @@
         "chapter": "cargo",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "5.3 폭발 범위 탐색과 치킨 변환", "verbatim": true},
+        "title": {"text": "5.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["5.3 폭발 범위 탐색과 치킨 변환"],
+        "sectionPath": ["5.3 구현"],
         "points": [
-          {"label": "", "text": "Coroutine을 이용한 폭탄의 첫 충돌 이후 멈춤 대기 → 무작위 대기 → 경고 → 폭발 시퀀스", "verbatim": false},
-          {"label": "", "text": "`Physics2D.OverlapCircleAll()`을 이용한 폭발 범위 탐색", "verbatim": true},
-          {"label": "", "text": "폭발 지점과의 거리에 따른 충격량 및 회전력 적용", "verbatim": true},
+          {"label": "", "text": "Coroutine을 이용한 폭탄의 첫 충돌 이후 무작위 대기 → 경고 → 폭발 시퀀스", "verbatim": true},
+          {
+            "label": "",
+            "text": "폭발 범위의 물체마다 거리에 따라 충격량을 줄이되 `minimumForceRatio` 이상은 보장하고, 무작위 회전력을 더함",
+            "verbatim": true
+          },
           {"label": "", "text": "폭발에 노출된 닭 화물의 스프라이트·물리 머티리얼 교체와 보너스 점수 처리", "verbatim": true}
         ],
         "visuals": [
@@ -1228,45 +1188,33 @@
         ]
       },
       {
-        "key": "cargo-choice",
-        "chapter": "cargo",
-        "layout": "overview",
+        "key": "fb-choice",
+        "chapter": "feedback",
+        "layout": "full",
         "tab": "선택",
-        "title": {"text": "5.4 조건문 추가 대신 상속 분리", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["5.4 조건문 추가 대신 상속 분리"],
-        "points": [
+        "title": {"text": "6.2 선택", "verbatim": true},
+        "lead": {"text": "화물을 조준하는 순간과 발사된 화물의 비행 과정, 선박에 적재된 결과를 확인하는 순간에 플레이어가 집중해야 할 대상이 서로 달랐음", "verbatim": false},
+        "sectionPath": ["6.2 선택"],
+        "points": [{"label": "", "text": "시점이 갑자기 이동하는 대신 위치와 줌을 보간하여 자연스럽게 연결되도록 구현", "verbatim": true}],
+        "visuals": [
+          {"kind": "table", "n": 1, "fp": "|대안 A. 고정 카메라 (초기 구현)|대안 B. 플레이 상태에 따른 시점 전환 (선택)"},
           {
-            "label": "공통 화물의 동작을 유지하면서 특수 기능 확장",
-            "text": "`Block`에 특수 기능을 더하면 갓 클래스가 될 위험 → 공통 기능은 `Block`에서, 폭탄의 폭발 시퀀스와 치킨의 상태 변화는 각각의 상속 클래스에서 처리",
-            "verbatim": false
-          },
-          {
-            "label": "최종 선택: 대안 B",
-            "text": "컨셉 기획서에서 정한 공통 블록 + 상호작용 블록 상속 구조(기획서에서는 `BaseBlock`·`InteractionBlock`이라 부름)를 실제 구현으로 옮긴 것",
-            "verbatim": true
-          },
-          {
-            "label": "폭탄의 위험을 보상으로 연결하는 게임플레이 설계",
-            "text": "이 규칙을 발견한 플레이어에게는 위험한 폭탄이 단순한 페널티가 아니라, 어디에 배치하는 것이 최선일지 판단하는 요소가 됨",
-            "verbatim": true
-          },
-          {
-            "label": "일부러 알려 주지 않은 이스터에그",
-            "text": "시범 플레이에서 이를 발견한 테스터가 상상도 못 했다며 즐거워했고, 이런 것이 또 있지 않을까 하는 기대감이 들었다고 함",
-            "verbatim": true
+            "kind": "image",
+            "src": "images/camera_follow.gif",
+            "w": 640,
+            "h": 400,
+            "caption": {"text": "조준할 때는 화물과 궤적을, 날아가는 동안에는 화물을 따라가고, 착지하면 선박으로 돌아오는 카메라 시점 전환", "verbatim": true}
           }
-        ],
-        "visuals": []
+        ]
       },
       {
         "key": "fb-structure",
         "chapter": "feedback",
         "layout": "overview",
         "tab": "구조",
-        "title": {"text": "6.2 카메라 타깃과 UI 패널의 역할", "verbatim": true},
+        "title": {"text": "6.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["6.2 카메라 타깃과 UI 패널의 역할"],
+        "sectionPath": ["6.3 구현"],
         "points": [
           {
             "label": "",
@@ -1276,8 +1224,13 @@
           {"label": "", "text": "`GameManager`의 침수도와 게임 진행 상태를 참조하여 인게임 UI와 결과 화면의 표시 상태 제어", "verbatim": true},
           {
             "label": "",
-            "text": "위치와 기능에 따라 분할된 UI 패널마다 `RectTransform`의 포지션을 조정하는 방식으로 등장·퇴장 시점과 연출 관리",
+            "text": "`RectTransform.anchoredPosition`과 `Lerp()`를 이용한 인게임 UI, 침수 게이지, 결과 화면의 슬라이드 전환 연출",
             "verbatim": true
+          },
+          {
+            "label": "화면 비율 변경에 따른 UI 배치 문제 해결",
+            "text": "Canvas Scaler와 UI별 앵커를 조정하고, 화면 밖 대기 위치를 고정 좌표 대신 Canvas의 너비와 높이를 기준으로 계산하도록 변경함",
+            "verbatim": false
           }
         ],
         "visuals": [
@@ -1286,8 +1239,7 @@
             "src": "images/flood_gauge.png",
             "w": 838,
             "h": 468,
-            "caption": {"text": "3스테이지 — 침수가 시작되면 오른쪽에 나타나는 침수 게이지와 CAUTION 표시", "verbatim": true},
-            "sectionPath": ["6.3 시점 보간과 UI 슬라이드"]
+            "caption": {"text": "3스테이지 — 침수가 시작되면 오른쪽에 나타나는 침수 게이지와 CAUTION 표시", "verbatim": true}
           }
         ]
       },
@@ -1296,11 +1248,10 @@
         "chapter": "feedback",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "6.3 시점 보간과 UI 슬라이드", "verbatim": true},
+        "title": {"text": "6.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["6.3 시점 보간과 UI 슬라이드"],
+        "sectionPath": ["6.3 구현"],
         "points": [
-          {"label": "", "text": "`Block`의 조준, 비행, 적재 상태에 따른 카메라 타깃과 줌 변경 및 `Lerp()`를 이용한 부드러운 시점 전환", "verbatim": true},
           {
             "label": "",
             "text": "`SetCameraTarget`은 타깃·오프셋·줌 목표만 바꾸고, `CameraWork`가 매 프레임 위치와 `orthographicSize`를 `Lerp`로 따라감",
@@ -1314,47 +1265,6 @@
             "n": 1,
             "lines": [18, 33],
             "fp": "public void SetCameraTarget(Transform newTarget, Vector3 off"
-          }
-        ]
-      },
-      {
-        "key": "fb-choice",
-        "chapter": "feedback",
-        "layout": "overview",
-        "tab": "선택",
-        "title": {"text": "6.4 고정 카메라 대신 시점 전환", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["6.4 고정 카메라 대신 시점 전환"],
-        "points": [
-          {
-            "label": "고정 카메라에서 플레이 상태에 따른 시점 전환으로 변경",
-            "text": "조준 중에는 화물과 예상 궤적을 보여주고, 발사 후에는 비행하는 화물을 확대해 추적하며, 충돌 이후에는 선박으로 시점을 복귀시키도록 변경함",
-            "verbatim": false
-          },
-          {
-            "label": "게임 정보의 중요도에 따른 UI 표시 방식 구분",
-            "text": "침수 게이지는 침수가 진행될 때만 화면 오른쪽에서 등장시켜, 위험이 발생했다는 사실 자체를 UI의 등장으로 전달",
-            "verbatim": false
-          },
-          {
-            "label": "화면 비율 변경에 따른 UI 배치 문제 해결",
-            "text": "Canvas Scaler와 UI별 앵커를 조정하고, 화면 밖 대기 위치를 고정 좌표 대신 Canvas의 너비와 높이를 기준으로 계산하도록 변경함",
-            "verbatim": true
-          },
-          {
-            "label": "UI 조작과 화물 투척 입력이 충돌하는 문제 해결",
-            "text": "`IsPointerOverGameObject()`로 UI 위 클릭을 드래그 시작에서 빼, 일시정지 버튼을 누르고 재개해도 화물이 발사되지 않음",
-            "verbatim": false
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/camera_follow.gif",
-            "w": 640,
-            "h": 400,
-            "caption": {"text": "조준할 때는 화물과 궤적을, 날아가는 동안에는 화물을 따라가고, 착지하면 선박으로 돌아오는 카메라 시점 전환", "verbatim": true},
-            "sectionPath": ["6.3 시점 보간과 UI 슬라이드"]
           }
         ]
       },
@@ -1393,6 +1303,6 @@
         "visuals": []
       }
     ],
-    "applied": "399f349696a2f2ab"
+    "applied": "ee8ba920bba493d9"
   }
 }

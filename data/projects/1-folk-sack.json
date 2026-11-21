@@ -67,7 +67,7 @@
       "what": "타일마다 내구도가 달라 곡괭이질만으로는 언제 부서질지 알 수 없던 문제",
       "how": "누적 손상률을 20/40/60/80% 단계로 계산해 손상된 칸에만 공용 균열 그림 4장을 덧씌우고, 균열 View는 풀로 재사용합니다.",
       "why": "숫자는 화면을 어지럽히고 타일 그림 교체는 종류마다 그림과 메시·Collider 재생성이 필요해, 지형 렌더링을 건드리지 않는 오버레이를 택했습니다.",
-      "section": "3.3 손상 단계 계산과 View 재사용",
+      "section": "3.2 선택",
       "image": {
         "src": "images/crack_overlay.gif",
         "w": 640,
@@ -81,7 +81,7 @@
       "what": "원하는 칸에 굴착이 들어갔는지 기다리지 않고는 알 수 없던 문제",
       "how": "요청을 보내는 순간 지형 메시에서 그 칸의 꼭짓점만 `DOTween.Shake`로 흔들고, 끝나면 이동량을 0으로 되돌립니다.",
       "why": "복제본을 흔들면 가장자리가 겹치고 광물이 따라 흔들리지 않아 타일 자체를 흔들었고, 화면 이동량만 바꿔 Collider·판정에는 영향이 없게 했습니다.",
-      "section": "4.3 칸 단위 Tween과 이동량 복원",
+      "section": "4.2 선택",
       "image": {
         "src": "images/tile_hit.gif",
         "w": 640,
@@ -95,7 +95,7 @@
       "what": "굴착 동작이 중간에 끊기면 타격·정리 이벤트가 실행되지 않고, 공중에서 굴착과 매달리기를 번갈아 하면 허공에서 벽·천장을 뚫고 올라갈 수 있던 문제",
       "how": "이동·점프·낙하·벽 매달리기·굴착·사망 상태를 Animator에 연결하고, 굴착이 끊기는 경로마다 끝까지 재생할지 즉시 끊고 코드로 정리할지를 정했습니다.",
       "why": "이동으로 넘어가는 경로는 끝까지 재생해 판정과 보이는 품질을 지키고, 매달리는 경로는 즉시 끊어 갱도를 설계하며 굴착한다는 기획 의도를 지켰습니다.",
-      "section": "5.1 상태에 맞춰 움직이는 캐릭터",
+      "section": "5.2 선택",
       "image": {
         "src": "images/character_anim.gif",
         "w": 560,
@@ -315,7 +315,7 @@
         "points": [
           {
             "label": "",
-            "text": "캐릭터 굴착 동작의 프레임을 분석해 곡괭이가 타일에 닿는 프레임을 찾고, 0.5초짜리 `Mine.anim`의 0.333초에 타격 이벤트(`AnimationEvent_MineImpact`), 0.5초에 정리 이벤트(`AnimationEvent_MineFinished`)를 둠(5.2)",
+            "text": "캐릭터 굴착 동작의 프레임을 분석해 곡괭이가 타일에 닿는 프레임을 찾고, 0.5초짜리 `Mine.anim`의 0.333초에 타격 이벤트(`AnimationEvent_MineImpact`), 0.5초에 정리 이벤트(`AnimationEvent_MineFinished`)를 둠(5.3)",
             "verbatim": true
           },
           {
@@ -355,13 +355,31 @@
         ]
       },
       {
+        "key": "crack-choice",
+        "chapter": "crack",
+        "layout": "full",
+        "tab": "선택",
+        "title": {"text": "3.2 선택", "verbatim": true},
+        "lead": {"text": "타일마다 내구도가 달라 곡괭이질만으로는 언제 부서질지 알 수 없었고, 붕괴와 매몰이 있는 게임에서 그 정보는 꼭 필요했음", "verbatim": false},
+        "sectionPath": ["3.2 선택"],
+        "points": [
+          {"label": "결과", "text": "손상된 타일 위에만 공용 균열 그림 4장을 덧씌워, 누적 손상을 숫자 없이 20/40/60/80% 단계로 보여 줌", "verbatim": true},
+          {
+            "label": "균열은 서버가 확정한 결과로만",
+            "text": "가장 중요한 피드백 정보인 균열은 서버 결과(`ApplyAuthoritativeBatch`)가 적용된 뒤에만 갱신",
+            "verbatim": true
+          }
+        ],
+        "visuals": [{"kind": "table", "n": 1, "fp": "|내구도 숫자 표시|타일 그림 교체|균열 오버레이 (선택)"}]
+      },
+      {
         "key": "crack-stage",
         "chapter": "crack",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "3.3 손상 단계 계산과 View 재사용", "verbatim": true},
+        "title": {"text": "3.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["3.3 손상 단계 계산과 View 재사용"],
+        "sectionPath": ["3.3 구현"],
         "points": [
           {"label": "", "text": "누적 손상률이 넘긴 가장 높은 단계(20/40/60/80)를 반환. 손상 없음·파괴·잘못된 최댓값은 0(표시 없음)", "verbatim": true},
           {"label": "", "text": "곱셈을 `long`으로 해 내구도가 큰 타일에서도 넘침이 생기지 않게 함", "verbatim": true},
@@ -378,41 +396,44 @@
             "src": "images/crack_overlay.gif",
             "w": 640,
             "h": 400,
-            "caption": {"text": "금광석 타일을 거듭 치면 광석 위에 균열이 겹쳐 짙어지다가, 부서지며 금 조각이 떨어지는 모습", "verbatim": true}
+            "caption": {"text": "금광석 타일을 거듭 치면 광석 위에 균열이 겹쳐 짙어지다가, 부서지며 금 조각이 떨어지는 모습", "verbatim": true},
+            "sectionPath": ["3.2 선택"]
           }
         ]
       },
       {
-        "key": "crack-choice",
-        "chapter": "crack",
-        "layout": "overview",
+        "key": "shake-choice",
+        "chapter": "shake",
+        "layout": "full",
         "tab": "선택",
-        "title": {"text": "3.4 숫자·그림 교체 대신 오버레이", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["3.4 숫자·그림 교체 대신 오버레이"],
+        "title": {"text": "4.2 선택", "verbatim": true},
+        "lead": {
+          "text": "처음(`8d8a69c`)에는 타격한 타일과 같은 그림을 위에 하나 더 만들어 흔들었으나, 원본 타일이 뒤에 그대로 남아 가장자리가 겹쳐 보였고 타일에 박힌 광물은 따라 흔들리지 않아 한 몸이라는 느낌이 깨짐",
+          "verbatim": false
+        },
+        "sectionPath": ["4.2 선택"],
         "points": [
-          {"label": "숫자 대신 균열 연출", "text": "숫자를 표시하면 타일로 가득한 화면이 난잡해지므로 균열 연출로 대신함", "verbatim": true},
           {
-            "label": "스프라이트 교체 대신 오버레이",
-            "text": "팀원이 만든 지형 렌더링은 그대로 두고, 손상된 칸에만 공용 균열 그림을 덧씌우는 방식을 택함",
+            "label": "결과",
+            "text": "굴착 요청을 보내는 순간 대상 칸의 지형 자체를 DOTween으로 흔들어, 원하는 칸에 굴착이 들어갔는지 바로 알려 줌",
             "verbatim": true
           },
           {
-            "label": "균열은 서버가 확정한 결과로만",
-            "text": "가장 중요한 피드백 정보인 균열은 서버 결과(`ApplyAuthoritativeBatch`)가 적용된 뒤에만 갱신",
+            "label": "진동은 즉시, 균열은 서버 확정 뒤",
+            "text": "요청을 보내는 순간 진동으로 바로 보여 주고, 내구도 정보인 균열(3.2)은 서버 결과로만 그려 두 피드백의 역할을 나눔",
             "verbatim": true
           }
         ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "방법|장점|문제"}]
+        "visuals": [{"kind": "table", "n": 1, "fp": "|대안 A. 복제본 흔들기 (8d8a69c)|대안 B. 지형 메시의 꼭짓점 이동 (4555c0a) (선택)"}]
       },
       {
         "key": "shake-play",
         "chapter": "shake",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "4.3 칸 단위 Tween과 이동량 복원", "verbatim": true},
+        "title": {"text": "4.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["4.3 칸 단위 Tween과 이동량 복원"],
+        "sectionPath": ["4.3 구현"],
         "points": [
           {
             "label": "",
@@ -433,48 +454,40 @@
             "src": "images/tile_hit.gif",
             "w": 640,
             "h": 400,
-            "caption": {"text": "곡괭이가 닿을 때마다 석탄 타일이 짧게 흔들리는 진동 (0.25배속, 확대)", "verbatim": true}
+            "caption": {"text": "곡괭이가 닿을 때마다 석탄 타일이 짧게 흔들리는 진동 (0.25배속, 확대)", "verbatim": true},
+            "sectionPath": ["4.2 선택"]
           }
         ]
       },
       {
-        "key": "shake-choice",
-        "chapter": "shake",
+        "key": "anim-choice",
+        "chapter": "anim",
         "layout": "full",
         "tab": "선택",
-        "title": {"text": "4.4 복제본 대신 지형 자체를 흔들기", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["4.4 복제본 대신 지형 자체를 흔들기"],
+        "title": {"text": "5.2 선택", "verbatim": true},
+        "lead": {"text": "굴착 중 상태는 동작 끝 프레임의 `AnimationEvent_MineFinished`가 정리함. 동작이 중간에 끊기면 이 이벤트가 오지 않음", "verbatim": false},
+        "sectionPath": ["5.2 선택"],
         "points": [
           {
-            "label": "최종 선택: 대안 B",
-            "text": "복제본을 없애고 지형 메시에서 해당 칸의 꼭짓점만 옮겨 타일 자체가 흔들리게 바꾸고(`4555c0a`), 광물 표시와 균열에도 같은 이동량을 적용",
-            "verbatim": true
-          },
-          {
-            "label": "진동은 즉시, 균열은 서버 확정 뒤",
-            "text": "요청을 보내는 순간 진동으로 바로 보여 주고, 내구도 정보인 균열(3.4)은 서버 결과로만 그려 두 피드백의 역할을 나눔",
+            "label": "최종 선택",
+            "text": "이동으로 넘어가는 경로는 끝까지 재생해 판정과 보이는 품질을 지키고, 매달리는 경로는 즉시 끊어 기획 의도를 지킴",
             "verbatim": true
           }
         ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "|대안 A. 복제본 흔들기 (8d8a69c)|대안 B. 지형 메시의 꼭짓점 이동 (4555c0a)"}]
+        "visuals": [{"kind": "table", "n": 1, "fp": "|이동·점프·낙하로 넘어갈 때|벽에 매달릴 때"}]
       },
       {
         "key": "anim-intro",
         "chapter": "anim",
         "layout": "visual",
-        "tab": "개요",
-        "title": {"text": "5.1 상태에 맞춰 움직이는 캐릭터", "verbatim": true},
-        "lead": {"text": "캐릭터 스프라이트와 애니메이션을 세팅하고, 이동·점프·낙하·벽 매달리기·굴착·사망 상태를 Animator에 연결", "verbatim": true},
-        "sectionPath": ["5.1 상태에 맞춰 움직이는 캐릭터"],
+        "tab": "선택",
+        "title": {"text": "5.2 선택", "verbatim": true},
+        "lead": null,
+        "sectionPath": ["5.2 선택"],
         "points": [
-          {"label": "", "text": "굴착 동작이 다른 상태에 의해 끊기는 경로마다, 끝까지 재생할지 즉시 끊고 코드로 정리할지를 정함", "verbatim": true},
-          {
-            "label": "",
-            "text": "플레이어별 색상 변경(`68a5066`)과 벽 잡기 이동(`58b20d2`)은 팀원 작업. 본인은 그 위에서 애니메이션 연결과 굴착 규칙을 맡음",
-            "verbatim": true
-          },
-          {"label": "", "text": "상태 규칙은 직접 정하고, 연결 코드는 AI의 도움을 받아 구현", "verbatim": true}
+          {"label": "", "text": "동작을 끊는 경로에서는 이벤트 대신 코드가 직접 굴착 상태를 정리하도록 함(`a8e2931` · `cbe4a6b`)", "verbatim": true},
+          {"label": "대가 · 이동", "text": "굴착 중 이동을 시작해도 동작이 끝날 때까지 이동 동작으로 바뀌지 않음", "verbatim": true},
+          {"label": "대가 · 매달림", "text": "매달리면 휘두르던 굴착은 헛손질로 끝남", "verbatim": true}
         ],
         "visuals": [
           {
@@ -491,9 +504,9 @@
         "chapter": "anim",
         "layout": "visual",
         "tab": "구조",
-        "title": {"text": "5.2 Animator 상태 7개와 굴착 이벤트", "verbatim": true},
+        "title": {"text": "5.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["5.2 Animator 상태 7개와 굴착 이벤트"],
+        "sectionPath": ["5.3 구현"],
         "points": [
           {
             "label": "",
@@ -514,32 +527,15 @@
         "chapter": "anim",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "5.3 굴착 중 방향 고정과 매달릴 때의 정리", "verbatim": true},
+        "title": {"text": "5.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["5.3 굴착 중 방향 고정과 매달릴 때의 정리"],
+        "sectionPath": ["5.3 구현"],
         "points": [
           {"label": "", "text": "굴착 중에는 이동해도 바라보는 방향을 바꾸지 않음 → 클릭할 때 정한 칸(2장) 쪽으로 곡괭이가 계속 향함", "verbatim": true},
           {"label": "", "text": "매달리면 남아 있던 굴착 트리거를 지워, 매달리기가 끝나자마자 굴착 동작이 튀어나오지 않게 함", "verbatim": true},
           {"label": "", "text": "매달리는 순간 진행 중이던 굴착을 취소하고 대상 칸 표시를 지움", "verbatim": true}
         ],
         "visuals": [{"kind": "code", "n": 1, "fp": "if (itemController == null ||"}]
-      },
-      {
-        "key": "anim-choice",
-        "chapter": "anim",
-        "layout": "full",
-        "tab": "선택",
-        "title": {"text": "5.4 끝까지 재생할 것인가, 즉시 끊을 것인가", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["5.4 끝까지 재생할 것인가, 즉시 끊을 것인가"],
-        "points": [
-          {
-            "label": "최종 선택",
-            "text": "이동으로 넘어가는 경로는 끝까지 재생해 판정과 보이는 품질을 지키고, 매달리는 경로는 즉시 끊어 기획 의도를 지킴",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "|이동·점프·낙하로 넘어갈 때|벽에 매달릴 때"}]
       },
       {
         "key": "sound-listener",
@@ -608,7 +604,7 @@
           },
           {
             "label": "바꾼 것",
-            "text": "타일 진동의 첫 구현(복제본 흔들기, `8d8a69c`)은 직접 플레이해 보고 가장자리 겹침과 광물이 따라 흔들리지 않는 문제를 찾아, 지형 자체를 흔드는 방식으로 바꿈(4.4)",
+            "text": "타일 진동의 첫 구현(복제본 흔들기, `8d8a69c`)은 직접 플레이해 보고 가장자리 겹침과 광물이 따라 흔들리지 않는 문제를 찾아, 지형 자체를 흔드는 방식으로 바꿈(4.2)",
             "verbatim": true
           }
         ],
@@ -714,7 +710,7 @@
         "points": [
           {
             "label": "",
-            "text": "캐릭터 굴착 동작의 프레임을 분석해 곡괭이가 타일에 닿는 프레임을 찾고, 0.5초짜리 `Mine.anim`의 0.333초에 타격 이벤트(`AnimationEvent_MineImpact`), 0.5초에 정리 이벤트(`AnimationEvent_MineFinished`)를 둠(5.2)",
+            "text": "캐릭터 굴착 동작의 프레임을 분석해 곡괭이가 타일에 닿는 프레임을 찾고, 0.5초짜리 `Mine.anim`의 0.333초에 타격 이벤트(`AnimationEvent_MineImpact`), 0.5초에 정리 이벤트(`AnimationEvent_MineFinished`)를 둠(5.3)",
             "verbatim": true
           },
           {
@@ -754,13 +750,31 @@
         ]
       },
       {
+        "key": "crack-choice",
+        "chapter": "crack",
+        "layout": "full",
+        "tab": "선택",
+        "title": {"text": "3.2 선택", "verbatim": true},
+        "lead": {"text": "타일마다 내구도가 달라 곡괭이질만으로는 언제 부서질지 알 수 없었고, 붕괴와 매몰이 있는 게임에서 그 정보는 꼭 필요했음", "verbatim": false},
+        "sectionPath": ["3.2 선택"],
+        "points": [
+          {"label": "결과", "text": "손상된 타일 위에만 공용 균열 그림 4장을 덧씌워, 누적 손상을 숫자 없이 20/40/60/80% 단계로 보여 줌", "verbatim": true},
+          {
+            "label": "균열은 서버가 확정한 결과로만",
+            "text": "가장 중요한 피드백 정보인 균열은 서버 결과(`ApplyAuthoritativeBatch`)가 적용된 뒤에만 갱신",
+            "verbatim": true
+          }
+        ],
+        "visuals": [{"kind": "table", "n": 1, "fp": "|내구도 숫자 표시|타일 그림 교체|균열 오버레이 (선택)"}]
+      },
+      {
         "key": "crack-stage",
         "chapter": "crack",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "3.3 손상 단계 계산과 View 재사용", "verbatim": true},
+        "title": {"text": "3.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["3.3 손상 단계 계산과 View 재사용"],
+        "sectionPath": ["3.3 구현"],
         "points": [
           {"label": "", "text": "누적 손상률이 넘긴 가장 높은 단계(20/40/60/80)를 반환. 손상 없음·파괴·잘못된 최댓값은 0(표시 없음)", "verbatim": true},
           {"label": "", "text": "곱셈을 `long`으로 해 내구도가 큰 타일에서도 넘침이 생기지 않게 함", "verbatim": true},
@@ -777,41 +791,44 @@
             "src": "images/crack_overlay.gif",
             "w": 640,
             "h": 400,
-            "caption": {"text": "금광석 타일을 거듭 치면 광석 위에 균열이 겹쳐 짙어지다가, 부서지며 금 조각이 떨어지는 모습", "verbatim": true}
+            "caption": {"text": "금광석 타일을 거듭 치면 광석 위에 균열이 겹쳐 짙어지다가, 부서지며 금 조각이 떨어지는 모습", "verbatim": true},
+            "sectionPath": ["3.2 선택"]
           }
         ]
       },
       {
-        "key": "crack-choice",
-        "chapter": "crack",
-        "layout": "overview",
+        "key": "shake-choice",
+        "chapter": "shake",
+        "layout": "full",
         "tab": "선택",
-        "title": {"text": "3.4 숫자·그림 교체 대신 오버레이", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["3.4 숫자·그림 교체 대신 오버레이"],
+        "title": {"text": "4.2 선택", "verbatim": true},
+        "lead": {
+          "text": "처음(`8d8a69c`)에는 타격한 타일과 같은 그림을 위에 하나 더 만들어 흔들었으나, 원본 타일이 뒤에 그대로 남아 가장자리가 겹쳐 보였고 타일에 박힌 광물은 따라 흔들리지 않아 한 몸이라는 느낌이 깨짐",
+          "verbatim": false
+        },
+        "sectionPath": ["4.2 선택"],
         "points": [
-          {"label": "숫자 대신 균열 연출", "text": "숫자를 표시하면 타일로 가득한 화면이 난잡해지므로 균열 연출로 대신함", "verbatim": true},
           {
-            "label": "스프라이트 교체 대신 오버레이",
-            "text": "팀원이 만든 지형 렌더링은 그대로 두고, 손상된 칸에만 공용 균열 그림을 덧씌우는 방식을 택함",
+            "label": "결과",
+            "text": "굴착 요청을 보내는 순간 대상 칸의 지형 자체를 DOTween으로 흔들어, 원하는 칸에 굴착이 들어갔는지 바로 알려 줌",
             "verbatim": true
           },
           {
-            "label": "균열은 서버가 확정한 결과로만",
-            "text": "가장 중요한 피드백 정보인 균열은 서버 결과(`ApplyAuthoritativeBatch`)가 적용된 뒤에만 갱신",
+            "label": "진동은 즉시, 균열은 서버 확정 뒤",
+            "text": "요청을 보내는 순간 진동으로 바로 보여 주고, 내구도 정보인 균열(3.2)은 서버 결과로만 그려 두 피드백의 역할을 나눔",
             "verbatim": true
           }
         ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "방법|장점|문제"}]
+        "visuals": [{"kind": "table", "n": 1, "fp": "|대안 A. 복제본 흔들기 (8d8a69c)|대안 B. 지형 메시의 꼭짓점 이동 (4555c0a) (선택)"}]
       },
       {
         "key": "shake-play",
         "chapter": "shake",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "4.3 칸 단위 Tween과 이동량 복원", "verbatim": true},
+        "title": {"text": "4.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["4.3 칸 단위 Tween과 이동량 복원"],
+        "sectionPath": ["4.3 구현"],
         "points": [
           {
             "label": "",
@@ -832,48 +849,40 @@
             "src": "images/tile_hit.gif",
             "w": 640,
             "h": 400,
-            "caption": {"text": "곡괭이가 닿을 때마다 석탄 타일이 짧게 흔들리는 진동 (0.25배속, 확대)", "verbatim": true}
+            "caption": {"text": "곡괭이가 닿을 때마다 석탄 타일이 짧게 흔들리는 진동 (0.25배속, 확대)", "verbatim": true},
+            "sectionPath": ["4.2 선택"]
           }
         ]
       },
       {
-        "key": "shake-choice",
-        "chapter": "shake",
+        "key": "anim-choice",
+        "chapter": "anim",
         "layout": "full",
         "tab": "선택",
-        "title": {"text": "4.4 복제본 대신 지형 자체를 흔들기", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["4.4 복제본 대신 지형 자체를 흔들기"],
+        "title": {"text": "5.2 선택", "verbatim": true},
+        "lead": {"text": "굴착 중 상태는 동작 끝 프레임의 `AnimationEvent_MineFinished`가 정리함. 동작이 중간에 끊기면 이 이벤트가 오지 않음", "verbatim": false},
+        "sectionPath": ["5.2 선택"],
         "points": [
           {
-            "label": "최종 선택: 대안 B",
-            "text": "복제본을 없애고 지형 메시에서 해당 칸의 꼭짓점만 옮겨 타일 자체가 흔들리게 바꾸고(`4555c0a`), 광물 표시와 균열에도 같은 이동량을 적용",
-            "verbatim": true
-          },
-          {
-            "label": "진동은 즉시, 균열은 서버 확정 뒤",
-            "text": "요청을 보내는 순간 진동으로 바로 보여 주고, 내구도 정보인 균열(3.4)은 서버 결과로만 그려 두 피드백의 역할을 나눔",
+            "label": "최종 선택",
+            "text": "이동으로 넘어가는 경로는 끝까지 재생해 판정과 보이는 품질을 지키고, 매달리는 경로는 즉시 끊어 기획 의도를 지킴",
             "verbatim": true
           }
         ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "|대안 A. 복제본 흔들기 (8d8a69c)|대안 B. 지형 메시의 꼭짓점 이동 (4555c0a)"}]
+        "visuals": [{"kind": "table", "n": 1, "fp": "|이동·점프·낙하로 넘어갈 때|벽에 매달릴 때"}]
       },
       {
         "key": "anim-intro",
         "chapter": "anim",
         "layout": "visual",
-        "tab": "개요",
-        "title": {"text": "5.1 상태에 맞춰 움직이는 캐릭터", "verbatim": true},
-        "lead": {"text": "캐릭터 스프라이트와 애니메이션을 세팅하고, 이동·점프·낙하·벽 매달리기·굴착·사망 상태를 Animator에 연결", "verbatim": true},
-        "sectionPath": ["5.1 상태에 맞춰 움직이는 캐릭터"],
+        "tab": "선택",
+        "title": {"text": "5.2 선택", "verbatim": true},
+        "lead": null,
+        "sectionPath": ["5.2 선택"],
         "points": [
-          {"label": "", "text": "굴착 동작이 다른 상태에 의해 끊기는 경로마다, 끝까지 재생할지 즉시 끊고 코드로 정리할지를 정함", "verbatim": true},
-          {
-            "label": "",
-            "text": "플레이어별 색상 변경(`68a5066`)과 벽 잡기 이동(`58b20d2`)은 팀원 작업. 본인은 그 위에서 애니메이션 연결과 굴착 규칙을 맡음",
-            "verbatim": true
-          },
-          {"label": "", "text": "상태 규칙은 직접 정하고, 연결 코드는 AI의 도움을 받아 구현", "verbatim": true}
+          {"label": "", "text": "동작을 끊는 경로에서는 이벤트 대신 코드가 직접 굴착 상태를 정리하도록 함(`a8e2931` · `cbe4a6b`)", "verbatim": true},
+          {"label": "대가 · 이동", "text": "굴착 중 이동을 시작해도 동작이 끝날 때까지 이동 동작으로 바뀌지 않음", "verbatim": true},
+          {"label": "대가 · 매달림", "text": "매달리면 휘두르던 굴착은 헛손질로 끝남", "verbatim": true}
         ],
         "visuals": [
           {
@@ -890,9 +899,9 @@
         "chapter": "anim",
         "layout": "visual",
         "tab": "구조",
-        "title": {"text": "5.2 Animator 상태 7개와 굴착 이벤트", "verbatim": true},
+        "title": {"text": "5.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["5.2 Animator 상태 7개와 굴착 이벤트"],
+        "sectionPath": ["5.3 구현"],
         "points": [
           {
             "label": "",
@@ -913,32 +922,15 @@
         "chapter": "anim",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "5.3 굴착 중 방향 고정과 매달릴 때의 정리", "verbatim": true},
+        "title": {"text": "5.3 구현", "verbatim": true},
         "lead": null,
-        "sectionPath": ["5.3 굴착 중 방향 고정과 매달릴 때의 정리"],
+        "sectionPath": ["5.3 구현"],
         "points": [
           {"label": "", "text": "굴착 중에는 이동해도 바라보는 방향을 바꾸지 않음 → 클릭할 때 정한 칸(2장) 쪽으로 곡괭이가 계속 향함", "verbatim": true},
           {"label": "", "text": "매달리면 남아 있던 굴착 트리거를 지워, 매달리기가 끝나자마자 굴착 동작이 튀어나오지 않게 함", "verbatim": true},
           {"label": "", "text": "매달리는 순간 진행 중이던 굴착을 취소하고 대상 칸 표시를 지움", "verbatim": true}
         ],
         "visuals": [{"kind": "code", "n": 1, "fp": "if (itemController == null ||"}]
-      },
-      {
-        "key": "anim-choice",
-        "chapter": "anim",
-        "layout": "full",
-        "tab": "선택",
-        "title": {"text": "5.4 끝까지 재생할 것인가, 즉시 끊을 것인가", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["5.4 끝까지 재생할 것인가, 즉시 끊을 것인가"],
-        "points": [
-          {
-            "label": "최종 선택",
-            "text": "이동으로 넘어가는 경로는 끝까지 재생해 판정과 보이는 품질을 지키고, 매달리는 경로는 즉시 끊어 기획 의도를 지킴",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "|이동·점프·낙하로 넘어갈 때|벽에 매달릴 때"}]
       },
       {
         "key": "sound-listener",
@@ -1007,14 +999,14 @@
           },
           {
             "label": "바꾼 것",
-            "text": "타일 진동의 첫 구현(복제본 흔들기, `8d8a69c`)은 직접 플레이해 보고 가장자리 겹침과 광물이 따라 흔들리지 않는 문제를 찾아, 지형 자체를 흔드는 방식으로 바꿈(4.4)",
+            "text": "타일 진동의 첫 구현(복제본 흔들기, `8d8a69c`)은 직접 플레이해 보고 가장자리 겹침과 광물이 따라 흔들리지 않는 문제를 찾아, 지형 자체를 흔드는 방식으로 바꿈(4.2)",
             "verbatim": true
           }
         ],
         "visuals": [{"kind": "table", "n": 1, "fp": "맡긴 것|직접 판단한 것|확인한 방법"}]
       }
     ],
-    "applied": "148e1de3fdc7717e"
+    "applied": "36b38d71c07cba4c"
   },
   "generatedAt": "2026-11-21"
 }
