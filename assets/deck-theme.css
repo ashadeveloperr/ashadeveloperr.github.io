@@ -170,7 +170,7 @@ table.kv td.role { color: var(--accent-ink); font-weight: 800; }
 /* ── 세로 가운데(결정 G8): 본문 안 .pf-fill 하나를 위아래 auto 여백으로. 내용이 상자보다 길면 여백 0(넘침은 감사가 봄)
      .pf-sizing = 시각 자료 맞추기(PF.fitVisuals) 동안만: .pf-fill이 본문 높이를 다 써서 .vis 칸 크기를 잴 수 있게 ── */
 .pf-body:has(> .pf-fill), .pf-zoomwrap:has(> .pf-fill) { display: flex; flex-direction: column; }
-.pf-fill { margin-block: auto; width: 100%; flex: none; }
+.pf-fill { margin-block: 0 auto; width: 100%; flex: none; }   /* 직접 고침 11/21: 세로 가운데 → 위쪽(모든 장면의 본문이 제목 아래 같은 기준선에서 시작) */
 .pf-sizing .pf-fill { flex: 1 1 auto; min-height: 0; margin-block: 0; display: flex; flex-direction: column; }
 .pf-sizing .pf-fill > * { flex: 1 1 auto; min-height: 0; }
 
@@ -221,14 +221,14 @@ table.kv td.role { color: var(--accent-ink); font-weight: 800; }
 
 /* ── 슬라이드 장면(deck.slides[].layout) ── */
 .dk { display: grid; gap: 28px; min-width: 0; }
-.dk-side { grid-template-columns: minmax(0, var(--vw, 1.4fr)) minmax(0, 1fr); align-items: center; }
+.dk-side { grid-template-columns: minmax(0, var(--vw, 1.4fr)) minmax(0, 1fr); align-items: start; }   /* 높이가 다른 양쪽 칸을 위쪽에 맞춤 */
 .dk-side.flip { grid-template-columns: minmax(0, 1fr) minmax(0, var(--vw, 1.4fr)); }
 .dk-side.flip > .vis { order: 2; }
 .pf-sizing .dk-side { align-items: stretch; grid-template-rows: minmax(0, 1fr); }
 .dk-stack { grid-template-rows: auto auto; gap: 20px; }
 .pf-sizing .dk-stack { grid-template-rows: minmax(0, 1fr) auto; }
-.dk-text { align-content: center; }
-.vis { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; min-width: 0; min-height: 0; }
+.dk-text { align-content: start; }
+.vis { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 16px; min-width: 0; min-height: 0; }
 .vis[data-arr="row"] { flex-direction: row; align-items: flex-start; }
 .vbox { margin: 0; display: flex; flex-direction: column; gap: 6px; flex: none; max-width: 100%; min-width: 0; }
 .vmedia { border-radius: calc(var(--radius) * .6); overflow: hidden; background: var(--card); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; }
@@ -250,7 +250,7 @@ table.md-table tbody tr:nth-child(even) td { background: var(--zebra); }
 table.md-table code { font-size: max(.86em, 12px); }   /* 머리 칸(13px) 안 코드도 코드 하한 12px 아래로 내려가지 않게 */
 table.md-table img { max-height: 120px; max-width: 100%; height: auto; }   /* width·height 속성(렌더러가 미리 잰 크기)으로 불러오기 전에도 자리를 잡음 */
 .vbox[data-kind] > .pf-vband { min-width: 0; }                         /* 그림 상자 안 띠는 상자 폭에 맞춰 꺾임(높이는 fitVisuals가 다시 잼) */
-.cards { display: grid; gap: 12px; align-content: center; min-width: 0; }
+.cards { display: grid; gap: 12px; align-content: start; min-width: 0; }
 .cards.row { grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); align-items: stretch; }
 .cards.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .ncard { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; padding: 14px 16px; background: var(--card); border: 1px solid var(--line); border-radius: calc(var(--radius) * .7); align-items: start; }
@@ -273,6 +273,9 @@ table.md-table img { max-height: 120px; max-width: 100%; height: auto; }   /* wi
 .flow.col .fstep .labelchip { justify-content: center; }
 .scr-row { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); gap: 22px; }
 .pf-sizing .scr-row { align-items: stretch; }
+/* 직접 고침 11/21: 크기를 잰 뒤(.pf-sizing 밖)에는 카드 네 줄(화면·FEATURE·제목·설명)을 행을 공유하는 격자로 — 화면 높이가 달라도 FEATURE·제목이 한 줄에 */
+.scr-row:not(.pf-sizing .scr-row) { grid-template-rows: repeat(4, auto); row-gap: 10px; align-items: start; }
+.scr-row:not(.pf-sizing .scr-row) > .fe-card { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 10px; }
 .pf-vband { margin: 0; padding: 12px 14px; border-left: 4px solid #F04438; background: #2A1212; color: #FDA29B; font-size: 13px; line-height: 1.45; border-radius: 8px; min-width: 260px; }
 .pf-vband b { font-weight: 800; }
 .pf-vband span { display: block; margin-top: 3px; font-family: var(--mono); font-size: 12px; overflow-wrap: anywhere; }
