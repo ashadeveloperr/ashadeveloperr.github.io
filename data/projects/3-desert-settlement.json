@@ -21,7 +21,7 @@
     },
     {
       "label": "인원",
-      "value": "1인 개발 (구현은 AI 에이전트와 협업)"
+      "value": "1인 개발"
     },
     {
       "label": "환경",
@@ -58,7 +58,7 @@
         "src": "images/verification.png",
         "w": 966,
         "h": 613,
-        "caption": "에이전트의 시뮬레이션 및 유니티 테스트를 통한 검증"
+        "caption": "시뮬레이터 검증과 Unity 테스트를 이어서 실행한 출력 — 모든 검증 통과, EditMode 221개·PlayMode 14개 통과(1개 건너뜀)"
       }
     },
     {
@@ -159,7 +159,7 @@
       "src": "images/verification.png",
       "w": 966,
       "h": 613,
-      "caption": "에이전트의 시뮬레이션 및 유니티 테스트를 통한 검증"
+      "caption": "시뮬레이터 검증과 Unity 테스트를 이어서 실행한 출력 — 모든 검증 통과, EditMode 221개·PlayMode 14개 통과(1개 건너뜀)"
     }
   ],
   "retro": {
