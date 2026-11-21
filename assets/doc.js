@@ -226,13 +226,15 @@
       div.textContent = code.textContent;
       const acc = /^\s*accTitle\s*:\s*(.+)$/m.exec(code.textContent)?.[1]?.trim();
       fig.dataset.label = acc || PF.t('doc.diagram-n', { n });
-      // 장 머리 요약 도표(%% feature-flow)와 작은 설명 도표(%% simple — 코어 루프 등, 코드 구조도가 아닌 것)는 원문·크게 보기 줄을 보이지 않게(.mmd-summary).
-      // 줄은 다시 그릴 때 원문을 읽으므로 지우지 않고 숨김(직접 고침 11/21)
-      if (/^\s*%%\s*(feature-flow|simple)\b/m.test(code.textContent)) fig.classList.add('mmd-summary');
+      // 장 머리 요약 도표(%% feature-flow → .mmd-summary)와 작은 설명 도표(%% simple → .mmd-simple — 코어 루프 등, 코드 구조도가 아닌 것)는
+      // 원문·크게 보기 줄을 보이지 않게. 줄은 다시 그릴 때 원문을 읽으므로 지우지 않고 숨김. 작은 설명 도표는 도표를 눌러 크게 볼 수 있음(⑪)(직접 고침 11/21)
+      if (/^\s*%%\s*feature-flow\b/m.test(code.textContent)) fig.classList.add('mmd-summary');
+      else if (/^\s*%%\s*simple\b/m.test(code.textContent)) fig.classList.add('mmd-simple');
       fig.appendChild(div);
       fig.insertAdjacentHTML('beforeend', `<div class="mmd-bar"><details class="mmd-src"><summary>${T('doc.diagram-src')}</summary><pre><code>${esc(code.textContent)}</code></pre></details>` +
         `<button type="button" class="mmd-zoom">${T('doc.zoom')}</button></div>`);
       (code.closest('pre') || code).replaceWith(fig);
+      if (!acc) fig.dataset.label = diagramLabel(fig, code.textContent) || fig.dataset.label;
       figs.push(fig);
     });
     try { await Promise.race([Promise.all([document.fonts.load('16px Pretendard'), document.fonts.load('700 16px Pretendard')]), sleep(4000)]); } catch { /* 글꼴 없이 진행 */ }
@@ -335,7 +337,7 @@
       if (img && !img.closest('a')) return zoom({ src: img.currentSrc || img.src, caption: img.alt });
       const zb = e.target.closest('.mmd-zoom');
       if (zb) { const svg = zb.closest('.mmd').querySelector('.mermaid svg'); if (svg) zoom({ svg, caption: zb.closest('.mmd').dataset.label }); return; }
-      // 도표 자체를 눌러도 크게 보기(요약·작은 설명 도표 .mmd-summary 제외, 도표 안 링크·편집 모드 중에는 그대로)(직접 고침 11/21)
+      // 도표 자체를 눌러도 크게 보기(작은 설명 도표 .mmd-simple 포함, 장 머리 요약 도표 .mmd-summary 제외, 도표 안 링크·편집 모드 중에는 그대로)(직접 고침 11/21)
       const fig = e.target.closest('.mmd:not(.mmd-summary)');
       if (fig && e.target.closest('.mermaid') && !e.target.closest('a') && !document.body.classList.contains('pf-editing')) {
         const svg = fig.querySelector('.mermaid svg');
@@ -347,6 +349,32 @@
     const pres = [...doc.querySelectorAll('pre')].filter((x) => !x.closest('.mmd-src'));
     pres.forEach((pre) => { fade(pre); pre.addEventListener('scroll', () => fade(pre), { passive: true }); });
     addEventListener('resize', () => pres.forEach(fade));
+  }
+
+  // 다이어그램 이름(크게 보기 창 제목·스크린리더 이름)을 문서에서 찾음(직접 고침 11/21). 원문 accTitle이 있으면 그것이 먼저(호출하는 쪽).
+  // ① 바로 위 문단이 굵은 글 한 줄이면(예: **① 같은 Core를 …**) 그 글에서 앞 원문자 번호만 뗀 것
+  // ② 없으면 가장 가까운 위 제목(번호 뗌). 제목이 문제·선택·구현처럼 짧으면 장 제목(':' 앞)을 앞에 붙이고, 도표 종류를 뒤에 붙임
+  function diagramLabel(fig, src) {
+    const prev = fig.previousElementSibling;
+    if (prev && prev.tagName === 'P') {
+      const kids = [...prev.childNodes].filter((x) => !(x.nodeType === 3 && !x.textContent.trim()));
+      if (kids.length === 1 && kids[0].nodeName === 'STRONG') {
+        const t = kids[0].textContent.replace(/^[\s①-⑳]+/, '').trim();
+        if (t) return t;
+      }
+    }
+    const strip = (h) => htext(h).replace(/^\s*\d+(?:\.\d+)*\.?\s*/, '').trim();
+    let sec = null, chap = null;
+    for (let el = fig.previousElementSibling; el; el = el.previousElementSibling) {
+      if (!sec && /^H[2-4]$/.test(el.tagName)) sec = el;
+      if (el.tagName === 'H2') { chap = el; break; }
+    }
+    if (!sec) return '';
+    let name = strip(sec);
+    if (sec !== chap && chap && name.length <= 4) name = `${strip(chap).split(/[:—]/)[0].trim()} · ${name}`;
+    const type = /^\s*(?:%%[^\n]*\n|---[\s\S]*?---\s*\n|\s*\n)*\s*(\w[\w-]*)/.exec(src)?.[1] || '';
+    const KIND = { sequenceDiagram: '시퀀스 다이어그램', classDiagram: '클래스 다이어그램', stateDiagram: '상태 다이어그램', 'stateDiagram-v2': '상태 다이어그램', flowchart: '흐름도', graph: '흐름도', erDiagram: 'ERD' };
+    return KIND[type] ? `${name} — ${KIND[type]}` : name;
   }
 
   function classifyMdLink(a, isRelative, decode) {
