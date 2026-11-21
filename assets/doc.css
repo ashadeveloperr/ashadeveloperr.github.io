@@ -215,8 +215,10 @@ html[data-mmd-dark] { --diagram-bg: var(--t-diagram, var(--surface)); }
 html[data-mmd-dark] .mmd .mermaid { border-color: var(--line); }
 .mmd-bar { contain: inline-size; display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 6px 12px; margin-top: 6px; font-size: 13px; }
 .mmd-src summary { color: var(--muted); cursor: pointer; font-weight: 600; }
-/* 장 머리 요약 도표(%% feature-flow)는 원문·크게 보기 줄 없이(직접 고침 11/21) */
+/* 장 머리 요약 도표(%% feature-flow)·작은 설명 도표(%% simple)는 원문·크게 보기 줄 없이(직접 고침 11/21) */
 .mmd.mmd-summary .mmd-bar { display: none; }
+/* 그 밖의 도표(코드 구조도 등)는 도표 자체를 눌러 크게 보기(doc.js ⑪). 편집 모드에서는 편집 커서 그대로(직접 고침 11/21) */
+body:not(.pf-editing) .mmd:not(.mmd-summary) .mermaid svg { cursor: zoom-in; }
 .mmd-src pre { margin: 8px 0 0; max-height: 320px; overflow: auto; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; }
 .mmd-src pre code { display: block; padding: 10px 12px; font-size: 12.5px; color: var(--body); background: none; white-space: pre; word-break: normal; }
 .mmd-zoom { font: inherit; font-size: 13px; font-weight: 700; color: var(--accent-ink); background: none; border: 0; cursor: pointer; padding: 0; }

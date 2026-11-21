@@ -735,7 +735,7 @@
           {"label": "", "text": "식량 충족률이 주민 목표 인원으로 이어져, 부족의 결과가 \"주민이 떠남\" 하나로 나타남(두 번 벌하지 않음)", "verbatim": true},
           {"label": "", "text": "새 환자 = 전파율 × 걸릴 수 있는 주민 × 아픈 주민 ÷ 전체 주민", "verbatim": true}
         ],
-        "visuals": [{"kind": "code", "n": 1, "fp": "// 먹기·마시기(주민이 먼저), 그다음 남은 원료로 가공."}]
+        "visuals": [{"kind": "code", "n": 1, "fp": "if (Rules.LaborOn) demand = (Residents + Rules.BaseCrew) * F"}]
       },
       {
         "key": "verify-cash",
@@ -1385,7 +1385,7 @@
           {"label": "", "text": "식량 충족률이 주민 목표 인원으로 이어져, 부족의 결과가 \"주민이 떠남\" 하나로 나타남(두 번 벌하지 않음)", "verbatim": true},
           {"label": "", "text": "새 환자 = 전파율 × 걸릴 수 있는 주민 × 아픈 주민 ÷ 전체 주민", "verbatim": true}
         ],
-        "visuals": [{"kind": "code", "n": 1, "fp": "// 먹기·마시기(주민이 먼저), 그다음 남은 원료로 가공."}]
+        "visuals": [{"kind": "code", "n": 1, "fp": "if (Rules.LaborOn) demand = (Residents + Rules.BaseCrew) * F"}]
       },
       {
         "key": "verify-cash",
@@ -1476,7 +1476,7 @@
         "visuals": [{"kind": "table", "n": 1, "fp": "검토 항목|As-Is|To-Be"}]
       }
     ],
-    "applied": "4f676f6df7832aa5"
+    "applied": "b66ef6f5b6f8a8d9"
   },
   "generatedAt": "2026-11-21"
 }

@@ -343,7 +343,7 @@
           }
         ],
         "visuals": [
-          {"kind": "code", "n": 1, "lines": [9, 24], "fp": "public void ExecutePreparedUse(Vector3 currentOwnerPos)"},
+          {"kind": "code", "n": 1, "lines": [9, 23], "fp": "public void ExecutePreparedUse(Vector3 currentOwnerPos)"},
           {
             "kind": "image",
             "src": "images/dig_timing.gif",
@@ -559,7 +559,7 @@
           {
             "kind": "code",
             "n": 1,
-            "lines": [10, 29],
+            "lines": [10, 26],
             "fp": "private static Vector3 ResolveEffectPosition(Vector3 worldPo"
           }
         ]
@@ -738,7 +738,7 @@
           }
         ],
         "visuals": [
-          {"kind": "code", "n": 1, "lines": [9, 24], "fp": "public void ExecutePreparedUse(Vector3 currentOwnerPos)"},
+          {"kind": "code", "n": 1, "lines": [9, 23], "fp": "public void ExecutePreparedUse(Vector3 currentOwnerPos)"},
           {
             "kind": "image",
             "src": "images/dig_timing.gif",
@@ -954,7 +954,7 @@
           {
             "kind": "code",
             "n": 1,
-            "lines": [10, 29],
+            "lines": [10, 26],
             "fp": "private static Vector3 ResolveEffectPosition(Vector3 worldPo"
           }
         ]
@@ -1006,7 +1006,7 @@
         "visuals": [{"kind": "table", "n": 1, "fp": "맡긴 것|직접 판단한 것|확인한 방법"}]
       }
     ],
-    "applied": "36b38d71c07cba4c"
+    "applied": "b0f649c873766885"
   },
   "generatedAt": "2026-11-21"
 }

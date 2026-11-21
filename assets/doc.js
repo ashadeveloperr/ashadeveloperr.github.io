@@ -226,8 +226,9 @@
       div.textContent = code.textContent;
       const acc = /^\s*accTitle\s*:\s*(.+)$/m.exec(code.textContent)?.[1]?.trim();
       fig.dataset.label = acc || PF.t('doc.diagram-n', { n });
-      // 장 머리 요약 도표(원문에 %% feature-flow 표시)는 원문·크게 보기 줄을 보이지 않게(.mmd-summary). 줄은 다시 그릴 때 원문을 읽으므로 지우지 않고 숨김(직접 고침 11/21)
-      if (/^\s*%%\s*feature-flow\b/m.test(code.textContent)) fig.classList.add('mmd-summary');
+      // 장 머리 요약 도표(%% feature-flow)와 작은 설명 도표(%% simple — 코어 루프 등, 코드 구조도가 아닌 것)는 원문·크게 보기 줄을 보이지 않게(.mmd-summary).
+      // 줄은 다시 그릴 때 원문을 읽으므로 지우지 않고 숨김(직접 고침 11/21)
+      if (/^\s*%%\s*(feature-flow|simple)\b/m.test(code.textContent)) fig.classList.add('mmd-summary');
       fig.appendChild(div);
       fig.insertAdjacentHTML('beforeend', `<div class="mmd-bar"><details class="mmd-src"><summary>${T('doc.diagram-src')}</summary><pre><code>${esc(code.textContent)}</code></pre></details>` +
         `<button type="button" class="mmd-zoom">${T('doc.zoom')}</button></div>`);
@@ -333,7 +334,13 @@
       const img = e.target.closest('img');
       if (img && !img.closest('a')) return zoom({ src: img.currentSrc || img.src, caption: img.alt });
       const zb = e.target.closest('.mmd-zoom');
-      if (zb) { const svg = zb.closest('.mmd').querySelector('.mermaid svg'); if (svg) zoom({ svg, caption: zb.closest('.mmd').dataset.label }); }
+      if (zb) { const svg = zb.closest('.mmd').querySelector('.mermaid svg'); if (svg) zoom({ svg, caption: zb.closest('.mmd').dataset.label }); return; }
+      // 도표 자체를 눌러도 크게 보기(요약·작은 설명 도표 .mmd-summary 제외, 도표 안 링크·편집 모드 중에는 그대로)(직접 고침 11/21)
+      const fig = e.target.closest('.mmd:not(.mmd-summary)');
+      if (fig && e.target.closest('.mermaid') && !e.target.closest('a') && !document.body.classList.contains('pf-editing')) {
+        const svg = fig.querySelector('.mermaid svg');
+        if (svg) zoom({ svg, caption: fig.dataset.label });
+      }
     });
     // 코드 오른쪽 흐림 표시: 가로로 더 있을 때만
     const fade = (pre) => pre.classList.toggle('fade-r', pre.scrollWidth > pre.clientWidth + 1 && pre.scrollLeft + pre.clientWidth < pre.scrollWidth - 1);
