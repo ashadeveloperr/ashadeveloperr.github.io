@@ -154,6 +154,12 @@
     // ①② md HTML은 먼저 비활성 <template>에 넣고(그 안의 그림은 받지 않음) 상대경로·제목 id를 고친 뒤에 문서에 붙임(PF.md.parse, 슬라이드와 같은 규칙).
     //    제목 id는 GitHub 규칙(PF.slugger), 링크 분류(숨김 "(새 탭)")·인쇄 각주([n])가 섞이기 전의 원문 제목 글자로 계산하고, 그 글자를 목차·레일에도 씀
     const { frag, headings: hs } = PF.md.parse(md, id);
+    // 머리말(제목 # 다음 ~ 첫 장 ## 앞: 한 줄 소개 인용문·개발 형태·개요 표·문서 구성)은 페이지 머리(.doc-intro)가 data로 이미 보여 주므로 본문에서 뺌(중복 방지)
+    {
+      const kids = [...frag.childNodes];
+      const h2 = kids.findIndex((n) => n.nodeName === 'H2');
+      if (h2 > 0) kids.slice(0, h2).forEach((n) => { if (n.nodeName !== 'H1') n.remove(); });
+    }
     const { isRelative, decode } = PF.md;
     const headings = hs.map((h) => { headText.set(h.el, h.text); return h.el; });
 

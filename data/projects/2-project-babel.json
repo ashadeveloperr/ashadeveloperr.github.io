@@ -245,7 +245,7 @@
             "verbatim": false
           }
         ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "항목|내용", "sectionPath": ["SAIL OR SUNK — 2D 물리 기반 화물 적재 게임의 시스템 설계와 구현"]}],
+        "visuals": [],
         "edited": true
       },
       {
@@ -1401,6 +1401,6 @@
         "visuals": []
       }
     ],
-    "applied": "7f902c3a63c9d349"
+    "applied": "f5b7f84ddfe4f245"
   }
 }
