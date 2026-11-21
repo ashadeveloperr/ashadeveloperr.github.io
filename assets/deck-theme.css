@@ -176,12 +176,13 @@ table.kv td.role { color: var(--accent-ink); font-weight: 800; }
 
 /* ── 프로젝트 소개(슬라이드 표지, 결정 G4) ── */
 .t-P1 .pf-body { display: flex; flex-direction: column; }
-.pi-main { flex: 1; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); grid-template-rows: minmax(0, 100%); gap: 40px; margin-top: 22px; min-height: 0; }
+.pi-titlerow { margin-top: 22px; flex: none; }   /* 직접 고침 11/21: 제목은 두 단 위 한 줄 */
+.pi-main { flex: 1; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); grid-template-rows: minmax(0, 100%); gap: 40px; margin-top: 12px; min-height: 0; }
 .t-P1.portrait .pi-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
 .t-P1.nocover .pi-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); }
 .pi-left, .pi-right { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
 .pi-t { font-size: 44px; font-weight: 800; letter-spacing: -.03em; line-height: 1.12; color: var(--ink); }
-.pi-head .tagline { font-size: 18px; font-weight: 600; color: var(--muted); margin-top: 10px !important; line-height: 1.5; }
+.pi-head .tagline { font-size: 18px; font-weight: 600; color: var(--muted); margin-top: 0 !important; line-height: 1.5; }
 .pi-cover { width: 100%; flex: 0 1 auto; min-height: 140px; max-height: 380px; border-radius: calc(var(--radius) * .9); box-shadow: 0 24px 60px -24px var(--shadow), 0 30px 80px -40px color-mix(in srgb, var(--accent-2) calc(60% * var(--fx)), transparent); }
 .t-P1.portrait .pi-cover { max-height: 480px; }
 .pi-cover img { width: 100%; height: 100%; object-fit: contain; }
@@ -195,7 +196,12 @@ table.kv td.role { color: var(--accent-ink); font-weight: 800; }
 .lc-k { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
 .intent .it { margin-top: 4px !important; font-size: 15px; line-height: 1.62; color: var(--ink); }
 .pi-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.pi-links.row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pi-links.row { grid-template-columns: repeat(2, minmax(0, 1fr)); }   /* 직접 고침 11/21: 3+1로 들쭉날쭉하지 않게 2×2 */
+.pi-left .pi-cover { flex: 1 1 0; aspect-ratio: auto !important; }   /* 대표 그림이 남는 높이에 맞춰 줄어듦(min/max-height는 아래 규칙) */
+/* 직접 고침 11/21: 링크 카드는 모두 같은 크기 — 행 높이 같게, 카드가 칸을 꽉 채움(주소는 줄바꿈) */
+.pi-links { grid-auto-rows: 1fr; }
+.lcard, .lcard a { height: 100%; box-sizing: border-box; }
+.lcard .url { overflow-wrap: anywhere; }
 .lcard a { position: relative; display: block; border: 1px solid var(--line); border-radius: calc(var(--radius) * .6); padding: 8px 30px 9px 14px; color: var(--ink); text-decoration: none; background: var(--paper); }
 .lcard a .pf-newtab-icon { position: absolute; right: 12px; top: 11px; margin: 0; }
 .lcard a:hover { border-color: var(--accent); }
@@ -204,6 +210,7 @@ table.kv td.role { color: var(--accent-ink); font-weight: 800; }
 .pi-right .tags { margin-top: 2px; }
 .pi-tight .pi-t { font-size: 38px; }
 .pi-tight .pi-head .tagline { font-size: 16px; }
+.pi-tight .pi-titlerow { margin-top: 16px; }
 .pi-tight .pi-cover { max-height: 300px; }
 .t-P1.portrait.pi-tight .pi-cover { max-height: 400px; }
 .pi-tight .pi-meta dd { font-size: 14px; }

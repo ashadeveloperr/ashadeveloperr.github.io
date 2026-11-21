@@ -376,12 +376,14 @@
     const cards = links.map((l) => `<div class="lcard">${PF.link({ href: l.href, kind: l.kind, label: `<span class="lc-k">${esc(l.k)}</span><span class="lc-t">${esc(l.label)}</span><span class="url">${esc(l.visible)}</span>` })}</div>`).join('');
     const tags = (p.tags || []).length ? `<ul class="tags">${p.tags.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
     const cover = p.cover ? `<div class="media pi-cover"${ar ? ` style="aspect-ratio:${ar.toFixed(4)}"` : ''}>${imgTag(PF.srcPath(p.id, p.cover), p.title, d)}</div>` : '';
-    const head = `<div class="pi-head"><${titleTag} class="pi-t">${esc(p.title)}</${titleTag}>${p.tagline ? `<p class="tagline">${inline(p.tagline)}</p>` : ''}</div>`;
+    // 직접 고침 11/21: 제목은 두 단 위에 따로 두고(오른쪽 단이 제목이 아니라 한 줄 소개와 같은 줄에서 시작), 한 줄 소개만 왼쪽 단 맨 위에
+    const titleEl = `<${titleTag} class="pi-t">${esc(p.title)}</${titleTag}>`;
+    const head = p.tagline ? `<div class="pi-head"><p class="tagline">${inline(p.tagline)}</p></div>` : '';
     const make = (tight, linksLeft) => {
       const s = scene({ id, tpl, kind: 'bare', cls: `${variant}${tight ? ' pi-tight' : ''}`, foot, sec, group, stitle: p.title });
       const right = `<div class="pi-right">${meta.length ? `<dl class="pi-meta">${meta.join('')}</dl>` : ''}${intent}${!linksLeft && cards ? `<div class="pi-links">${cards}</div>` : ''}${tags}</div>`;
-      const left = `<div class="pi-left">${head}${cover}${linksLeft && cards ? `<div class="pi-links row">${cards}</div>` : ''}</div>`;
-      body(s).innerHTML = `<div class="toprow"><span class="pf-eyebrow">${esc(eyebrow)}</span><span class="rl">${esc(PF.teamLabel(p.team))}</span></div><div class="pi-main">${left}${right}</div>`;
+      const left = `<div class="pi-left">${head}${cover}${linksLeft && cards ? `<div class="pi-links row" style="--n:${links.length}">${cards}</div>` : ''}</div>`;
+      body(s).innerHTML = `<div class="toprow"><span class="pf-eyebrow">${esc(eyebrow)}</span><span class="rl">${esc(PF.teamLabel(p.team))}</span></div><div class="pi-titlerow">${titleEl}</div><div class="pi-main">${left}${right}</div>`;
       return s;
     };
     for (const tight of [false, true]) for (const linksLeft of variant === 'nocover' ? [false] : [false, true]) { const s = make(tight, linksLeft); if (fitsM(s)) return s; }

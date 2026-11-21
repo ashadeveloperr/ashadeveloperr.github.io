@@ -193,7 +193,7 @@
   const txt = (t) => (t && typeof t === 'object' ? t.text : t) || '';
   const ncards = (points, { row = false, num = true, two = false } = {}) => (points.length
     ? `<div class="cards${row ? ' row' : ''}${two ? ' two' : ''}" style="--n:${Math.min(points.length, 4)}">${points.map((pt, i) =>
-      `<div class="ncard${num ? '' : ' nonum'}">${num ? `<span class="num" aria-hidden="true">${i + 1}</span>` : ''}<div>${pt.label ? `<span class="lb">${esc(PF.label(pt.label))}</span>` : ''}<p>${inline(txt(pt))}</p></div></div>`).join('')}</div>` : '');
+      `<div class="ncard${num ? '' : ' nonum'}">${num ? `<span class="num" aria-hidden="true">${i + 1}</span>` : ''}<div>${pt.label ? `<span class="lb">${inline(PF.label(pt.label))}</span>` : ''}<p>${inline(txt(pt))}</p></div></div>`).join('')}</div>` : '');
   const FLOW = { '문제': '', '원인': '', '해결': 'accent', '결과': 'ok', '배운 점': '' };   // data 값 → 칩 색(보이는 글자만 PF.label로 바뀜)
   const flowHtml = (points, dir) => `<div class="flow ${dir}" style="--n:${Math.min(points.length, 4)}">${points.map((pt) =>
     `<div class="fstep${pt.label === '결과' ? ' res' : ''}">${pt.label ? `<span class="labelchip${FLOW[pt.label] ? ' ' + FLOW[pt.label] : ''}">${esc(PF.label(pt.label))}</span>` : ''}<p>${inline(txt(pt))}</p></div>`).join('')}</div>`;
@@ -203,7 +203,8 @@
     const tight = variant.tight ? ' tight' : '';
     if (!vs.length) {
       if (sl.layout === 'problem') return `<div class="dk dk-text${tight}">${flowHtml(points, variant.stack || variant.tight ? 'row' : 'col')}</div>`;
-      return `<div class="dk dk-text${tight}">${ncards(points, { two: points.length >= 3 && !variant.stack, num: sl.layout !== 'overview' })}</div>`;
+      const oneRow = points.length >= 2 && points.length <= 3 && !variant.stack;   // 직접 고침 11/21: 카드 2~3개는 한 줄(ㅁ ㅁ ㅁ), 4개 이상은 두 단
+      return `<div class="dk dk-text${tight}">${ncards(points, { row: oneRow, two: !oneRow && points.length >= 4 && !variant.stack, num: sl.layout !== 'overview' })}</div>`;
     }
     if (sl.layout === 'screens') {
       return `<div class="dk scr-row${tight}" style="--n:${vs.length}">${vs.map((v, i) => `<div class="fe-card">${vis([v])}${points[i] ? `<p class="fe-k">${esc(PF.t('en.feature'))} ${String(i + 1).padStart(2, '0')}</p>${points[i].label ? `<h3>${esc(PF.label(points[i].label))}</h3>` : ''}${txt(points[i]) ? `<p>${inline(txt(points[i]))}</p>` : ''}` : ''}</div>`).join('')}</div>`;
@@ -259,6 +260,10 @@
   }
   //   codeChunk(v) = 그 코드의 이번 줄 범위 · tsplit = { v, rows: [a, b) } 행을 나누는 표 하나(다른 표는 그대로 둠)
   function fitSlide(sl, vis, sid, part, codeChunk, meta, tsplit = null, depth = 0) {
+    // 직접 고침 11/21(글 위계): 도입이 없고 첫 요점만 라벨이 없으며 나머지는 모두 라벨이 있으면, 첫 요점은 카드가 아니라 제목 아래 소제목(도입)으로
+    const P0 = sl.points || [];
+    const leadPoint = !txt(sl.lead) && P0.length >= 2 && !P0[0].label && P0.slice(1).every((x) => x.label) && sl.layout !== 'problem' && sl.layout !== 'screens';
+    if (leadPoint) sl = { ...sl, lead: P0[0], points: P0.slice(1) };
     const vs = vis.map((v) => vboxHtml(v, v.ref.kind === 'code' ? codeChunk(v) : v.ref.kind === 'table' && tsplit && tsplit.v === v ? tsplit.rows : null));
     const V = sl.layout === 'full' || sl.layout === 'screens' ? [{}, { tight: true }]
       : [{ vw: 1.4 }, { vw: 1.7 }, { vw: 1.15 }, { vw: 1.4, tight: true }, { stack: true }, { stack: true, tight: true }];
@@ -267,6 +272,7 @@
       s.classList.add(`l-${sl.layout || 'visual'}`);
       if (meta.err) s.dataset.pfErr = meta.err;
       if (sl.edited) s.dataset.pfEdited = '1';                       // 장면 고치기로 고친 장면(미리보기 개요에 ✎)
+      if (leadPoint) s.dataset.pfLeadPoint = '1';                     // 도입 = data의 요점 1(편집 모드가 카드 번호를 하나 미룸)
       PF.body(s).innerHTML = `<div class="pf-fill">${bodyHtml(sl, vs, v)}</div>`;
       if (meta.auto) s.querySelector('.pf-foot > span').insertAdjacentHTML('beforeend', '<span class="pf-autoband" data-pf-ui="note">예전 데이터로 자동 구성 — /portfolio-build를 다시 실행하면 슬라이드가 됩니다</span>');
       return PF.fitVisuals(s);
