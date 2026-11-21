@@ -422,7 +422,7 @@
           },
           {
             "label": "",
-            "text": "서버로 굴착을 요청하는 경로(`RequestExcavation`)는 팀원 커밋에서 추가",
+            "text": "`PickaxeItem.ExecuteDigPower`: 실제 굴착을 일으키는 함수. 지금은 서버에 굴착을 요청하고(`RoomClient.RequestExcavation`), 요청을 보내는 데 성공하면 `TerrainManager.PlayTileHit`로 진동·소리를 재생(4장). 이 서버 요청 경로는 팀원 커밋에서 추가",
             "verbatim": true
           }
         ],
@@ -460,7 +460,7 @@
           },
           {
             "label": "",
-            "text": "실행 단계(`ExecutePreparedUse`)에서는 예약한 칸에 지형이 남아 있는지, 현재 위치에서 칸까지가 사거리 안인지 다시 확인하고, 조건이 맞지 않으면 그 휘두르기를 헛손질로 처리",
+            "text": "예약한 칸에 지형이 남아 있는지(`HasTerrain`) 다시 보고, 사거리는 클릭할 때가 아니라 곡괭이가 닿는 순간의 위치(`currentOwnerPos`)에서 칸 경계의 가장 가까운 점(`Bounds.ClosestPoint`)까지 잼. 하나라도 어긋나면 그 휘두르기는 헛손질",
             "verbatim": true
           }
         ],
@@ -621,12 +621,12 @@
         "points": [
           {
             "label": "",
-            "text": "같은 칸을 다시 치면 이전 Tween을 끝내고 이동량을 0으로 되돌린 뒤 새로 시작 → 흔들림이 누적되지 않음",
+            "text": "같은 칸을 다시 치면 `StopCell`로 이전 Tween을 끝내고 이동량을 0으로 되돌린 뒤 새로 시작 → 흔들림이 누적되지 않음",
             "verbatim": true
           },
           {
             "label": "",
-            "text": "`DOTween.Shake`의 값을 오브젝트 위치가 아닌 `TrySetCellVisualOffset`(칸의 렌더링 이동량)으로 넘김",
+            "text": "`DOTween.Shake`의 값을 오브젝트 위치가 아닌 `TrySetCellVisualOffset`(칸의 렌더링 이동량, 아래)으로 넘김",
             "verbatim": true
           },
           {
@@ -752,7 +752,7 @@
         "points": [
           {
             "label": "",
-            "text": "`Char.controller`: 상태 7개(Idle·Run·Jump·Fall·Climb·Mine·Dead)",
+            "text": "`Char.controller`(Animator Controller 에셋): 상태 7개(Idle·Run·Jump·Fall·Climb·Mine·Dead)",
             "verbatim": true
           },
           {
@@ -880,10 +880,10 @@
             "kind": "code",
             "n": 1,
             "lines": [
-              1,
-              20
+              10,
+              29
             ],
-            "fp": "private static AudioListener GetActiveListener()"
+            "fp": "private static Vector3 ResolveEffectPosition(Vector3 worldPo"
           }
         ]
       },
@@ -903,7 +903,7 @@
         "points": [
           {
             "label": "문제",
-            "text": "프로젝트 중반 이후 HUD 그래픽(본인)과 상점 UI 기능(팀원)을 같은 씬에서 작업하면서 병합할 때마다 충돌이 반복됨. 9/7~9/9는 팀 전체 커밋이 가장 많았던 시기로(하루 최대 49회, 9/8 저장소 커밋 기록 기준) 아래 프리팹 분리도 이 시기에 진행",
+            "text": "프로젝트 중반 이후 HUD 그래픽(본인)과 상점 UI 기능(팀원)을 같은 씬에서 작업하면서 병합할 때마다 충돌이 반복됨",
             "verbatim": true
           },
           {
@@ -959,5 +959,5 @@
       }
     ]
   },
-  "generatedAt": "2026-11-18"
+  "generatedAt": "2026-11-21"
 }
