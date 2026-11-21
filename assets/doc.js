@@ -106,7 +106,6 @@
         <div class="doc-intro">
           <p class="eyebrow">${T('name.doc')}</p>
           <h1>${esc(p.title)}</h1>
-          ${p.tagline ? `<p class="tagline">${inline(p.tagline)}</p>` : ''}
           <dl class="meta-line">${metaRows}</dl>
           ${tags}
           <details class="glance" id="glance"><summary>${T('doc.glance')}</summary>

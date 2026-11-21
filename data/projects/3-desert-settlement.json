@@ -215,10 +215,10 @@
         "points": [
           {"label": "", "text": "반경 3~7의 헥스 타일 맵 위에서 시설을 짓고, 육각형 변을 따라 수로를 놓아 우물의 물을 나누는 정착지 경영 게임", "verbatim": true},
           {"label": "", "text": "물은 우물에서 수로를 따라 흐르고 상류 시설이 먼저 받음 → 물이 모자라면 가동률이 떨어짐", "verbatim": true},
-          {"label": "", "text": "정착지를 경매에 팔고 입찰자가 내미는 영구 모디파이어를 골라 다음 정착지로 넘어가는 캠페인 루프", "verbatim": true},
-          {"label": "핵심 루프", "text": "정착지 건설·운영 → 경매 → 매각/보류 → 행선지 선택 → 다음 정착지", "verbatim": true}
+          {"label": "", "text": "정착지를 경매에 팔고 입찰자가 내미는 영구 모디파이어를 골라 다음 정착지로 넘어가는 캠페인 루프", "verbatim": true}
         ],
         "visuals": [
+          {"kind": "mermaid", "n": 1, "fp": "flowchart LR", "sectionPath": ["1. 프로젝트 개요", "1.1 만든 것"]},
           {
             "kind": "image",
             "src": "images/water_flow.gif",
@@ -862,7 +862,7 @@
       {
         "key": "made",
         "chapter": "overview",
-        "layout": "overview",
+        "layout": "visual",
         "tab": "개요",
         "title": {"text": "1.1 만든 것", "verbatim": true},
         "lead": null,
@@ -870,10 +870,10 @@
         "points": [
           {"label": "", "text": "반경 3~7의 헥스 타일 맵 위에서 시설을 짓고, 육각형 변을 따라 수로를 놓아 우물의 물을 나누는 정착지 경영 게임", "verbatim": true},
           {"label": "", "text": "물은 우물에서 수로를 따라 흐르고 상류 시설이 먼저 받음 → 물이 모자라면 가동률이 떨어짐", "verbatim": true},
-          {"label": "", "text": "정착지를 경매에 팔고 입찰자가 내미는 영구 모디파이어를 골라 다음 정착지로 넘어가는 캠페인 루프", "verbatim": true},
-          {"label": "핵심 루프", "text": "정착지 건설·운영 → 경매 → 매각/보류 → 행선지 선택 → 다음 정착지", "verbatim": true}
+          {"label": "", "text": "정착지를 경매에 팔고 입찰자가 내미는 영구 모디파이어를 골라 다음 정착지로 넘어가는 캠페인 루프", "verbatim": true}
         ],
         "visuals": [
+          {"kind": "mermaid", "n": 1, "fp": "flowchart LR", "sectionPath": ["1. 프로젝트 개요", "1.1 만든 것"]},
           {"kind": "table", "n": 1, "fp": "항목|내용", "sectionPath": ["Desert Flavor — AI 협업 개발에서 기획·검증을 맡은 헥스타일 경영 게임"]},
           {
             "kind": "image",
@@ -1540,7 +1540,7 @@
         "visuals": [{"kind": "table", "n": 1, "fp": "후보|파산|끝까지 간 캠페인 끝 자금(중앙 / 최대)|비고"}]
       }
     ],
-    "applied": "6e269bb7fc48502a"
+    "applied": "a183bb6e81ba534d"
   },
   "generatedAt": "2026-11-21"
 }
