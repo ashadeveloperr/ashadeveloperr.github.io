@@ -171,6 +171,19 @@
     // ③ 링크 분류(§5-2)
     frag.querySelectorAll('a[href]').forEach((a) => classifyMdLink(a, isRelative, decode));
     doc.replaceChildren(frag);
+    // 제목 앞 번호(2. · 2.1 · 2.1.3)를 .h-num으로 감싸 제목 글자와 색으로 나눔. 글자(textContent)는 그대로라 목차·딥링크·편집 모드에 영향 없음(직접 고침 11/21)
+    doc.querySelectorAll('h2, h3, h4').forEach((h) => {
+      const t = h.firstChild;
+      if (!t || t.nodeType !== 3) return;
+      const m = /^(\s*)(\d+(?:\.\d+)*\.?)(?=\s)/.exec(t.textContent);
+      if (!m) return;
+      const num = document.createElement('span');
+      num.className = 'h-num';
+      num.textContent = m[2];
+      t.textContent = t.textContent.slice(m[0].length);
+      h.insertBefore(num, t);
+      if (m[1]) h.insertBefore(document.createTextNode(m[1]), num);
+    });
 
     // ④ 제목 찾기(#sec=<절 제목> 딥링크용, PF.resolveHeading: 정확히 일치 → 앞부분 양방향 일치, 여럿이면 문서 순서상 첫 번째)
     const list = headings.map((h) => ({ text: htext(h), el: h }));
@@ -213,6 +226,8 @@
       div.textContent = code.textContent;
       const acc = /^\s*accTitle\s*:\s*(.+)$/m.exec(code.textContent)?.[1]?.trim();
       fig.dataset.label = acc || PF.t('doc.diagram-n', { n });
+      // 장 머리 요약 도표(원문에 %% feature-flow 표시)는 원문·크게 보기 줄을 보이지 않게(.mmd-summary). 줄은 다시 그릴 때 원문을 읽으므로 지우지 않고 숨김(직접 고침 11/21)
+      if (/^\s*%%\s*feature-flow\b/m.test(code.textContent)) fig.classList.add('mmd-summary');
       fig.appendChild(div);
       fig.insertAdjacentHTML('beforeend', `<div class="mmd-bar"><details class="mmd-src"><summary>${T('doc.diagram-src')}</summary><pre><code>${esc(code.textContent)}</code></pre></details>` +
         `<button type="button" class="mmd-zoom">${T('doc.zoom')}</button></div>`);
