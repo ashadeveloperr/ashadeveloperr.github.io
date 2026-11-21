@@ -337,9 +337,9 @@
       tocItems.push({ c, chId, n: slides.reduce((a, x) => a + x.scenes.length, 0) });
     });
     const retro = buildRetro(p.retro || {}, p, foot, auto);
-    const end = endScene(p, foot, ext, auto);
+    // 맺음(end) 장면은 표지와 같은 제목·소개·링크를 되풀이해 빼 둠(직접 고침 11/21). 링크는 표지에 그대로 있음
     const toc = tocScene(p, foot, tocItems, retro, auto);
-    const all = [cover, toc, ...chapterScenes, ...retro, end];
+    const all = [cover, toc, ...chapterScenes, ...retro];
     PF.noteFill(all, { fill: !auto });                                  // 예전 데이터 자동 구성은 채움률 참고를 내지 않음(다시 빌드 안내 1건만)
     if (auto) PF.note('cover', 'auto-mode', 1, '예전 데이터로 자동 구성(다시 빌드하면 슬라이드)');
     else if (all.length > 30) PF.note('cover', 'many-scenes', all.length, `장면 ${all.length}장(권장 15~30장)`);
@@ -368,7 +368,7 @@
         if (ch) to = scenes.find((s) => s.dataset.group === ch.title && s.classList.contains('t-CH'))?.id || '';
       }
     } else if (/^shots/.test(want)) to = scenes.find((s) => s.classList.contains('l-screens'))?.id || '';
-    else if (want === 'more') to = 'end';
+    else if (want === 'more' || want === 'end') to = 'cover';
     else if (/^retro/.test(want)) to = 'retro';
     else if (/^d-/.test(want)) to = PF.deckSceneNear(p, want, (id) => scenes.some((s) => s.id === id));   // 숨겼거나 다시 빌드로 없어진 장면
     if (!to || !scenes.some((s) => s.id === to)) to = /^(hl|ts|shots|more|retro|d-|ch-)/.test(want) ? 'toc' : '';
@@ -399,8 +399,7 @@
 
   function tocScene(p, foot, items, retro, auto) {
     const rows = [...items.map((x, i) => [String(i + 1).padStart(2, '0'), x.c.title, PF.t('deck.toc-count', { n: x.n }), x.chId]),
-      retro.length && [String(items.length + 1).padStart(2, '0'), PF.t('deck.retro'), PF.t('deck.retro-desc'), retro[0].id],
-      [String(items.length + (retro.length ? 2 : 1)).padStart(2, '0'), PF.t('deck.more'), PF.t('deck.more-desc'), 'end']].filter(Boolean);
+      retro.length && [String(items.length + 1).padStart(2, '0'), PF.t('deck.retro'), PF.t('deck.retro-desc'), retro[0].id]].filter(Boolean);
     const make = (compact) => {
       const s = PF.scene({ id: 'toc', tpl: 'P2', kind: 'bare', cls: compact ? 'compact' : '', foot, sec: PF.t('name.toc'), stitle: PF.t('name.toc') });
       const half = rows.length > 7 ? Math.ceil(rows.length / 2) : rows.length;

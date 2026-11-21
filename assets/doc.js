@@ -159,6 +159,12 @@
       const kids = [...frag.childNodes];
       const h2 = kids.findIndex((n) => n.nodeName === 'H2');
       if (h2 > 0) kids.slice(0, h2).forEach((n) => { if (n.nodeName !== 'H1') n.remove(); });
+      // 맨 위 대표 그림(.doc-hero)과 같은 파일인 본문 그림은 한 번 더 보이지 않게 뺌(그림만 있는 문단째, 직접 고침 11/21)
+      if (p.cover) frag.querySelectorAll('img[data-md-src]').forEach((img) => {
+        if (img.getAttribute('data-md-src') !== p.cover) return;
+        const para = img.closest('p');
+        if (para && !para.textContent.trim() && para.querySelectorAll('img').length === 1) para.remove(); else img.remove();
+      });
     }
     const { isRelative, decode } = PF.md;
     const headings = hs.map((h) => { headText.set(h.el, h.text); return h.el; });
