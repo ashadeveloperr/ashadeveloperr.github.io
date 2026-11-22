@@ -101,6 +101,9 @@
     const prof = pf.profile || {};
     const byId = Object.fromEntries(projects.map((p) => [p.id, p]));
     const nameT = prof.name || t('name.portfolio');
+    // 확정 PDF 이름(/portfolio-make-pdf의 tools/make-pdf.py pdf_name()과 같은 규칙, 직접 고침 11/22)
+    const pdfName = String(prof.name || '').trim().replace(/[\\/:*?"<>|]/g, '');
+    const pdfFile = (pdfName ? `${pdfName}-포트폴리오.pdf` : '포트폴리오.pdf').normalize('NFC');
     document.title = `${prof.name ? prof.name + ' · ' : ''}${t('name.portfolio')}`;
     document.querySelector('.skip-link')?.replaceChildren(t('ui.skip'));
     const total = pad2(projects.length);
@@ -172,7 +175,7 @@
     root.innerHTML = `<header class="top no-print"><div class="wrap top-in">
         <a class="top-name" href="#cover">${esc(nameT)}</a>
         <nav aria-label="절 이동"><ul>${nav.map(([id, label]) => `<li><a href="#${esc(id)}">${esc(label)}</a></li>`).join('')}</ul></nav>
-        <button type="button" class="btn primary pdf" data-pdf>${T('ui.pdf')}</button>${PF.modeButton()}</div></header>
+        <button type="button" class="btn primary pdf" data-pdf data-pdf-file="${esc(pdfFile)}" aria-haspopup="menu" aria-expanded="false">${T('ui.pdf')}</button>${PF.modeButton()}</div></header>
       <main id="main">${out.join('')}</main>`;
     root.querySelectorAll('img').forEach((i) => { if (!i.hasAttribute('loading')) i.loading = 'lazy'; i.decoding = 'async'; });
     info.sections = [...root.querySelectorAll('main > section[id], main > footer[id]')].map((s) => s.id);
@@ -332,8 +335,30 @@
       const a = e.target.closest('a[href^="#p-"]');
       if (a && redirect(decodeURIComponent(a.getAttribute('href').slice(1)))) e.preventDefault();
     });
-    root.querySelector('[data-pdf]')?.addEventListener('click', async (e) => {
+    // [PDF로 저장](직접 고침 11/22): 레포 맨 위에 확정 PDF가 있으면 [새 탭에서 열기]·[파일로 받기] 메뉴, 없으면 예전처럼 인쇄 창
+    const pdfBtn = root.querySelector('[data-pdf]');
+    let pdfOk = null, pdfMenu = null;
+    const closePdfMenu = () => { pdfMenu?.remove(); pdfMenu = null; pdfBtn?.setAttribute('aria-expanded', 'false'); };
+    document.addEventListener('click', (e) => { if (pdfMenu && !e.target.closest('.pdf-menu, [data-pdf]')) closePdfMenu(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && pdfMenu) { closePdfMenu(); pdfBtn.focus(); } });
+    pdfBtn?.addEventListener('click', async (e) => {
       const b = e.currentTarget, label = b.textContent;
+      if (pdfMenu) { closePdfMenu(); return; }
+      const file = b.dataset.pdfFile || '', url = file ? encodeURIComponent(file) : '';
+      if (pdfOk === null) pdfOk = url ? await fetch(url, { method: 'HEAD', cache: 'no-store' })
+        .then((r) => r.ok && /pdf/i.test(r.headers.get('content-type') || '')).catch(() => false) : false;
+      if (pdfOk) {
+        pdfMenu = document.createElement('div');
+        pdfMenu.className = 'pdf-menu'; pdfMenu.setAttribute('role', 'menu');
+        pdfMenu.innerHTML = `<a role="menuitem" href="${url}" target="_blank" rel="noopener">${T('ui.pdf-open')}</a>`
+          + `<a role="menuitem" href="${url}" download="${esc(file)}">${T('ui.pdf-download')}</a>`;
+        const bar = b.closest('.top') || b.parentElement;
+        pdfMenu.style.right = `${Math.max(0, bar.getBoundingClientRect().right - b.getBoundingClientRect().right)}px`;
+        bar.appendChild(pdfMenu); b.setAttribute('aria-expanded', 'true');
+        pdfMenu.addEventListener('click', () => setTimeout(closePdfMenu));
+        pdfMenu.querySelector('a').focus();
+        return;
+      }
       b.disabled = true; b.textContent = t('ui.preparing');
       await loadAll(15000);                                            // 아래쪽 그림까지 받은 뒤 인쇄(늦게 받는 그림은 PDF에서 빠짐)
       b.disabled = false; b.textContent = label;
