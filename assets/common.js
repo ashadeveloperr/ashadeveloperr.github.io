@@ -249,11 +249,11 @@ const PF = (() => {
   const { t, tab, label, load: loadStrings, report: stringsReport } = PFStr;
 
   // ── Mermaid ELK 배치(상세 문서·발표 덱 공용): 선이 덜 겹치고 상자가 고르게 놓임. 받지 못하면 기본 배치(dagre) 그대로 ──
-  // layout-elk 0.1.7 = mermaid 11.4.1과 같은 시기 판. 문서의 %%{init}%%·--- config ---에서 layout을 정하면 그쪽이 이김
+  // layout-elk 0.2.0 = mermaid 11.12.0과 같은 시기 판(다이어그램 엔진 연결 때 함께 올림). 문서의 %%{init}%%·--- config ---에서 layout을 정하면 그쪽이 이김
   let elkReady = null;
   function mermaidElk() {
     if (!window.mermaid?.registerLayoutLoaders) return Promise.resolve(false);
-    elkReady ??= import('https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.7/dist/mermaid-layout-elk.esm.min.mjs')
+    elkReady ??= import('https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs')
       .then((m) => { mermaid.registerLayoutLoaders(m.default); return true; })
       .catch((err) => { console.warn('[PF] Mermaid ELK 배치를 불러오지 못해 기본 배치로 그립니다:', err); return false; });
     return elkReady;

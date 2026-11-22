@@ -122,7 +122,17 @@
     for (const el of els) {
       if (svgCache.has(el)) continue;
       const text = el.querySelector('code')?.textContent || '';
-      try { const { svg } = await mermaid.render(`dk-mmd-${n++}`, text, mmdHost); svgCache.set(el, { svg }); }
+      try {
+        let { svg } = await mermaid.render(`dk-mmd-${n++}`, PF.mmdText ? PF.mmdText(text) : text, mmdHost);
+        // 다이어그램 엔진(assets/diagram-tidy.js): 잠깐 화면 밖 상자에 넣어 화살표를 직각으로 다시 그린 뒤 꺼냄. 엔진이 없으면 그대로
+        if (PF.orthoEdges) {
+          mmdHost.innerHTML = svg;
+          try { PF.orthoEdges(mmdHost.querySelector('svg'), text); svg = mmdHost.innerHTML; }
+          catch (e) { console.warn('[deck] 다이어그램 엔진 오류:', e); }
+          mmdHost.replaceChildren();
+        }
+        svgCache.set(el, { svg });
+      }
       catch (err) { svgCache.set(el, { error: String(err?.message || err).split('\n')[0].slice(0, 120) }); info.errors.push('mermaid: ' + (err?.message || err)); }
     }
     mmdHost.replaceChildren();

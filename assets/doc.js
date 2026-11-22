@@ -223,7 +223,7 @@
       const div = document.createElement('div');
       div.className = 'mermaid';
       div.id = `mmd-${n++}`;
-      div.textContent = code.textContent;
+      div.textContent = PF.mmdText ? PF.mmdText(code.textContent) : code.textContent;   // note for 줄은 엔진이 그림(diagram-tidy.js)
       const acc = /^\s*accTitle\s*:\s*(.+)$/m.exec(code.textContent)?.[1]?.trim();
       fig.dataset.label = acc || PF.t('doc.diagram-n', { n });
       // 장 머리 요약 도표(%% feature-flow → .mmd-summary)와 작은 설명 도표(%% simple → .mmd-simple — 코어 루프 등, 코드 구조도가 아닌 것)는
@@ -280,13 +280,17 @@
         const div = fig.querySelector('.mermaid');
         if (!div.dataset.processed) return;
         div.removeAttribute('data-processed'); div.classList.remove('pf-mmd-error');
-        div.textContent = fig.querySelector('.mmd-src code')?.textContent || '';
+        const src = fig.querySelector('.mmd-src code')?.textContent || '';
+        div.textContent = PF.mmdText ? PF.mmdText(src) : src;
       });
       try { await mermaid.run({ nodes: doc.querySelectorAll('.mermaid') }); }
       catch (err) { console.warn('[doc] Mermaid 렌더 오류:', err); errors.push(`mermaid: ${String(err?.message || err).split('\n')[0].slice(0, 160)}`); }
       figs.forEach((fig) => {
         const svg = fig.querySelector('.mermaid svg');
         if (!svg) { fig.querySelector('.mermaid')?.classList.add('pf-mmd-error'); return; }
+        // 다이어그램 엔진(assets/diagram-tidy.js): 화살표를 직각으로·%% 격자·%% 화살표 줄 처리. 엔진이 없으면 Mermaid 그림 그대로
+        try { PF.orthoEdges?.(svg, fig.querySelector('.mmd-src code')?.textContent || ''); }
+        catch (err) { console.warn('[doc] 다이어그램 엔진 오류:', err); }
         const natural = svg.viewBox?.baseVal?.width || parseFloat(svg.style.maxWidth) || 0;
         if (natural) { svg.setAttribute('width', String(Math.ceil(natural))); svg.style.maxWidth = '100%'; svg.removeAttribute('height'); }
         svg.dataset.naturalWidth = String(natural);
