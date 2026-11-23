@@ -139,6 +139,19 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
                   color: var(--headline-ink, #003153); }
 :root[data-mode="dark"] .hero .headline { color: color-mix(in srgb, #003153 40%, #fff); }
 .hero-ct { display: grid; font-size: 14px; }
+/* (직접 고침 11/24) 머리 2×2: 왼쪽 위 제목·부제 | 오른쪽 위 자기소개, 왼쪽 아래 연락처·링크 | 오른쪽 아래 기술 스택.
+   아래 두 칸은 각각 위 칸과 같은 왼쪽 기준선(같은 열). 자기소개는 왼쪽 정렬. 두 칸 배치는 아래 @media (min-width: 760px) */
+.hero-g { row-gap: clamp(28px, 3.6vh, 48px); align-items: start; }
+.hero-about { max-width: none; }
+.hero .hero-about p { font-size: clamp(15px, 1.15vw, 18px); line-height: 1.68; text-align: left; }
+.hero .hero-about p + p { margin-top: 10px; }
+.hero-k { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; padding-bottom: 10px; border-bottom: 1px solid var(--ink);
+          font-size: 13px; font-weight: 800; color: var(--ink); }
+.hero-k span { font-size: 12.5px; font-weight: 600; color: var(--muted); }
+.hero-sk .skill { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 6px 0; }
+.hero-sk .skill:first-child { border-top: 0; }
+.hero-sk .skill h3 { font-size: 14.5px; }
+.hero-sk .skill li { font-size: 13.5px; line-height: 1.55; }
 .hc-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; width: 100%; padding: 9px 0; border: 0; border-bottom: 1px solid var(--line);
           background: none; color: var(--ink); font: inherit; text-align: left; text-decoration: none; cursor: pointer; }
 .hc-row > span:first-child { overflow-wrap: anywhere; }
@@ -282,12 +295,14 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .msg-hp { position: absolute; left: -9999px; }
 @media screen { .ct.print-only { display: none; } }                  /* 연락처·프로젝트별 링크 목록은 제출 PDF에만 */
 
-/* ④ 핵심 기능(화면만): 오른쪽 위 프로젝트 탭 · 기능 카드 한 줄(최대 4개).
+/* ④ 핵심 기능(화면만, 직접 고침 11/24): 프로젝트마다 그 프로젝트 소개 바로 뒤 한 화면. 머리(KEY FEATURES · 핵심 기능 | 오른쪽 프로젝트 이름) · 기능 카드 한 줄(최대 4개).
    그림 틀은 모두 같은 크기(16:10), 그림은 원래 비율 그대로 틀 안에 맞춤(잘리거나 늘어나지 않음 — 비율이 다르면 위아래·양옆에 바탕색이 남음) */
-.kf-tabs { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 22px; padding-bottom: 2px; }
-.kf-tab { padding: 4px 0; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--muted); font: 700 15px/1.3 var(--sans); cursor: pointer; }
-.kf-tab:hover { color: var(--ink); }
-.kf-tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+.kf-sec { scroll-margin-top: var(--top-h); }
+.kf-sec > .wrap { padding-top: clamp(18px, 3vh, 36px); padding-bottom: clamp(24px, 4vh, 48px); }
+.kf-h { margin-top: 8px; font-size: clamp(28px, 3.6vw, 46px); font-weight: 800; line-height: 1.1; letter-spacing: -.03em; }
+.kf-of { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: flex-end; gap: 2px 12px; color: var(--ink); }
+.kf-of span { font-weight: 600; color: var(--muted); }
+.kf-sec .kf-grid { margin-top: clamp(18px, 3vh, 36px); }
 .kf-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 28px; }
 /* (직접 고침 11/20) 카드 안 8줄(그림·번호·제목·문제 라벨·문제·기능 라벨·기능·링크)을 subgrid로 → 한 줄의 카드끼리 같은 가로선 */
 .kf-card { display: grid; grid-row: span 8; grid-template-rows: subgrid; row-gap: 0; min-width: 0; }
@@ -309,7 +324,7 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .kf-link { font-size: 13px; font-weight: 700; color: var(--accent-ink); text-decoration: none; }
 .kf-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 1099px) { .kf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 559px) { .kf-grid { grid-template-columns: minmax(0, 1fr); } .kf-tabs { justify-content: flex-start; } }
+@media (max-width: 559px) { .kf-grid { grid-template-columns: minmax(0, 1fr); } .kf-of { justify-content: flex-start; } }
 
 /* 소개: 넓은 화면에서 자기소개(왼쪽) · 기술 스택(오른쪽) 두 단 — 한 화면에 들어가게 */
 @media screen and (min-width: 1024px) {
@@ -324,16 +339,13 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 /* 한 화면 = 한 절(넓고 충분히 높은 화면): 머리 · 소개 · 핵심 기능 · 연락처가 각각 머리 막대 아래 화면 높이를 채움.
    대표 프로젝트는 프로젝트 하나가 한 화면. 넘기기는 portfolio.js bindPaging */
 @media screen and (min-width: 760px) and (min-height: 561px) {
-  .hero, #intro, .sec.kf, .contact, .slide { min-height: calc(100svh - var(--top-h)); }
+  .hero, #intro, .kf-sec, .contact, .slide { min-height: calc(100svh - var(--top-h)); }
   .hero { display: flex; flex-direction: column; justify-content: center; padding: clamp(24px, 4vh, 48px) 0; }
   .hero > .wrap { width: 100%; }
   #intro, .sec.kf { padding: clamp(18px, 3vh, 36px) 0 clamp(24px, 4vh, 48px); }
   .contact { display: flex; flex-direction: column; justify-content: center; padding: clamp(24px, 4vh, 48px) 0; }
   .contact > .wrap { width: 100%; }
   .ab-grid .about p { font-size: clamp(16px, 1.3vw, 19px); }
-  .sec.kf { display: flex; flex-direction: column; }
-  .sec.kf > .wrap { flex: 1; width: 100%; display: flex; flex-direction: column; }
-  .kf-panel:not([hidden]) { margin: clamp(18px, 3vh, 36px) 0 0; }     /* (직접 고침 11/20) 세 프로젝트 탭이 모두 같은 높이에서 시작(예전: 남은 높이의 가운데 → 카드 높이마다 시작점이 달랐음) */
 }
 .ct { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; margin-top: 18px; }
 .ct-name { font-size: clamp(32px, 4.6vw, 48px); font-weight: 800; letter-spacing: -.03em; line-height: 1.15; margin-bottom: 16px; }
@@ -351,7 +363,10 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 
 /* 넓은 화면(760px 이상): 두 칸 */
 @media (min-width: 760px) {
-  .hero-g { grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; }
+  .hero-g { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(40px, 5vw, 80px); }
+  .hero-t h1 { font-size: clamp(40px, 5.2vw, 84px); }
+  .hero-t .headline { font-size: clamp(18px, 1.6vw, 24px); }
+  .hero-sk .skill { grid-template-columns: 28% minmax(0, 1fr); gap: 16px; }
   .ab-row { grid-template-columns: 260px minmax(0, 1fr); gap: 48px; }
   .skill { grid-template-columns: 34% 1fr; gap: 24px; }
   .meta { grid-template-columns: repeat(4, minmax(0, 1fr)); }
