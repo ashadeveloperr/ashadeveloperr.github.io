@@ -3,7 +3,7 @@
   "doc": "기술문서.md",
   "schemaVersion": 2,
   "title": "Desert Flavor",
-  "tagline": "사막의 헥스 맵에 우물과 수로를 놓아 물을 나누고, 정착지를 키워 경매에 팔아 받은 보상으로 점점 어려워지는 다음 정착지로 넘어가는 경영 시뮬레이션",
+  "tagline": "사막의 헥스 맵에 우물과 수로를 놓아 물을 나누고, 정착지를 키워 경매에 팔아 받은 보상으로 점점 어려워지는 다음 정착지로 넘어가는 경영 시뮬레이션입니다.",
   "cover": "images/cover.png",
   "team": {
     "type": "solo",
@@ -43,7 +43,7 @@
     "extra": []
   },
   "intent": {
-    "text": "주어진 약 2주 안에 경제 시뮬레이션 규모의 게임을 만들면서, 기획과 검증만으로 메커닉과 재미를 어디까지 끌어올릴 수 있는지 확인",
+    "text": "주어진 약 2주 안에 경제 시뮬레이션 규모의 게임을 만들면서, 기획과 검증만으로 메커닉과 재미를 어디까지 끌어올릴 수 있는지 확인하고자 했습니다.",
     "verbatim": true
   },
   "highlights": [
@@ -53,7 +53,7 @@
       "what": "구현을 AI에 맡겨, 의도와 다르게 동작하는 곳을 사람이 플레이만으로 다 찾기 어렵던 문제",
       "how": "게임과 같은 Core 소스를 링크한 봇 시뮬레이터, EditMode·PlayMode 테스트, 시드 난수와 명령 기록 재실행으로 같은 입력이면 같은 결과가 나오는지 확인합니다(저장 재실행 검사).",
       "why": "사람이 다 해 볼 수 없는 플레이 패턴을 수치로 보려 했고, 실제로 반복 플레이에서만 드러나는 시작 자금 폭주(정착지마다 +28%)를 찾아 고쳤습니다.",
-      "section": "6.3 구현",
+      "section": "8.3 구현",
       "image": {
         "src": "images/verification.png",
         "w": 966,
@@ -67,7 +67,7 @@
       "what": "1시 1분에 짓든 1시 59분에 짓든 2시 정각에 착공되어 명령 시각이 결과에 반영되지 않던 문제",
       "how": "정산은 정각마다 `AdvanceHour`가 맡고, 매 프레임 `AdvanceTo`가 분 단위로 따라가 완공 시각이 된 공사만 바로 끝내는 두 갈래 구조입니다(구조는 AI가 정하고, 정확한 완공 시각 기준은 본인이 정함).",
       "why": "구현 비용을 이유로 한 AI의 비추천을 처음엔 따랐지만, 명령 시각과 공사 시간이 어긋나 보이는 문제가 플레이테스트마다 모양을 바꿔 다시 나와 타협할 수 없는 핵심 경험으로 보고 바꿨습니다.",
-      "section": "3.2 선택",
+      "section": "5.2 선택",
       "image": {
         "src": "images/construction_queue_minutes.png",
         "w": 1620,
@@ -81,7 +81,7 @@
       "what": "장비 상점에서는 정답 장비가 굳고, 경매도 최고가에 팔면 끝이라 단조롭던 문제",
       "how": "입찰자마다 최대 중첩에 닿지 않은 모디파이어를 하나씩 뽑아 제시하고, 팔린 입찰자의 모디파이어를 다음 정착지 규칙에 곱으로 쌓습니다.",
       "why": "높은 입찰가와 원하는 보상 사이에 선택을 만들려 했고, 한도 없이 쌓이는 감소형이 합연산으로 −100%에 닿지 않도록 곱연산을 정한 뒤, 곱연산에서도 0에 가까워지는 것을 막으려 최대 중첩을 더했습니다.",
-      "section": "4.2 선택",
+      "section": "7.2 선택",
       "image": {
         "src": "images/auction_bidders.png",
         "w": 1620,
@@ -95,7 +95,7 @@
       "what": "단순 무작위 배치는 진행이 불가능한 맵을 만들고, 미리 조립한 구획 결합은 결합 로직을 설정하기 복잡하던 문제",
       "how": "맵을 BSP로 나눈 구역마다 장애물 지형을 하나만 키우고, 트인 땅이 이어지는지·우물에서 광맥·암반까지 수로를 놓을 수 있는지 검사해 실패하면 다시 만듭니다.",
       "why": "규칙을 글로만 넘기지 않고 맵 스케치 편집기로 그린 예시 맵과 함께 전달하는 멀티모달 방식으로, AI가 더 나은 생성 로직을 구성하게 했습니다.",
-      "section": "2.2 선택",
+      "section": "4.2 선택",
       "image": {
         "src": "images/map_sketch_paint.gif",
         "w": 720,
@@ -112,7 +112,7 @@
       "solution": "시뮬레이터로 후보를 비교해 설정 값 하나만 바꿔 최대 중첩을 1로 낮췄습니다(×1.05 중첩 1).",
       "result": "숙련 봇 캠페인 20개에서 파산 13/20 → 19/20, 끝까지 간 캠페인 끝 자금(중앙) 118,566 → 651로, 자금이 줄면 보너스도 같이 줄어 무한히 버티지 않게 되었습니다.",
       "lesson": "",
-      "section": "6.2 선택"
+      "section": "8.2 선택"
     },
     {
       "title": "명령 시각과 상관없이 정각에만 착공되는 문제",
@@ -121,7 +121,7 @@
       "solution": "4차 플레이테스트에서 \"12:30 → 17:30처럼 정확히\"를 기준으로 착공·완공을 분 단위로 바꾸고, 경제 정산은 정각마다 한 시간씩 그대로 두었습니다.",
       "result": "12:30에 명령한 5시간 건설이 12:30 착공 · 17:30 완공으로 정확히 5시간이 되었습니다. 숙련 봇 캠페인의 정착지 순이익은 거의 같았지만(D0~1 +1370 → +1379), 봇은 정각에만 명령하므로 분 단위 착공 자체의 영향은 확인하지 못했습니다.",
       "lesson": "",
-      "section": "3.2 선택"
+      "section": "5.2 선택"
     }
   ],
   "screenshots": [
@@ -163,7 +163,7 @@
     }
   ],
   "retro": {
-    "section": "7. 구현 결과 및 회고",
+    "section": "9. 구현 결과 및 회고",
     "achieved": [
       "건설·운영 → 경매 → 매각/보류 → 행선지 선택 → 다음 정착지(절차 생성 맵)로 이어지는 MVP 캠페인 루프",
       "동료 피드백의 좋은 점: 플레이 루프(완성 → 매각 → 영구 보너스 → 새 정착지)가 재미있음, 짜임새 있는 시뮬레이션, 복잡한 시스템을 알아 가는 재미",
@@ -182,26 +182,65 @@
       "직접 플레이하고 피드백을 반영하는 과정을 빠르게 하기"
     ]
   },
+  "generatedAt": "2026-11-23",
   "deck": {
     "chapters": [
-      {"key": "overview", "title": "프로젝트 개요", "sectionPath": ["1. 프로젝트 개요"]},
+      {
+        "key": "overview",
+        "title": "프로젝트 개요",
+        "sectionPath": [
+          "1. 프로젝트 개요"
+        ]
+      },
+      {
+        "key": "plan",
+        "title": "기획: 무엇에 투자하고, 언제 팔 것인가",
+        "sectionPath": [
+          "2. 기획: 무엇에 투자하고, 언제 팔 것인가"
+        ]
+      },
+      {
+        "key": "method",
+        "title": "개발 방식: AI가 구현하고, 나는 정하고 검증한다",
+        "sectionPath": [
+          "3. 개발 방식: AI가 구현하고, 나는 정하고 검증한다"
+        ]
+      },
       {
         "key": "map",
         "title": "절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다",
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다"]
+        "sectionPath": [
+          "4. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다"
+        ]
       },
-      {"key": "tick", "title": "건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다"]},
       {
-        "key": "auction",
-        "title": "경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다",
-        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다"]
+        "key": "tick",
+        "title": "건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다",
+        "sectionPath": [
+          "5. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다"
+        ]
       },
       {
         "key": "residents",
         "title": "주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다",
-        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다"]
+        "sectionPath": [
+          "6. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다"
+        ]
       },
-      {"key": "verify", "title": "검증 체계: 직접 다 플레이하지 않고도 확인한다", "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다"]}
+      {
+        "key": "auction",
+        "title": "경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다",
+        "sectionPath": [
+          "7. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다"
+        ]
+      },
+      {
+        "key": "verify",
+        "title": "검증 체계: 직접 다 플레이하지 않고도 확인한다",
+        "sectionPath": [
+          "8. 검증 체계: 직접 다 플레이하지 않고도 확인한다"
+        ]
+      }
     ],
     "slides": [
       {
@@ -209,144 +248,172 @@
         "chapter": "overview",
         "layout": "visual",
         "tab": "개요",
-        "title": {"text": "1.1 만든 것", "verbatim": true},
+        "title": {
+          "text": "1.1 컨셉",
+          "verbatim": true
+        },
         "lead": null,
-        "sectionPath": ["1. 프로젝트 개요", "1.1 만든 것"],
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.1 컨셉"
+        ],
         "points": [
-          {"label": "", "text": "반경 3~7의 헥스 타일 맵 위에서 시설을 짓고, 육각형 변을 따라 수로를 놓아 우물의 물을 나누는 정착지 경영 게임", "verbatim": true},
-          {"label": "", "text": "물은 우물에서 수로를 따라 흐르고 상류 시설이 먼저 받음 → 물이 모자라면 가동률이 떨어짐", "verbatim": true},
-          {"label": "", "text": "정착지를 경매에 팔고 입찰자가 내미는 영구 모디파이어를 골라 다음 정착지로 넘어가는 캠페인 루프", "verbatim": true}
+          {
+            "label": "",
+            "text": "Desert Flavor는 반경 3~7의 헥스 타일 맵 위에서 시설을 짓고, 육각형 변을 따라 수로를 놓아 우물의 물을 나누는 정착지 경영 게임입니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "경매에 온 입찰자들은 값과 함께 저마다 다른 영구 모디파이어를 내밀고, 플레이어는 그중 하나를 골라 다음 정착지로 넘어갑니다.",
+            "verbatim": true
+          },
+          {
+            "label": "목표한 경험",
+            "text": "모든 자원 병목이 풀려 긴장감이 사라지는 후반부를 잘라 내고, 점점 어려워지는 다음 정착지에서 플레이마다 다르게 문제를 풀게 하는 것",
+            "verbatim": false
+          }
         ],
         "visuals": [
-          {"kind": "mermaid", "n": 1, "fp": "flowchart LR", "sectionPath": ["1. 프로젝트 개요", "1.1 만든 것"]},
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart LR"
+          },
           {
             "kind": "image",
             "src": "images/water_flow.gif",
             "w": 640,
             "h": 432,
-            "caption": {"text": "육각형 변을 따라 수로를 예약하면 공사가 끝난 구간부터 물이 흘러 파랗게 바뀌는 모습 (1.5배속)", "verbatim": true}
+            "caption": {
+              "text": "육각형 변을 따라 수로를 예약하면 공사가 끝난 구간부터 물이 흘러 파랗게 바뀌는 모습 (1.5배속)",
+              "verbatim": true
+            }
           }
-        ],
-        "edited": true
+        ]
       },
       {
-        "key": "goal",
-        "chapter": "overview",
+        "key": "plan-question",
+        "chapter": "plan",
         "layout": "overview",
         "tab": "개요",
-        "title": {"text": "1.2 목표", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["1. 프로젝트 개요", "1.2 목표"],
-        "points": [
-          {
-            "label": "게임 측면의 목표",
-            "text": "자원 병목이 풀려 긴장감이 사라지는 후반부를 잘라 내고, 정착지를 경매로 보상받은 뒤 점점 어려워지는 다음 정착지에서 플레이마다 다른 방식으로 문제를 풀어나가는 경험",
-            "verbatim": false
-          },
-          {"label": "설계 원칙", "text": "플레이어의 고민을 '따라야 할 최적 행동'이 아니라 계획과 실제가 어긋났을 때의 상충 선택으로 설계", "verbatim": true},
-          {"label": "이 문서에서 다루는 것", "text": "구현 코드 자체보다 무엇을 정했고, 어떻게 검증했고, AI의 판단을 언제 뒤집었는지", "verbatim": true}
+        "title": {
+          "text": "2.1 처음 기획서의 핵심 질문과 설계 원칙",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "무엇에 투자하고 무엇을 포기할 것인가. 정착지를 어디까지 개발하고 언제 매각할 것인가.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 기획: 무엇에 투자하고, 언제 팔 것인가",
+          "2.1 처음 기획서의 핵심 질문과 설계 원칙"
         ],
-        "visuals": [],
-        "edited": true
-      },
-      {
-        "key": "ai-collab",
-        "chapter": "overview",
-        "layout": "overview",
-        "tab": "",
-        "title": {"text": "1.3 AI 협업 방식 — 누가 무엇을 했나", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["1. 프로젝트 개요", "1.3 AI 협업 방식 — 누가 무엇을 했나"],
         "points": [
-          {"label": "", "text": "구현: Claude Code 에이전트. 본인은 기획서·규칙 결정·플레이테스트·문제 파악과 정의(이슈)·결과 검토 담당", "verbatim": true},
           {
-            "label": "결정 기록",
-            "text": "항목마다 고른 것 / 이유 / 다른 안 / 바꾸려면을 남기고, 본인이 고른 것은 [사용자 결정](164개), AI가 고른 것은 [자동](128개)으로 구분",
+            "label": "설계 원칙",
+            "text": "플레이어의 고민을 '따라야 할 최적 행동'이 아니라 계획과 실제가 어긋났을 때의 상충 선택으로 만든다는 것입니다.",
             "verbatim": true
           },
           {
             "label": "",
-            "text": "작업 단위: GitHub 이슈(비공개 원본 저장소) 하나씩 \"질문 → 구현 → 시뮬레이터·Unity 테스트 → 결정 기록 갱신\" 순서",
+            "text": "광산만 짓는 전략, 지원시설만 짓는 전략, 경매 직전에 가동하지 않는 시설을 몰아 짓는 전략이 정답이 되지 않도록 물·식량·유지비·부지·경매 시장이 서로를 견제하게 했습니다.",
             "verbatim": true
-          },
-          {"label": "", "text": "검증 수단: 플레이테스트 4차례, EditMode·PlayMode 테스트, 봇이 자동으로 플레이하는 .NET 시뮬레이터", "verbatim": true}
+          }
         ],
         "visuals": []
+      },
+      {
+        "key": "plan-change",
+        "chapter": "plan",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "2.3 만들면서 바뀐 기획",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "바꾼 이유를 모아 보면 플레이어가 보기에 납득되는가, 같은 일을 하는 수단이 둘이지는 않은가가 되풀이됩니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 기획: 무엇에 투자하고, 언제 팔 것인가",
+          "2.3 만들면서 바뀐 기획"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "바뀐 것|처음 기획|지금|바꾼 이유"
+          }
+        ]
       },
       {
         "key": "arch",
-        "chapter": "overview",
+        "chapter": "method",
         "layout": "full",
         "tab": "구조",
-        "title": {"text": "1.4 개발 환경 및 전체 구조", "verbatim": true},
-        "lead": {
-          "text": "게임 규칙은 모두 Core(`Settlement`·`Campaign`·`AuctionManager` 등)에 있고, Unity 쪽(`GameSession`)과 시뮬레이터(`SettlementSim`)가 같은 Core를 서로 다른 시계로 돌리는 구조",
+        "title": {
+          "text": "3.2 게임 규칙을 Unity 밖에 둔 구조",
           "verbatim": true
         },
-        "sectionPath": ["1. 프로젝트 개요", "1.4 개발 환경 및 전체 구조"],
+        "lead": {
+          "text": "게임 규칙은 모두 Core에 있고 Unity 쪽(`GameSession`)과 시뮬레이터가 같은 Core를 서로 다른 시계로 돌리는 구조입니다.",
+          "verbatim": false
+        },
+        "sectionPath": [
+          "3. 개발 방식: AI가 구현하고, 나는 정하고 검증한다",
+          "3.2 게임 규칙을 Unity 밖에 둔 구조"
+        ],
         "points": [
           {
             "label": "",
-            "text": "어셈블리 정의로 Core(Unity를 참조하지 않는 순수 C# 규칙)와 Runtime(화면·입력, 게임 시계에 Unity 시간 공급)을 분리",
+            "text": "이 구조는 AI가 제안했습니다.",
             "verbatim": true
           },
-          {"label": "", "text": "AI가 제안한 구조로, 시뮬레이터가 게임과 같은 규칙으로 봇 플레이를 돌릴 수 있어서 받아들임", "verbatim": true}
-        ],
-        "visuals": [{"kind": "mermaid", "n": 1, "fp": "classDiagram"}]
-      },
-      {
-        "key": "arch-core",
-        "chapter": "overview",
-        "layout": "full",
-        "tab": "구조",
-        "title": {"text": "1.4 개발 환경 및 전체 구조", "verbatim": true},
-        "lead": {"text": "② 캠페인과 정착지 규칙 (Core)", "verbatim": true},
-        "sectionPath": ["1. 프로젝트 개요", "1.4 개발 환경 및 전체 구조"],
-        "points": [
           {
             "label": "",
-            "text": ".NET 시뮬레이터(`Tools/SettlementSim`)가 Core 폴더의 소스(시계를 맡은 Timing 제외)를 그대로 링크해 봇 플레이를 돌림",
+            "text": "저는 시뮬레이터가 게임과 같은 규칙으로 봇 플레이를 돌릴 수 있다는 점 때문에 받아들였습니다.",
             "verbatim": true
           }
         ],
-        "visuals": [{"kind": "mermaid", "n": 2, "fp": "classDiagram"}]
-      },
-      {
-        "key": "map-why",
-        "chapter": "map",
-        "layout": "overview",
-        "tab": "선택",
-        "title": {"text": "2.2 선택", "verbatim": true},
-        "lead": {"text": "파산할 때까지 점점 어려워지는 다음 정착지를 계속 플레이하는 콘텐츠라, 정착지마다 새 맵이 필요했음", "verbatim": false},
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.2 선택"],
-        "points": [
-          {"label": "단순 무작위 배치", "text": "게임 진행이 불가능한 시드도 생성됨", "verbatim": true},
-          {"label": "미리 조립한 구획들을 결합하는 방식", "text": "안정적이지만, 구획을 결합하는 로직을 설정하기 복잡함", "verbatim": true},
+        "visuals": [
           {
-            "label": "선택 — 규칙과 예시 맵을 함께 전달",
-            "text": "배치 규칙을 직접 정하고, 글로만 넘기지 않고 맵 스케치 편집기로 그린 예시 맵과 함께 전달함",
-            "verbatim": true
-          },
-          {"label": "", "text": "편집기 구현은 AI(10/23 `2335bac`), 예시 맵 `sketch_01`은 직접 그림", "verbatim": true}
-        ],
-        "visuals": []
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "classDiagram"
+          }
+        ]
       },
       {
         "key": "map-sketch",
         "chapter": "map",
         "layout": "visual",
-        "tab": "흐름",
-        "title": {"text": "2.2 선택", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.2 선택"],
+        "tab": "선택",
+        "title": {
+          "text": "4.2 선택",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "배치 규칙은 제가 직접 정하되, 글로만 넘기지 않고 맵 스케치 편집기로 그린 예시 맵과 함께 AI에 전달했습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다",
+          "4.2 선택"
+        ],
         "points": [
           {
             "label": "",
-            "text": "맵 스케치 편집기: Unity 씬 뷰에서 헥스 타일을 클릭·드래그로 칠함(숫자키 1~5 = 사막·수원·광맥·암반·장애물, Shift = 지우기)",
+            "text": "편집기 구현은 AI가 맡았고(10/23), 예시 맵 `sketch_01`은 제가 직접 그렸습니다.",
             "verbatim": true
           },
-          {"label": "", "text": "저장 형식이 캠페인 맵과 같은 JSON이라, AI가 예시의 좌표·지형을 그대로 읽어 확인함", "verbatim": true},
-          {"label": "", "text": "편집기에는 '생성 맵 미리보기'(난이도 D·시드)를 더해, 예시를 그린 화면에서 생성 결과를 바로 비교", "verbatim": true}
+          {
+            "label": "",
+            "text": "저장 형식이 캠페인 맵과 같은 JSON이라, AI가 예시의 좌표·지형을 그대로 읽어 확인할 수 있습니다.",
+            "verbatim": true
+          }
         ],
         "visuals": [
           {
@@ -354,14 +421,20 @@
             "src": "images/map_sketch_paint.gif",
             "w": 720,
             "h": 560,
-            "caption": {"text": "맵 스케치 편집기로 예시 맵 sketch_01을 칠하는 과정 — 장애물 → 암반 → 광맥 → 수원 순서", "verbatim": true}
+            "caption": {
+              "text": "맵 스케치 편집기로 예시 맵 sketch_01을 칠하는 과정 — 장애물 → 암반 → 광맥 → 수원 순서",
+              "verbatim": true
+            }
           },
           {
             "kind": "image",
             "src": "images/map_sketch_editor.png",
             "w": 1360,
             "h": 900,
-            "caption": {"text": "맵 스케치 편집기 — 왼쪽 씬 뷰의 예시 맵 sketch_01(좌표 표시), 오른쪽 인스펙터의 붓·JSON 저장·생성 맵 미리보기", "verbatim": true}
+            "caption": {
+              "text": "맵 스케치 편집기 — 왼쪽 씬 뷰의 예시 맵 sketch_01(좌표 표시), 오른쪽 인스펙터의 붓·JSON 저장·생성 맵 미리보기",
+              "verbatim": true
+            }
           }
         ]
       },
@@ -370,15 +443,36 @@
         "chapter": "map",
         "layout": "visual",
         "tab": "결과",
-        "title": {"text": "2.2 선택", "verbatim": true},
+        "title": {
+          "text": "4.2 선택",
+          "verbatim": true
+        },
         "lead": null,
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.2 선택"],
+        "sectionPath": [
+          "4. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다",
+          "4.2 선택"
+        ],
         "points": [
-          {"label": "① 장애물", "text": "지형마다 산맥(선) 또는 고원(덩어리) 중 하나. 다른 장애물 지형과 이어져 맵을 가로막으면 안 됨", "verbatim": true},
-          {"label": "② 광맥", "text": "난이도 수치만큼, 90% 확률로 장애물 근처", "verbatim": true},
-          {"label": "③ 암반", "text": "90% 확률로 이미 놓인 장애물 칸을 대신", "verbatim": true},
-          {"label": "④ 우물(수원)", "text": "난이도 수치만큼, 사막 위에 한 칸씩, 반경 2 안에 다른 우물 없음", "verbatim": true},
-          {"label": "결과", "text": "시뮬레이터 프로토타입에서 난이도별 40장이 모두 첫 시도에 생성되었고 규칙 위반은 0", "verbatim": true}
+          {
+            "label": "장애물",
+            "text": "지형마다 산맥(선) 또는 고원(덩어리) 중 하나입니다.",
+            "verbatim": true
+          },
+          {
+            "label": "광맥",
+            "text": "난이도 수치만큼 놓고, 90% 확률로 장애물 근처에 둡니다.",
+            "verbatim": true
+          },
+          {
+            "label": "우물(수원)",
+            "text": "난이도 수치만큼 사막 위에 한 칸씩 놓고, 반경 2 안에는 다른 우물을 두지 않습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "결과",
+            "text": "결과적으로 시뮬레이터 프로토타입에서 난이도별 40장이 모두 첫 시도에 생성되었고, 규칙 위반은 0이었습니다.",
+            "verbatim": true
+          }
         ],
         "visuals": [
           {
@@ -398,110 +492,111 @@
         "chapter": "map",
         "layout": "visual",
         "tab": "흐름",
-        "title": {"text": "2.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.3 구현"],
+        "title": {
+          "text": "4.3 구현",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "만드는 동안 지키는 규칙(구역마다 장애물 지형 하나)과 만든 뒤 검사(트인 땅 이어짐·수로 경로)로 나뉩니다.",
+          "verbatim": false
+        },
+        "sectionPath": [
+          "4. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다",
+          "4.3 구현"
+        ],
         "points": [
           {
             "label": "",
-            "text": "규칙을 만드는 동안 지키게 하는 부분(구역마다 장애물 지형 하나)과 만든 뒤 검사로 걸러 내는 부분(트인 땅 이어짐·수로 경로)이 나뉘어 있음 → 내놓는 맵은 항상 플레이할 수 있음",
+            "text": "그래서 내놓는 맵은 항상 플레이할 수 있습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "생성한 뒤에는 트인 땅이 하나로 이어지는지, 우물에서 광맥·암반까지 수로를 놓을 수 있는지 검사하고, 실패하면 다시 생성합니다.",
             "verbatim": true
           }
         ],
-        "visuals": [{"kind": "mermaid", "n": 1, "fp": "flowchart LR"}]
-      },
-      {
-        "key": "map-generate",
-        "chapter": "map",
-        "layout": "code",
-        "tab": "구현",
-        "title": {"text": "2.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.3 구현"],
-        "points": [
+        "visuals": [
           {
-            "label": "",
-            "text": "`TryGenerate`가 어느 단계에서든 실패하면 `null` → 같은 난수 흐름으로 다음 시도(최대 `MaxAttempts`번)",
-            "verbatim": true
-          },
-          {"label": "", "text": "난수는 시드로 만들어, 같은 시드면 Unity와 시뮬레이터가 같은 맵을 만듦", "verbatim": true}
-        ],
-        "visuals": [{"kind": "code", "n": 1, "fp": "public static GeneratedMap Generate(DifficultyParams p, Gene"}]
-      },
-      {
-        "key": "map-check",
-        "chapter": "map",
-        "layout": "code",
-        "tab": "구현",
-        "title": {"text": "2.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.3 구현"],
-        "points": [
-          {
-            "label": "",
-            "text": "장애물 지형은 자기 구역 안에서, 다른 지형과 맞닿지 않는 칸으로만 자람 → 지형끼리 이어져 맵을 가로막는 장벽이 생기지 않음",
-            "verbatim": true
-          },
-          {"label": "", "text": "그래도 막히는 경우를 위해 장애물이 아닌 땅이 하나로 이어져 있는지 한 번 더 검사", "verbatim": true},
-          {
-            "label": "",
-            "text": "마지막으로 수로 규칙(양쪽이 장애물인 변에는 수로 불가) 아래에서 우물 → 광맥, 우물 → 암반 경로를 찾고, 없으면 그 맵을 버림",
-            "verbatim": true
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart LR"
           }
-        ],
-        "visuals": [{"kind": "code", "n": 2, "fp": "bool Allowed(HexCoord c) => leafSet.Contains(c) && !owner.Co"}]
-      },
-      {
-        "key": "tick-choice",
-        "chapter": "tick",
-        "layout": "full",
-        "tab": "선택",
-        "title": {"text": "3.2 선택", "verbatim": true},
-        "lead": {"text": "12:30에 5시간짜리 건설을 명령했을 때", "verbatim": true},
-        "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.2 선택"],
-        "points": [
-          {
-            "label": "AI의 '비추천'을 처음엔 따랐다가 뒤집음",
-            "text": "2차 플레이테스트에서는 구현 비용이 크다는 판단을 따라 AI의 타협안을 받아들였지만, 4차에서 그 부작용(처음부터 차 있는 게이지, 1시간 기다리는 대기 공사)이 드러나 분 단위로 바꿈",
-            "verbatim": false
-          },
-          {
-            "label": "테스트는 통과했지만 화면이 의도와 달랐던 경우",
-            "text": "3차 \"여전히 정각에만 건설이 시작됨\"의 원인은 규칙이 아니라 화면 진행률 계산이 예전 '정각 착공'을 가정한 것이었음",
-            "verbatim": true
-          },
-          {
-            "label": "결과",
-            "text": "숙련 봇 캠페인에서 바꾸기 전과 후의 정착지 순이익이 거의 같음(D0~1 +1370 → +1379, D3~4 +291 → +285)",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "단계|착공|완공|실제 공사 시간"}]
+        ]
       },
       {
         "key": "tick-structure",
         "chapter": "tick",
-        "layout": "overview",
-        "tab": "구조",
-        "title": {"text": "3.3 구현", "verbatim": true},
+        "layout": "visual",
+        "tab": "결과",
+        "title": {
+          "text": "5.2 선택",
+          "verbatim": true
+        },
         "lead": null,
-        "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.3 구현"],
+        "sectionPath": [
+          "5. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다",
+          "5.2 선택"
+        ],
         "points": [
-          {"label": "", "text": "`GameClock`: 실제 시간을 게임 시간으로 바꾸고 정각마다 `HourPassed` 발생", "verbatim": true},
+          {
+            "label": "결과",
+            "text": "결과적으로 숙련 봇 캠페인에서 바꾸기 전과 후의 정착지 순이익은 거의 같았습니다(D0~1 +1370 → +1379, D3~4 +291 → +285).",
+            "verbatim": true
+          },
           {
             "label": "",
-            "text": "`Settlement.TimeSource`: 게임 시계를 읽는 함수. 건설 명령이 들어오면 정착지가 먼저 이 시각까지 따라간 뒤(`AdvanceTo`), 지금 시각(`Now` = 시 + 분 ÷ 60)에 착공",
+            "text": "다만 봇은 정각에만 명령하므로, 이 측정으로 확인한 것은 정각 명령의 결과가 거의 그대로라는 것뿐이고 분 단위 착공 자체의 영향은 확인하지 못했습니다.",
             "verbatim": true
           }
         ],
         "visuals": [
           {
             "kind": "image",
-            "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.2 선택"],
             "src": "images/construction_queue_minutes.png",
             "w": 1620,
             "h": 914,
-            "caption": {"text": "공사 대기열 — 두 곳은 공사 중(남은 시간이 분 단위까지 표시), 나머지는 대기. 맵 위 공사 중인 시설에 진행률 51%", "verbatim": true}
+            "caption": {
+              "text": "공사 대기열 — 두 곳은 공사 중(남은 시간이 분 단위까지 표시), 나머지는 대기. 맵 위 공사 중인 시설에 진행률 51%",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "tick-choice",
+        "chapter": "tick",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "5.2 선택",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "12:30에 5시간짜리 건설을 명령했을 때 착공·완공 시각은 다음처럼 바뀌어 왔습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다",
+          "5.2 선택"
+        ],
+        "points": [
+          {
+            "label": "이유",
+            "text": "저는 이것을 비용 때문에 타협할 수 없는 핵심 플레이 경험이라고 보고 \"12:30 → 17:30처럼 정확히\"를 기준으로 분 단위로 바꿨습니다.",
+            "verbatim": false
+          },
+          {
+            "label": "",
+            "text": "테스트는 통과했지만 화면이 의도와 달랐던 경우도 있었습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "단계|착공|완공|실제 공사 시간"
           }
         ]
       },
@@ -510,146 +605,32 @@
         "chapter": "tick",
         "layout": "visual",
         "tab": "흐름",
-        "title": {"text": "3.3 구현", "verbatim": true},
+        "title": {
+          "text": "5.3 구현",
+          "verbatim": true
+        },
         "lead": null,
-        "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.3 구현"],
+        "sectionPath": [
+          "5. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다",
+          "5.3 구현"
+        ],
         "points": [
           {
             "label": "",
-            "text": "분 단위로 따라가는 길(`AdvanceTo`)은 공사 완공만 처리하고, 물·생산·돈은 정각 한 번(`AdvanceHour`)에만 계산됨",
+            "text": "그림처럼 분 단위로 따라가는 길(`AdvanceTo`)은 공사 완공만 처리하고, 물·생산·돈은 정각 한 번(`AdvanceHour`)에만 계산됩니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "정각 정산(`AdvanceHour`)과 분 단위 진행(`AdvanceTo`)을 두 갈래로 나눈 것은 AI이고, 저는 '명령 시각 + 공사 시간에 정확히 완공'이라는 기준을 정했습니다.",
             "verbatim": true
           }
-        ],
-        "visuals": [{"kind": "mermaid", "n": 1, "fp": "flowchart LR"}]
-      },
-      {
-        "key": "tick-clock",
-        "chapter": "tick",
-        "layout": "code",
-        "tab": "구현",
-        "title": {"text": "3.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.3 구현"],
-        "points": [
-          {
-            "label": "",
-            "text": "AI가 정각 정산(`AdvanceHour`)과 분 단위 진행(`AdvanceTo`)을 두 갈래로 나눔(본인은 '명령 시각 + 공사 시간에 정확히 완공'이라는 기준을 정함) → 경제 계산 단위(1시간)는 그대로 두고 공사 시각만 분으로 정밀해짐",
-            "verbatim": true
-          },
-          {"label": "", "text": "경매가 열려 있으면(`AcceptsWorldInput`이 false) 둘 다 멈춤", "verbatim": true}
-        ],
-        "visuals": [{"kind": "code", "n": 1, "fp": "private void OnHourPassed(GameTimeStamp _)"}]
-      },
-      {
-        "key": "bid-choice",
-        "chapter": "auction",
-        "layout": "full",
-        "tab": "선택",
-        "title": {"text": "4.2 선택", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.2 선택"],
-        "points": [
-          {
-            "label": "상점 구매에서 입찰자 선택으로",
-            "text": "높은 입찰가와 원하는 모디파이어 사이에서 선택이 생김. 경매장을 더 지을수록 고를 수 있는 입찰자도 늘어남",
-            "verbatim": true
-          },
-          {
-            "label": "합연산 대신 곱연산",
-            "text": "처음에는 쌓이는 한도를 두지 않기로 해서(난이도 곡선으로 조절), 합연산이면 감소형이 여러 번 겹쳐 비용이 0이 되거나 음수로 넘어가는 상태가 생길 수 있어 곱연산으로 정함. 인접 보너스·생활 수준·지역 특성 같은 다른 배율도 곱으로 합치므로 계산 방식도 하나로 맞음",
-            "verbatim": true
-          },
-          {
-            "label": "곱연산에도 남는 문제 → 세기 낮추기와 최대 중첩",
-            "text": "재해 피해형은 ×0.7 → ×0.8로 낮추고(세 번 = ×0.51) 3번까지만 겹치게 함",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "보상 방식|장점|문제"}]
-      },
-      {
-        "key": "bid-structure",
-        "chapter": "auction",
-        "layout": "overview",
-        "tab": "구조",
-        "title": {"text": "4.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.3 구현"],
-        "points": [
-          {
-            "label": "",
-            "text": "`AuctionManager`: 정착지 시작 후 72시간이 지나면 첫 정기 경매, 입찰자 수 = 1 + 운영 중인 경매장 수(최대 7)",
-            "verbatim": true
-          },
-          {"label": "", "text": "예고 때 입찰자마다 모디파이어 하나를 뽑아 둠 → 경매 카드·예고 알림·행선지 창에 표시", "verbatim": true},
-          {"label": "", "text": "`Campaign`: 팔린 입찰자의 모디파이어를 캠페인 목록에 쌓고, 다음 정착지 규칙에 곱해서 적용", "verbatim": true},
-          {"label": "", "text": "자금 0 이하일 때: 광산이 있으면 입찰가 −20%의 긴급 매각 경매, 없으면 바로 파산", "verbatim": true}
         ],
         "visuals": [
           {
-            "kind": "image",
-            "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.2 선택"],
-            "src": "images/auction_bidders.png",
-            "w": 1620,
-            "h": 914,
-            "caption": {"text": "정기 경매 — 입찰자 3명이 각자 다른 영구 모디파이어와 가치 내역을 내밀고, 판매 거부도 고를 수 있음", "verbatim": true}
-          },
-          {
-            "kind": "image",
-            "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.2 선택"],
-            "src": "images/destination_select.png",
-            "w": 1620,
-            "h": 914,
-            "caption": {"text": "매각 뒤 다음 지역 고르기 — 받은 영구 모디파이어(건설 석재 −6%)와 난이도·운영비가 표시된 다음 정착지 후보 2곳", "verbatim": true}
-          }
-        ]
-      },
-      {
-        "key": "bid-roll",
-        "chapter": "auction",
-        "layout": "code",
-        "tab": "구현",
-        "title": {"text": "4.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.3 구현"],
-        "points": [
-          {"label": "", "text": "캠페인에서 이미 최대 중첩 수만큼 받은 모디파이어는 후보에서 뺌(4.2)", "verbatim": true},
-          {
-            "label": "",
-            "text": "설정 확률(지금 0.7)로 그 입찰자 전용 목록, 아니면 범용 목록에서 비중대로 하나 → 한쪽 목록이 비면 다른 목록, 둘 다 비면 모디파이어 없이 입찰",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "난수는 시드로 만들어, 같은 실행 환경 안에서는 같은 캠페인·같은 명령이면 같은 결과(`savecheck`로 확인. Unity와 시뮬레이터 사이의 경매 난수는 확인하지 않음)",
-            "verbatim": false
-          }
-        ],
-        "visuals": [{"kind": "code", "n": 1, "fp": "private BidderModifierDefinition RollModifier(BidderModifier"}]
-      },
-      {
-        "key": "bid-bankrupt",
-        "chapter": "auction",
-        "layout": "screens",
-        "tab": "결과",
-        "title": {"text": "4.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.3 구현"],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/emergency_auction.png",
-            "w": 1620,
-            "h": 914,
-            "caption": {"text": "자금이 바닥나 열린 긴급 매각 경매 — 입찰가 −20%, 보류하면 자금이 음수인 채로 24시간 뒤 파산", "verbatim": true}
-          },
-          {
-            "kind": "image",
-            "src": "images/bankrupt.png",
-            "w": 1620,
-            "h": 914,
-            "caption": {"text": "긴급 매각을 보류하고 24시간이 지나 파산한 화면 — 이번 캠페인 기록과 최고 기록, 새 캠페인 시작", "verbatim": true}
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart LR"
           }
         ]
       },
@@ -658,35 +639,55 @@
         "chapter": "residents",
         "layout": "full",
         "tab": "선택",
-        "title": {"text": "5.2 선택", "verbatim": true},
+        "title": {
+          "text": "6.2 선택",
+          "verbatim": true
+        },
         "lead": null,
-        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.2 선택"],
+        "sectionPath": [
+          "6. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다",
+          "6.2 선택"
+        ],
         "points": [
-          {"label": "기획서의 확정 결정을 뒤집음", "text": "기획서의 \"인구/노동력 [확정]: 삭제\"를 뒤집고 노동력을 모으고 관리하는 체계로 바꿈", "verbatim": true},
           {
-            "label": "같은 기준을 두 규칙에 더 적용",
-            "text": "전염병은 \"효율 −%\"보다 \"주민이 아파서 일을 못 한다\"가 더 직관적이고 이해하기 쉽다고 판단해 모형을 바꿈",
+            "label": "",
+            "text": "기획서의 \"인구/노동력 [확정]: 삭제\"를 뒤집고, 노동력을 모으고 관리하는 체계로 바꿨습니다.",
             "verbatim": true
           },
           {
-            "label": "물이라는 비용을 매겼으면 가치도 올림",
-            "text": "가공 시설에 물이 들면 지을 이유가 줄어들므로, 가공품의 생활 수준·식량 효율·판매가를 함께 올림",
+            "label": "",
+            "text": "전염병은 \"효율 −%\"보다 \"주민이 아파서 일을 못 한다\"가 더 직관적이고 이해하기 쉽다고 판단해 모형을 바꿨습니다.",
             "verbatim": true
           }
         ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "규칙|As-Is|To-Be"}]
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "규칙|As-Is|To-Be"
+          }
+        ]
       },
       {
         "key": "res-structure",
         "chapter": "residents",
-        "layout": "overview",
-        "tab": "구조",
-        "title": {"text": "5.3 구현", "verbatim": true},
+        "layout": "screens",
+        "tab": "결과",
+        "title": {
+          "text": "6.3 구현",
+          "verbatim": true
+        },
         "lead": null,
-        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.3 구현"],
+        "sectionPath": [
+          "6. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다",
+          "6.3 구현"
+        ],
         "points": [
-          {"label": "", "text": "주택: 수로에서 물을 받고, 정원만큼 주민이 시간당 조금씩 차오름(생활 수준이 높을수록 빨리)", "verbatim": true},
-          {"label": "", "text": "일터(우물·농장·채석장·광산 등): 필요 인원 대비 배치된 인원 비율만큼 가동", "verbatim": true}
+          {
+            "label": "",
+            "text": "일터(우물·농장·채석장·광산 등)는 필요 인원 대비 배치된 인원 비율만큼 가동합니다.",
+            "verbatim": true
+          }
         ],
         "visuals": [
           {
@@ -694,101 +695,195 @@
             "src": "images/labor_shortage.png",
             "w": 1620,
             "h": 914,
-            "caption": {"text": "두 번째 정착지 초반 — 시설 머리 위 일손 1/2·0/2와 왼쪽 '일손 부족' 알림", "verbatim": true}
+            "caption": {
+              "text": "두 번째 정착지 초반 — 시설 머리 위 일손 1/2·0/2와 왼쪽 '일손 부족' 알림",
+              "verbatim": true
+            }
           },
           {
             "kind": "image",
             "src": "images/epidemic_alert.png",
             "w": 1620,
             "h": 914,
-            "caption": {"text": "전염병 확산 중 — 왼쪽 알림에 아픈 주민 수(일 못 함)·병원 병상·면역 인원이 표시됨", "verbatim": true}
+            "caption": {
+              "text": "전염병 확산 중 — 왼쪽 알림에 아픈 주민 수(일 못 함)·병원 병상·면역 인원이 표시됨",
+              "verbatim": true
+            }
           }
         ]
       },
       {
-        "key": "res-epidemic",
-        "chapter": "residents",
+        "key": "bid-structure",
+        "chapter": "auction",
         "layout": "visual",
-        "tab": "흐름",
-        "title": {"text": "5.3 구현", "verbatim": true},
+        "tab": "결과",
+        "title": {
+          "text": "7.2 선택",
+          "verbatim": true
+        },
         "lead": null,
-        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.3 구현"],
+        "sectionPath": [
+          "7. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다",
+          "7.2 선택"
+        ],
         "points": [
           {
             "label": "",
-            "text": "정해진 피해 곡선이 아니라 세 무리 사이를 옮겨 가는 사람 수로 계산 → 아픈 사람이 많을수록 빨리 퍼지고, 면역이 늘면 저절로 수그러듦",
+            "text": "로그라이크의 보상 선택 방식을 가져와, 입찰자마다 서로 다른 영구 모디파이어를 하나씩 제시하게 했습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "그러자 높은 입찰가와 원하는 모디파이어 사이에서 선택이 생겼고, 경매장을 더 지을수록 고를 수 있는 입찰자도 늘어나게 되었습니다.",
             "verbatim": true
           }
         ],
-        "visuals": [{"kind": "mermaid", "n": 1, "fp": "flowchart LR"}]
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/auction_bidders.png",
+            "w": 1620,
+            "h": 914,
+            "caption": {
+              "text": "정기 경매 — 입찰자 3명이 각자 다른 영구 모디파이어와 가치 내역을 내밀고, 판매 거부도 고를 수 있음",
+              "verbatim": true
+            }
+          },
+          {
+            "kind": "image",
+            "src": "images/destination_select.png",
+            "w": 1620,
+            "h": 914,
+            "caption": {
+              "text": "매각 뒤 다음 지역 고르기 — 받은 영구 모디파이어(건설 석재 −6%)와 난이도·운영비가 표시된 다음 정착지 후보 2곳",
+              "verbatim": true
+            }
+          }
+        ]
       },
       {
-        "key": "res-food",
-        "chapter": "residents",
+        "key": "bid-choice",
+        "chapter": "auction",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "7.2 선택",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "7. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다",
+          "7.2 선택"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "그래서 곱연산으로 정했고, 인접 보너스·생활 수준·지역 특성 같은 다른 배율도 곱으로 합치므로 계산 방식도 하나로 맞았습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "그래서 재해 피해형은 ×0.7 → ×0.8로 낮추고(세 번 = ×0.51) 3번까지만 겹치게 했습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "보상 방식|장점|문제"
+          }
+        ]
+      },
+      {
+        "key": "bid-roll",
+        "chapter": "auction",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "5.3 구현", "verbatim": true},
+        "title": {
+          "text": "7.3 구현",
+          "verbatim": true
+        },
         "lead": null,
-        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.3 구현"],
-        "points": [
-          {"label": "", "text": "노동력이 켜지면 식량 수요 = (주민 + 기본 인부) × 1인당 식량 → 시설이 아니라 사람이 먹음", "verbatim": true},
-          {"label": "", "text": "식량 충족률이 주민 목표 인원으로 이어져, 부족의 결과가 \"주민이 떠남\" 하나로 나타남(두 번 벌하지 않음)", "verbatim": true},
-          {"label": "", "text": "새 환자 = 전파율 × 걸릴 수 있는 주민 × 아픈 주민 ÷ 전체 주민", "verbatim": true}
+        "sectionPath": [
+          "7. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다",
+          "7.3 구현"
         ],
-        "visuals": [{"kind": "code", "n": 1, "fp": "if (Rules.LaborOn) demand = (Residents + Rules.BaseCrew) * F"}]
+        "points": [
+          {
+            "label": "",
+            "text": "캠페인에서 이미 최대 중첩 수만큼 받은 모디파이어는 후보에서 뺍니다(7.2).",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "그다음 설정 확률(지금 0.7)로 그 입찰자 전용 목록에서, 아니면 범용 목록에서 비중대로 하나를 고릅니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "private BidderModifierDefinition RollModifier(BidderModifier"
+          }
+        ]
       },
       {
         "key": "verify-cash",
         "chapter": "verify",
-        "layout": "full",
-        "tab": "선택",
-        "title": {"text": "6.2 선택", "verbatim": true},
-        "lead": {"text": "시작 자금 모디파이어 후보(숙련 봇 캠페인 20개, 시뮬레이터 `-- bottleneck`)", "verbatim": true},
-        "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "6.2 선택"],
-        "points": [
-          {
-            "label": "시뮬레이터를 만든 이유",
-            "text": "사람의 플레이 경향이나 선호도가 반영되지 않은, 수치만으로 판단할 수 있는 객관적인 데이터가 필요했음",
-            "verbatim": true
-          },
-          {
-            "label": "시뮬레이터가 찾은 것 — 시작 자금 폭주",
-            "text": "범용 모디파이어 \"시작 자금 ×1.05\"가 보유 자금 전체에 곱해져, 최대 중첩 5면 정착지를 하나 거칠 때마다 +28%씩 쌓임",
-            "verbatim": false
-          },
-          {
-            "label": "시뮬레이터의 한계",
-            "text": "숙련 봇조차 물탱크나 시장을 짓지 않고 사람보다 훨씬 적게 벌었고, 규칙이 바뀔 때마다 이전 측정의 전제가 무너짐",
-            "verbatim": false
-          },
-          {
-            "label": "그래서 역할을 다시 나눔",
-            "text": "사람이 직접 플레이해 수치의 기준을 잡고, 시뮬레이터는 그 값을 검증하는 비교군과 예상하지 못한 충돌 지점을 찾는 도구로 쓰는 것이 맞다고 판단함",
-            "verbatim": true
-          }
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "8.2 선택",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "시뮬레이터는 반복 플레이에서만 드러나는 문제를 찾았습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "8. 검증 체계: 직접 다 플레이하지 않고도 확인한다",
+          "8.2 선택"
         ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "후보|파산|끝까지 간 캠페인 끝 자금(중앙 / 최대)|비고"}]
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "후보|파산|끝까지 간 캠페인 끝 자금(중앙 / 최대)|비고"
+          },
+          {
+            "kind": "image",
+            "src": "images/simulator_bottleneck.png",
+            "w": 1600,
+            "h": 528,
+            "caption": {
+              "text": "채택한 B 설정으로 숙련 봇 캠페인 20개를 다시 돌린 결과 — 파산 19/20, 끝까지 간 캠페인 끝 자금 651 (11/17 버전을 다시 실행한 출력 일부)",
+              "verbatim": true
+            }
+          }
+        ]
       },
       {
         "key": "verify-structure",
         "chapter": "verify",
-        "layout": "overview",
+        "layout": "visual",
         "tab": "구조",
-        "title": {"text": "6.3 구현", "verbatim": true},
+        "title": {
+          "text": "8.3 구현",
+          "verbatim": true
+        },
         "lead": null,
-        "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "6.3 구현"],
+        "sectionPath": [
+          "8. 검증 체계: 직접 다 플레이하지 않고도 확인한다",
+          "8.3 구현"
+        ],
         "points": [
           {
             "label": "",
-            "text": "시뮬레이터(`Tools/SettlementSim`): Core 소스를 그대로 링크한 .NET 콘솔. 기준 봇·숙련 봇이 캠페인을 자동으로 돌리고 D 구간별 순이익·처음 적자·파산을 출력",
+            "text": "정리할 때마다 시뮬레이터 출력 전체가 바꾸기 전과 같은지, 그때의 Unity 테스트가 모두 통과하는지 확인했습니다.",
             "verbatim": true
-          },
-          {"label": "", "text": "원본 v0.8 회귀값: 노동력 등 나중에 추가된 규칙을 끈 상태에서 기획 단계 경제 계산과 같은 값이 나오는지 고정", "verbatim": true},
-          {"label": "", "text": "`-- savecheck`: 저장 파일의 명령 기록을 다시 실행해 같은 결과가 나오는지 확인", "verbatim": true},
-          {
-            "label": "",
-            "text": "Unity 테스트: EditMode(Core 규칙)·PlayMode(화면·진행률). 11/17 기준 EditMode 221 · PlayMode 15(14개 통과, 수동 실행용 1개 건너뜀)",
-            "verbatim": false
           }
         ],
         "visuals": [
@@ -819,664 +914,27 @@
         "chapter": "verify",
         "layout": "full",
         "tab": "구현",
-        "title": {"text": "6.3 구현", "verbatim": true},
-        "lead": {"text": "유지보수성 검토를 요청해 검토 항목 22개를 받아 이슈 12개로 나눠 처리. 대부분은 게임 동작을 바꾸지 않는 정리", "verbatim": true},
-        "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "6.3 구현"],
-        "points": [{"label": "", "text": "확인 방법: 정리할 때마다 시뮬레이터 출력 전체가 바꾸기 전과 같은지, 그때의 Unity 테스트가 모두 통과하는지 확인", "verbatim": true}],
-        "visuals": [{"kind": "table", "n": 1, "fp": "검토 항목|As-Is|To-Be"}]
-      }
-    ],
-    "base": [
-      {
-        "key": "made",
-        "chapter": "overview",
-        "layout": "visual",
-        "tab": "개요",
-        "title": {"text": "1.1 만든 것", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["1. 프로젝트 개요", "1.1 만든 것"],
-        "points": [
-          {"label": "", "text": "반경 3~7의 헥스 타일 맵 위에서 시설을 짓고, 육각형 변을 따라 수로를 놓아 우물의 물을 나누는 정착지 경영 게임", "verbatim": true},
-          {"label": "", "text": "물은 우물에서 수로를 따라 흐르고 상류 시설이 먼저 받음 → 물이 모자라면 가동률이 떨어짐", "verbatim": true},
-          {"label": "", "text": "정착지를 경매에 팔고 입찰자가 내미는 영구 모디파이어를 골라 다음 정착지로 넘어가는 캠페인 루프", "verbatim": true}
-        ],
-        "visuals": [
-          {"kind": "mermaid", "n": 1, "fp": "flowchart LR", "sectionPath": ["1. 프로젝트 개요", "1.1 만든 것"]},
-          {"kind": "table", "n": 1, "fp": "항목|내용", "sectionPath": ["Desert Flavor — AI 협업 개발에서 기획·검증을 맡은 헥스타일 경영 게임"]},
-          {
-            "kind": "image",
-            "src": "images/water_flow.gif",
-            "w": 640,
-            "h": 432,
-            "caption": {"text": "육각형 변을 따라 수로를 예약하면 공사가 끝난 구간부터 물이 흘러 파랗게 바뀌는 모습 (1.5배속)", "verbatim": true}
-          }
-        ]
-      },
-      {
-        "key": "goal",
-        "chapter": "overview",
-        "layout": "overview",
-        "tab": "개요",
-        "title": {"text": "1.2 목표", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["1. 프로젝트 개요", "1.2 목표"],
-        "points": [
-          {
-            "label": "개발 의도",
-            "text": "주어진 약 2주 안에 경제 시뮬레이션 규모의 게임을 만들면서, 기획과 검증만으로 메커닉과 재미를 어디까지 끌어올릴 수 있는지 확인",
-            "verbatim": true
-          },
-          {
-            "label": "AI 주도 개발을 택한 이유",
-            "text": "AI 에이전트의 프로그래밍 성능이 이미 충분하다고 판단해 구현을 맡기고, 본인은 기획과 플레이로 확인하며 수치를 조율하는 일에 집중",
-            "verbatim": true
-          },
-          {"label": "이 문서에서 다루는 것", "text": "구현 코드 자체보다 무엇을 정했고, 어떻게 검증했고, AI의 판단을 언제 뒤집었는지", "verbatim": true}
-        ],
-        "visuals": []
-      },
-      {
-        "key": "design-goal",
-        "chapter": "overview",
-        "layout": "overview",
-        "tab": "개요",
-        "title": {"text": "1.2 목표", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["1. 프로젝트 개요", "1.2 목표"],
-        "points": [
-          {
-            "label": "게임 측면의 목표",
-            "text": "자원 병목이 풀려 긴장감이 사라지는 후반부를 잘라 내고, 정착지를 경매로 보상받은 뒤 점점 어려워지는 다음 정착지에서 플레이마다 다른 방식으로 문제를 풀어나가는 경험",
-            "verbatim": false
-          },
-          {"label": "기획서의 핵심 질문", "text": "무엇에 투자하고 무엇을 포기할 것인가. 정착지를 어디까지 개발하고 언제 매각할 것인가.", "verbatim": true},
-          {"label": "설계 원칙", "text": "플레이어의 고민을 '따라야 할 최적 행동'이 아니라 계획과 실제가 어긋났을 때의 상충 선택으로 설계", "verbatim": true},
-          {
-            "label": "",
-            "text": "광산만 짓는 전략, 지원시설만 짓는 전략, 경매 직전에 가동하지 않는 시설을 몰아 짓는 전략이 정답이 되지 않도록 물·식량·유지비·부지·경매 시장으로 서로 견제하게 함",
-            "verbatim": true
-          }
-        ],
-        "visuals": []
-      },
-      {
-        "key": "ai-collab",
-        "chapter": "overview",
-        "layout": "overview",
-        "tab": "",
-        "title": {"text": "1.3 AI 협업 방식 — 누가 무엇을 했나", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["1. 프로젝트 개요", "1.3 AI 협업 방식 — 누가 무엇을 했나"],
-        "points": [
-          {"label": "", "text": "구현: Claude Code 에이전트. 본인은 기획서·규칙 결정·플레이테스트·문제 파악과 정의(이슈)·결과 검토 담당", "verbatim": true},
-          {
-            "label": "결정 기록",
-            "text": "항목마다 고른 것 / 이유 / 다른 안 / 바꾸려면을 남기고, 본인이 고른 것은 [사용자 결정](164개), AI가 고른 것은 [자동](128개)으로 구분",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "작업 단위: GitHub 이슈(비공개 원본 저장소) 하나씩 \"질문 → 구현 → 시뮬레이터·Unity 테스트 → 결정 기록 갱신\" 순서",
-            "verbatim": true
-          },
-          {"label": "", "text": "검증 수단: 플레이테스트 4차례, EditMode·PlayMode 테스트, 봇이 자동으로 플레이하는 .NET 시뮬레이터", "verbatim": true}
-        ],
-        "visuals": []
-      },
-      {
-        "key": "arch",
-        "chapter": "overview",
-        "layout": "full",
-        "tab": "구조",
-        "title": {"text": "1.4 개발 환경 및 전체 구조", "verbatim": true},
-        "lead": {
-          "text": "게임 규칙은 모두 Core(`Settlement`·`Campaign`·`AuctionManager` 등)에 있고, Unity 쪽(`GameSession`)과 시뮬레이터(`SettlementSim`)가 같은 Core를 서로 다른 시계로 돌리는 구조",
+        "title": {
+          "text": "8.3 구현",
           "verbatim": true
         },
-        "sectionPath": ["1. 프로젝트 개요", "1.4 개발 환경 및 전체 구조"],
-        "points": [
-          {
-            "label": "",
-            "text": "어셈블리 정의로 Core(Unity를 참조하지 않는 순수 C# 규칙)와 Runtime(화면·입력, 게임 시계에 Unity 시간 공급)을 분리",
-            "verbatim": true
-          },
-          {"label": "", "text": "AI가 제안한 구조로, 시뮬레이터가 게임과 같은 규칙으로 봇 플레이를 돌릴 수 있어서 받아들임", "verbatim": true}
+        "lead": {
+          "text": "또 AI에 유지보수성 검토를 요청해 검토 항목 22개를 받고, 이를 이슈 12개로 나눠 처리했습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "8. 검증 체계: 직접 다 플레이하지 않고도 확인한다",
+          "8.3 구현"
         ],
-        "visuals": [{"kind": "mermaid", "n": 1, "fp": "classDiagram"}]
-      },
-      {
-        "key": "arch-core",
-        "chapter": "overview",
-        "layout": "full",
-        "tab": "구조",
-        "title": {"text": "1.4 개발 환경 및 전체 구조", "verbatim": true},
-        "lead": {"text": "② 캠페인과 정착지 규칙 (Core)", "verbatim": true},
-        "sectionPath": ["1. 프로젝트 개요", "1.4 개발 환경 및 전체 구조"],
-        "points": [
-          {
-            "label": "",
-            "text": ".NET 시뮬레이터(`Tools/SettlementSim`)가 Core 폴더의 소스(시계를 맡은 Timing 제외)를 그대로 링크해 봇 플레이를 돌림",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "mermaid", "n": 2, "fp": "classDiagram"}]
-      },
-      {
-        "key": "map-why",
-        "chapter": "map",
-        "layout": "overview",
-        "tab": "선택",
-        "title": {"text": "2.2 선택", "verbatim": true},
-        "lead": {"text": "파산할 때까지 점점 어려워지는 다음 정착지를 계속 플레이하는 콘텐츠라, 정착지마다 새 맵이 필요했음", "verbatim": false},
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.2 선택"],
-        "points": [
-          {"label": "단순 무작위 배치", "text": "게임 진행이 불가능한 시드도 생성됨", "verbatim": true},
-          {"label": "미리 조립한 구획들을 결합하는 방식", "text": "안정적이지만, 구획을 결합하는 로직을 설정하기 복잡함", "verbatim": true},
-          {
-            "label": "선택 — 규칙과 예시 맵을 함께 전달",
-            "text": "배치 규칙을 직접 정하고, 글로만 넘기지 않고 맵 스케치 편집기로 그린 예시 맵과 함께 전달함",
-            "verbatim": true
-          },
-          {"label": "", "text": "편집기 구현은 AI(10/23 `2335bac`), 예시 맵 `sketch_01`은 직접 그림", "verbatim": true}
-        ],
-        "visuals": []
-      },
-      {
-        "key": "map-sketch",
-        "chapter": "map",
-        "layout": "visual",
-        "tab": "흐름",
-        "title": {"text": "2.2 선택", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.2 선택"],
-        "points": [
-          {
-            "label": "",
-            "text": "맵 스케치 편집기: Unity 씬 뷰에서 헥스 타일을 클릭·드래그로 칠함(숫자키 1~5 = 사막·수원·광맥·암반·장애물, Shift = 지우기)",
-            "verbatim": true
-          },
-          {"label": "", "text": "저장 형식이 캠페인 맵과 같은 JSON이라, AI가 예시의 좌표·지형을 그대로 읽어 확인함", "verbatim": true},
-          {"label": "", "text": "편집기에는 '생성 맵 미리보기'(난이도 D·시드)를 더해, 예시를 그린 화면에서 생성 결과를 바로 비교", "verbatim": true}
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/map_sketch_paint.gif",
-            "w": 720,
-            "h": 560,
-            "caption": {"text": "맵 스케치 편집기로 예시 맵 sketch_01을 칠하는 과정 — 장애물 → 암반 → 광맥 → 수원 순서", "verbatim": true}
-          },
-          {
-            "kind": "image",
-            "src": "images/map_sketch_editor.png",
-            "w": 1360,
-            "h": 900,
-            "caption": {"text": "맵 스케치 편집기 — 왼쪽 씬 뷰의 예시 맵 sketch_01(좌표 표시), 오른쪽 인스펙터의 붓·JSON 저장·생성 맵 미리보기", "verbatim": true}
-          }
-        ]
-      },
-      {
-        "key": "map-rules",
-        "chapter": "map",
-        "layout": "visual",
-        "tab": "결과",
-        "title": {"text": "2.2 선택", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.2 선택"],
-        "points": [
-          {"label": "① 장애물", "text": "지형마다 산맥(선) 또는 고원(덩어리) 중 하나. 다른 장애물 지형과 이어져 맵을 가로막으면 안 됨", "verbatim": true},
-          {"label": "② 광맥", "text": "난이도 수치만큼, 90% 확률로 장애물 근처", "verbatim": true},
-          {"label": "③ 암반", "text": "90% 확률로 이미 놓인 장애물 칸을 대신", "verbatim": true},
-          {"label": "④ 우물(수원)", "text": "난이도 수치만큼, 사막 위에 한 칸씩, 반경 2 안에 다른 우물 없음", "verbatim": true},
-          {"label": "결과", "text": "시뮬레이터 프로토타입에서 난이도별 40장이 모두 첫 시도에 생성되었고 규칙 위반은 0", "verbatim": true}
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/procedural_by_difficulty.png",
-            "w": 1440,
-            "h": 1216,
-            "caption": {
-              "text": "생성 맵 미리보기로 만든 맵(시드 1) — 난이도 D 0·1·2·3으로 갈수록 반경 3 → 6, 우물 2 → 1, 광맥 2 → 1, 장애물 20% → 40%",
-              "verbatim": true
-            }
-          }
-        ]
-      },
-      {
-        "key": "map-flow",
-        "chapter": "map",
-        "layout": "visual",
-        "tab": "흐름",
-        "title": {"text": "2.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.3 구현"],
-        "points": [
-          {
-            "label": "",
-            "text": "규칙을 만드는 동안 지키게 하는 부분(구역마다 장애물 지형 하나)과 만든 뒤 검사로 걸러 내는 부분(트인 땅 이어짐·수로 경로)이 나뉘어 있음 → 내놓는 맵은 항상 플레이할 수 있음",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "mermaid", "n": 1, "fp": "flowchart LR"}]
-      },
-      {
-        "key": "map-generate",
-        "chapter": "map",
-        "layout": "code",
-        "tab": "구현",
-        "title": {"text": "2.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.3 구현"],
-        "points": [
-          {
-            "label": "",
-            "text": "`TryGenerate`가 어느 단계에서든 실패하면 `null` → 같은 난수 흐름으로 다음 시도(최대 `MaxAttempts`번)",
-            "verbatim": true
-          },
-          {"label": "", "text": "난수는 시드로 만들어, 같은 시드면 Unity와 시뮬레이터가 같은 맵을 만듦", "verbatim": true}
-        ],
-        "visuals": [{"kind": "code", "n": 1, "fp": "public static GeneratedMap Generate(DifficultyParams p, Gene"}]
-      },
-      {
-        "key": "map-check",
-        "chapter": "map",
-        "layout": "code",
-        "tab": "구현",
-        "title": {"text": "2.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["2. 절차 맵 생성: 예시 맵을 그려 AI에게 생성 규칙을 전달했다", "2.3 구현"],
-        "points": [
-          {
-            "label": "",
-            "text": "장애물 지형은 자기 구역 안에서, 다른 지형과 맞닿지 않는 칸으로만 자람 → 지형끼리 이어져 맵을 가로막는 장벽이 생기지 않음",
-            "verbatim": true
-          },
-          {"label": "", "text": "그래도 막히는 경우를 위해 장애물이 아닌 땅이 하나로 이어져 있는지 한 번 더 검사", "verbatim": true},
-          {
-            "label": "",
-            "text": "마지막으로 수로 규칙(양쪽이 장애물인 변에는 수로 불가) 아래에서 우물 → 광맥, 우물 → 암반 경로를 찾고, 없으면 그 맵을 버림",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "code", "n": 2, "fp": "bool Allowed(HexCoord c) => leafSet.Contains(c) && !owner.Co"}]
-      },
-      {
-        "key": "tick-choice",
-        "chapter": "tick",
-        "layout": "full",
-        "tab": "선택",
-        "title": {"text": "3.2 선택", "verbatim": true},
-        "lead": {"text": "12:30에 5시간짜리 건설을 명령했을 때", "verbatim": true},
-        "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.2 선택"],
-        "points": [
-          {
-            "label": "AI의 '비추천'을 처음엔 따랐다가 뒤집음",
-            "text": "2차 플레이테스트에서는 구현 비용이 크다는 판단을 따라 AI의 타협안을 받아들였지만, 4차에서 그 부작용(처음부터 차 있는 게이지, 1시간 기다리는 대기 공사)이 드러나 분 단위로 바꿈",
-            "verbatim": false
-          },
-          {
-            "label": "테스트는 통과했지만 화면이 의도와 달랐던 경우",
-            "text": "3차 \"여전히 정각에만 건설이 시작됨\"의 원인은 규칙이 아니라 화면 진행률 계산이 예전 '정각 착공'을 가정한 것이었음",
-            "verbatim": true
-          },
-          {
-            "label": "결과",
-            "text": "숙련 봇 캠페인에서 바꾸기 전과 후의 정착지 순이익이 거의 같음(D0~1 +1370 → +1379, D3~4 +291 → +285)",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "단계|착공|완공|실제 공사 시간"}]
-      },
-      {
-        "key": "tick-structure",
-        "chapter": "tick",
-        "layout": "overview",
-        "tab": "구조",
-        "title": {"text": "3.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.3 구현"],
-        "points": [
-          {"label": "", "text": "`GameClock`: 실제 시간을 게임 시간으로 바꾸고 정각마다 `HourPassed` 발생", "verbatim": true},
-          {
-            "label": "",
-            "text": "`Settlement.TimeSource`: 게임 시계를 읽는 함수. 건설 명령이 들어오면 정착지가 먼저 이 시각까지 따라간 뒤(`AdvanceTo`), 지금 시각(`Now` = 시 + 분 ÷ 60)에 착공",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.2 선택"],
-            "src": "images/construction_queue_minutes.png",
-            "w": 1620,
-            "h": 914,
-            "caption": {"text": "공사 대기열 — 두 곳은 공사 중(남은 시간이 분 단위까지 표시), 나머지는 대기. 맵 위 공사 중인 시설에 진행률 51%", "verbatim": true}
-          }
-        ]
-      },
-      {
-        "key": "tick-flow",
-        "chapter": "tick",
-        "layout": "visual",
-        "tab": "흐름",
-        "title": {"text": "3.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.3 구현"],
-        "points": [
-          {
-            "label": "",
-            "text": "분 단위로 따라가는 길(`AdvanceTo`)은 공사 완공만 처리하고, 물·생산·돈은 정각 한 번(`AdvanceHour`)에만 계산됨",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "mermaid", "n": 1, "fp": "flowchart LR"}]
-      },
-      {
-        "key": "tick-clock",
-        "chapter": "tick",
-        "layout": "code",
-        "tab": "구현",
-        "title": {"text": "3.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["3. 건설 착공 시각과 경제 틱: 명령한 시각에 바로 착공한다", "3.3 구현"],
-        "points": [
-          {
-            "label": "",
-            "text": "AI가 정각 정산(`AdvanceHour`)과 분 단위 진행(`AdvanceTo`)을 두 갈래로 나눔(본인은 '명령 시각 + 공사 시간에 정확히 완공'이라는 기준을 정함) → 경제 계산 단위(1시간)는 그대로 두고 공사 시각만 분으로 정밀해짐",
-            "verbatim": true
-          },
-          {"label": "", "text": "경매가 열려 있으면(`AcceptsWorldInput`이 false) 둘 다 멈춤", "verbatim": true}
-        ],
-        "visuals": [{"kind": "code", "n": 1, "fp": "private void OnHourPassed(GameTimeStamp _)"}]
-      },
-      {
-        "key": "bid-choice",
-        "chapter": "auction",
-        "layout": "full",
-        "tab": "선택",
-        "title": {"text": "4.2 선택", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.2 선택"],
-        "points": [
-          {
-            "label": "상점 구매에서 입찰자 선택으로",
-            "text": "높은 입찰가와 원하는 모디파이어 사이에서 선택이 생김. 경매장을 더 지을수록 고를 수 있는 입찰자도 늘어남",
-            "verbatim": true
-          },
-          {
-            "label": "합연산 대신 곱연산",
-            "text": "처음에는 쌓이는 한도를 두지 않기로 해서(난이도 곡선으로 조절), 합연산이면 감소형이 여러 번 겹쳐 비용이 0이 되거나 음수로 넘어가는 상태가 생길 수 있어 곱연산으로 정함. 인접 보너스·생활 수준·지역 특성 같은 다른 배율도 곱으로 합치므로 계산 방식도 하나로 맞음",
-            "verbatim": true
-          },
-          {
-            "label": "곱연산에도 남는 문제 → 세기 낮추기와 최대 중첩",
-            "text": "재해 피해형은 ×0.7 → ×0.8로 낮추고(세 번 = ×0.51) 3번까지만 겹치게 함",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "보상 방식|장점|문제"}]
-      },
-      {
-        "key": "bid-structure",
-        "chapter": "auction",
-        "layout": "overview",
-        "tab": "구조",
-        "title": {"text": "4.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.3 구현"],
-        "points": [
-          {
-            "label": "",
-            "text": "`AuctionManager`: 정착지 시작 후 72시간이 지나면 첫 정기 경매, 입찰자 수 = 1 + 운영 중인 경매장 수(최대 7)",
-            "verbatim": true
-          },
-          {"label": "", "text": "예고 때 입찰자마다 모디파이어 하나를 뽑아 둠 → 경매 카드·예고 알림·행선지 창에 표시", "verbatim": true},
-          {"label": "", "text": "`Campaign`: 팔린 입찰자의 모디파이어를 캠페인 목록에 쌓고, 다음 정착지 규칙에 곱해서 적용", "verbatim": true},
-          {"label": "", "text": "자금 0 이하일 때: 광산이 있으면 입찰가 −20%의 긴급 매각 경매, 없으면 바로 파산", "verbatim": true}
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.2 선택"],
-            "src": "images/auction_bidders.png",
-            "w": 1620,
-            "h": 914,
-            "caption": {"text": "정기 경매 — 입찰자 3명이 각자 다른 영구 모디파이어와 가치 내역을 내밀고, 판매 거부도 고를 수 있음", "verbatim": true}
-          },
-          {
-            "kind": "image",
-            "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.2 선택"],
-            "src": "images/destination_select.png",
-            "w": 1620,
-            "h": 914,
-            "caption": {"text": "매각 뒤 다음 지역 고르기 — 받은 영구 모디파이어(건설 석재 −6%)와 난이도·운영비가 표시된 다음 정착지 후보 2곳", "verbatim": true}
-          }
-        ]
-      },
-      {
-        "key": "bid-roll",
-        "chapter": "auction",
-        "layout": "code",
-        "tab": "구현",
-        "title": {"text": "4.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.3 구현"],
-        "points": [
-          {"label": "", "text": "캠페인에서 이미 최대 중첩 수만큼 받은 모디파이어는 후보에서 뺌(4.2)", "verbatim": true},
-          {
-            "label": "",
-            "text": "설정 확률(지금 0.7)로 그 입찰자 전용 목록, 아니면 범용 목록에서 비중대로 하나 → 한쪽 목록이 비면 다른 목록, 둘 다 비면 모디파이어 없이 입찰",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "난수는 시드로 만들어, 같은 실행 환경 안에서는 같은 캠페인·같은 명령이면 같은 결과(`savecheck`로 확인. Unity와 시뮬레이터 사이의 경매 난수는 확인하지 않음)",
-            "verbatim": false
-          }
-        ],
-        "visuals": [{"kind": "code", "n": 1, "fp": "private BidderModifierDefinition RollModifier(BidderModifier"}]
-      },
-      {
-        "key": "bid-bankrupt",
-        "chapter": "auction",
-        "layout": "screens",
-        "tab": "결과",
-        "title": {"text": "4.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["4. 경매와 입찰자 영구 모디파이어: 최고가와 원하는 보상 사이에서 고른다", "4.3 구현"],
         "points": [],
         "visuals": [
           {
-            "kind": "image",
-            "src": "images/emergency_auction.png",
-            "w": 1620,
-            "h": 914,
-            "caption": {"text": "자금이 바닥나 열린 긴급 매각 경매 — 입찰가 −20%, 보류하면 자금이 음수인 채로 24시간 뒤 파산", "verbatim": true}
-          },
-          {
-            "kind": "image",
-            "src": "images/bankrupt.png",
-            "w": 1620,
-            "h": 914,
-            "caption": {"text": "긴급 매각을 보류하고 24시간이 지나 파산한 화면 — 이번 캠페인 기록과 최고 기록, 새 캠페인 시작", "verbatim": true}
+            "kind": "table",
+            "n": 1,
+            "fp": "검토 항목|As-Is|To-Be"
           }
         ]
-      },
-      {
-        "key": "res-asis",
-        "chapter": "residents",
-        "layout": "full",
-        "tab": "선택",
-        "title": {"text": "5.2 선택", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.2 선택"],
-        "points": [
-          {"label": "기획서의 확정 결정을 뒤집음", "text": "기획서의 \"인구/노동력 [확정]: 삭제\"를 뒤집고 노동력을 모으고 관리하는 체계로 바꿈", "verbatim": true},
-          {
-            "label": "같은 기준을 두 규칙에 더 적용",
-            "text": "전염병은 \"효율 −%\"보다 \"주민이 아파서 일을 못 한다\"가 더 직관적이고 이해하기 쉽다고 판단해 모형을 바꿈",
-            "verbatim": true
-          },
-          {
-            "label": "물이라는 비용을 매겼으면 가치도 올림",
-            "text": "가공 시설에 물이 들면 지을 이유가 줄어들므로, 가공품의 생활 수준·식량 효율·판매가를 함께 올림",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "규칙|As-Is|To-Be"}]
-      },
-      {
-        "key": "res-structure",
-        "chapter": "residents",
-        "layout": "overview",
-        "tab": "구조",
-        "title": {"text": "5.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.3 구현"],
-        "points": [
-          {"label": "", "text": "주택: 수로에서 물을 받고, 정원만큼 주민이 시간당 조금씩 차오름(생활 수준이 높을수록 빨리)", "verbatim": true},
-          {"label": "", "text": "일터(우물·농장·채석장·광산 등): 필요 인원 대비 배치된 인원 비율만큼 가동", "verbatim": true}
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/labor_shortage.png",
-            "w": 1620,
-            "h": 914,
-            "caption": {"text": "두 번째 정착지 초반 — 시설 머리 위 일손 1/2·0/2와 왼쪽 '일손 부족' 알림", "verbatim": true}
-          },
-          {
-            "kind": "image",
-            "src": "images/epidemic_alert.png",
-            "w": 1620,
-            "h": 914,
-            "caption": {"text": "전염병 확산 중 — 왼쪽 알림에 아픈 주민 수(일 못 함)·병원 병상·면역 인원이 표시됨", "verbatim": true}
-          }
-        ]
-      },
-      {
-        "key": "res-epidemic",
-        "chapter": "residents",
-        "layout": "visual",
-        "tab": "흐름",
-        "title": {"text": "5.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.3 구현"],
-        "points": [
-          {
-            "label": "",
-            "text": "정해진 피해 곡선이 아니라 세 무리 사이를 옮겨 가는 사람 수로 계산 → 아픈 사람이 많을수록 빨리 퍼지고, 면역이 늘면 저절로 수그러듦",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "mermaid", "n": 1, "fp": "flowchart LR"}]
-      },
-      {
-        "key": "res-food",
-        "chapter": "residents",
-        "layout": "code",
-        "tab": "구현",
-        "title": {"text": "5.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["5. 주택·노동력과 전염병: 추상 수치를 눈에 보이는 원인으로 바꿨다", "5.3 구현"],
-        "points": [
-          {"label": "", "text": "노동력이 켜지면 식량 수요 = (주민 + 기본 인부) × 1인당 식량 → 시설이 아니라 사람이 먹음", "verbatim": true},
-          {"label": "", "text": "식량 충족률이 주민 목표 인원으로 이어져, 부족의 결과가 \"주민이 떠남\" 하나로 나타남(두 번 벌하지 않음)", "verbatim": true},
-          {"label": "", "text": "새 환자 = 전파율 × 걸릴 수 있는 주민 × 아픈 주민 ÷ 전체 주민", "verbatim": true}
-        ],
-        "visuals": [{"kind": "code", "n": 1, "fp": "if (Rules.LaborOn) demand = (Residents + Rules.BaseCrew) * F"}]
-      },
-      {
-        "key": "verify-cash",
-        "chapter": "verify",
-        "layout": "full",
-        "tab": "선택",
-        "title": {"text": "6.2 선택", "verbatim": true},
-        "lead": {"text": "시작 자금 모디파이어 후보(숙련 봇 캠페인 20개, 시뮬레이터 `-- bottleneck`)", "verbatim": true},
-        "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "6.2 선택"],
-        "points": [
-          {
-            "label": "시뮬레이터를 만든 이유",
-            "text": "사람의 플레이 경향이나 선호도가 반영되지 않은, 수치만으로 판단할 수 있는 객관적인 데이터가 필요했음",
-            "verbatim": true
-          },
-          {
-            "label": "시뮬레이터가 찾은 것 — 시작 자금 폭주",
-            "text": "범용 모디파이어 \"시작 자금 ×1.05\"가 보유 자금 전체에 곱해져, 최대 중첩 5면 정착지를 하나 거칠 때마다 +28%씩 쌓임",
-            "verbatim": false
-          },
-          {
-            "label": "시뮬레이터의 한계",
-            "text": "숙련 봇조차 물탱크나 시장을 짓지 않고 사람보다 훨씬 적게 벌었고, 규칙이 바뀔 때마다 이전 측정의 전제가 무너짐",
-            "verbatim": false
-          },
-          {
-            "label": "그래서 역할을 다시 나눔",
-            "text": "사람이 직접 플레이해 수치의 기준을 잡고, 시뮬레이터는 그 값을 검증하는 비교군과 예상하지 못한 충돌 지점을 찾는 도구로 쓰는 것이 맞다고 판단함",
-            "verbatim": true
-          }
-        ],
-        "visuals": [{"kind": "table", "n": 1, "fp": "후보|파산|끝까지 간 캠페인 끝 자금(중앙 / 최대)|비고"}]
-      },
-      {
-        "key": "verify-structure",
-        "chapter": "verify",
-        "layout": "overview",
-        "tab": "구조",
-        "title": {"text": "6.3 구현", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "6.3 구현"],
-        "points": [
-          {
-            "label": "",
-            "text": "시뮬레이터(`Tools/SettlementSim`): Core 소스를 그대로 링크한 .NET 콘솔. 기준 봇·숙련 봇이 캠페인을 자동으로 돌리고 D 구간별 순이익·처음 적자·파산을 출력",
-            "verbatim": true
-          },
-          {"label": "", "text": "원본 v0.8 회귀값: 노동력 등 나중에 추가된 규칙을 끈 상태에서 기획 단계 경제 계산과 같은 값이 나오는지 고정", "verbatim": true},
-          {"label": "", "text": "`-- savecheck`: 저장 파일의 명령 기록을 다시 실행해 같은 결과가 나오는지 확인", "verbatim": true},
-          {
-            "label": "",
-            "text": "Unity 테스트: EditMode(Core 규칙)·PlayMode(화면·진행률). 11/17 기준 EditMode 221 · PlayMode 15(14개 통과, 수동 실행용 1개 건너뜀)",
-            "verbatim": false
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/simulator.png",
-            "w": 1600,
-            "h": 750,
-            "caption": {
-              "text": "시뮬레이터 기본 실행 — 원본 v0.8 회귀값과 무작위 수로망 2,000개 검증이 모두 OK, 마지막 줄 '모든 검증 통과' (11/17 버전을 다시 실행한 출력 일부)",
-              "verbatim": true
-            }
-          },
-          {
-            "kind": "image",
-            "src": "images/tests.png",
-            "w": 1600,
-            "h": 528,
-            "caption": {
-              "text": "Unity 배치 모드 테스트 — EditMode 221개 모두 통과, PlayMode 15개 중 14개 통과·1개 건너뜀(수동 실행용 화면 캡처 테스트) (11/17 버전을 다시 실행)",
-              "verbatim": true
-            }
-          }
-        ]
-      },
-      {
-        "key": "verify-review",
-        "chapter": "verify",
-        "layout": "full",
-        "tab": "구현",
-        "title": {"text": "6.3 구현", "verbatim": true},
-        "lead": {"text": "유지보수성 검토를 요청해 검토 항목 22개를 받아 이슈 12개로 나눠 처리. 대부분은 게임 동작을 바꾸지 않는 정리", "verbatim": true},
-        "sectionPath": ["6. 검증 체계: 직접 다 플레이하지 않고도 확인한다", "6.3 구현"],
-        "points": [{"label": "", "text": "확인 방법: 정리할 때마다 시뮬레이터 출력 전체가 바꾸기 전과 같은지, 그때의 Unity 테스트가 모두 통과하는지 확인", "verbatim": true}],
-        "visuals": [{"kind": "table", "n": 1, "fp": "검토 항목|As-Is|To-Be"}]
       }
-    ],
-    "applied": "b66ef6f5b6f8a8d9"
-  },
-  "generatedAt": "2026-11-21"
+    ]
+  }
 }

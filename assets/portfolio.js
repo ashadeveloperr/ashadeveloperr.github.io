@@ -66,8 +66,7 @@
       if (tab >= 0) tabsCtl.pick(tab);
       root.querySelector('#features')?.scrollIntoView({ behavior: 'instant', block: 'start' });
     } else {
-      if (narrowView.matches || !workCtl) root.querySelector('#work')?.scrollIntoView({ behavior: 'instant', block: 'start' });
-      workCtl?.go(i, true);                                            // 넓은 화면: 그 장의 세로 위치로 · 좁은 화면: 트랙을 그 장으로
+      workCtl?.go(i, true);                                            // 대표 프로젝트의 그 프로젝트 화면으로
     }
     return true;
   }
@@ -191,31 +190,28 @@
     return `<picture style="display:contents"><source media="(prefers-reduced-motion: reduce)" srcset="${esc(still)}"><img src="${esc(motion)}" alt="" onerror="this.onerror=null;this.previousElementSibling.remove();this.src='${esc(still)}'"></picture>`;
   }
 
-  // 대표 프로젝트: 한 장에 한 프로젝트(대표 이미지 — 모두 같은 높이, 비율이 다르면 잘라 냄 · 제목 · 소개 · 내 역할 · 기술 · 링크)
+  // (직접 고침 11/23) 대표 프로젝트: 프로젝트마다 한 화면, 위에서 아래로 쌓임(휠 한 번에 다음 프로젝트 — 가로로 넘기지 않음).
+  //   머리(PROJECTS · 제목 · 01 / 03) → 링크 4칸 → 대표 그림(모두 같은 높이, 비율이 다르면 잘라 냄) → 소제목 3칸 · 본문 3칸
   function work(projects, total) {
     const slide = (p, i) => {
       const L = p.links || {};
       const links = [link({ href: PF.projectUrl(p.id), label: T('name.deck'), kind: 'page', cls: 'wl main' }), link({ href: PF.docUrl(p.id), label: T('name.doc'), kind: 'page', cls: 'wl main' }),
         isUrl(L.video) && link({ href: L.video, label: T('name.video'), kind: 'external', cls: 'wl main' }), isUrl(L.github) && link({ href: L.github, label: 'GitHub', kind: 'external', cls: 'wl main' })].filter(Boolean);
-      return `<article class="slide" aria-roledescription="slide" aria-label="${i + 1} / ${projects.length} · ${esc(p.title)}"><div class="wrap">
+      return `<article class="slide" aria-label="${i + 1} / ${projects.length} · ${esc(p.title)}"><div class="wrap">
+        <div class="sec-head w-head"><div><p class="eyebrow">${T('en.work')}</p><h3 class="w-title">${link({ href: PF.projectUrl(p.id), label: esc(p.title), kind: 'page' })}</h3></div>
+          <p class="w-count"><b>${pad2(i + 1)}</b> / ${total}</p></div>
+        <div class="w-links">${links.join('')}</div>
         ${p.cover ? `<a class="w-shot" href="${esc(PF.docUrl(p.id))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">${coverMotion(p)}</a>`
           : '<div class="w-shot empty" aria-hidden="true"></div>'}
         <div class="w-info">
-          <h3>${link({ href: PF.projectUrl(p.id), label: esc(p.title), kind: 'page' })}</h3>
           <dl class="w-cols">
             <div class="w-col"><dt class="w-kind">${pad2(i + 1)} · ${esc(PF.teamLabel(p.team))}</dt><dd class="w-tag">${p.tagline ? inline(p.tagline) : ''}</dd></div>
             <div class="w-col"><dt>${p.team?.role ? T('name.role') : ''}</dt><dd class="w-role">${p.team?.role ? inline(p.team.role) : ''}</dd></div>
             <div class="w-col"><dt>${(p.tags || []).length ? T('en.skills') : ''}</dt><dd class="w-tags">${esc((p.tags || []).join(' / '))}</dd></div>
           </dl>
-          <div class="w-links">${links.join('')}</div>
         </div></div></article>`;
     };
-    return `<section id="work" class="work no-print" aria-roledescription="carousel" aria-label="${T('page.work')}"><div class="w-frame">
-      <div class="wrap"><div class="sec-head"><div><p class="eyebrow">${T('en.work')}</p><h2>${T('page.work')}</h2></div><p class="w-count" aria-live="polite"><b data-w-cur>01</b> / ${total}</p></div></div>
-      <div class="w-view"><div class="w-track">${projects.map(slide).join('')}</div>
-        ${projects.length > 1 ? `<button type="button" class="w-arrow prev" data-w-prev aria-label="${T('page.prev-project')}" title="${T('page.prev-project')}">&lt;</button>
-        <button type="button" class="w-arrow next" data-w-next aria-label="${T('page.next-project')}" title="${T('page.next-project')}">&gt;</button>` : ''}</div>
-    </div></section>`;
+    return `<section id="work" class="work no-print" aria-label="${T('page.work')}"><h2 class="pf-sr-only">${T('page.work')}</h2>${projects.map(slide).join('')}</section>`;
   }
 
   // 메시지 칸: 정적 페이지는 메일을 직접 못 보내 Web3Forms를 거침(받는 주소 = access key를 만들 때 넣은 이메일. 이 키는 페이지에 공개해도 되는 값)
@@ -329,7 +325,7 @@
     PF.bindMode(root);
     workCtl = bindWork();
     tabsCtl = bindTabs();
-    bindPaging(workCtl);
+    bindPaging();
     bindContact();
     root.addEventListener('click', (e) => {                            // 기술 스택 근거 칩 등 #p-<폴더> 링크: 화면에서는 그 절이 인쇄 전용이라 대표 프로젝트로
       const a = e.target.closest('a[href^="#p-"]');
@@ -371,8 +367,7 @@
   //   정해 둔 시간 동안 처음 빠르고 끝에서 느려지게. 움직임 줄이기 설정이면 바로 이동. 가려진 창(rAF 멈춤)에서도 끝 위치에 닿게 시간 초과로 마무리
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const GLIDE_MS = 560;
-  const onGlide = [];                                                  // 움직일 때마다 부를 것(대표 프로젝트 트랙 위치 — 스크롤 이벤트가 늦거나 없는 창에서도 맞게)
-  const moveTo = (y) => { scrollTo({ top: y, behavior: 'instant' }); onGlide.forEach((f) => f()); };
+  const moveTo = (y) => scrollTo({ top: y, behavior: 'instant' });
   let anim = null;
   function glide(to) {
     to = Math.max(0, Math.min(document.documentElement.scrollHeight - innerHeight, to));
@@ -396,96 +391,25 @@
   const docTop = (el) => el.getBoundingClientRect().top + scrollY;
   let lastWheel = 0;
 
-  // ── 대표 프로젝트 넘기기 ──
-  //   넓은 화면: 절이 머리 막대 아래에 붙어 있는 동안(.work 높이만큼) 세로 스크롤이 트랙을 가로로 옮김. 휠은 bindPaging이 받아 wheel(dir)로 넘겨 줌
-  //   스크롤바·키보드로 어중간한 곳에 멈추면 가까운 프로젝트로 맞춤. 좁은 화면: 붙여 두지 않고 손가락으로 가로로 밀어 넘김
+  // ── (직접 고침 11/23) 대표 프로젝트: 프로젝트마다 한 화면(세로로 쌓임). 넘기기는 bindPaging이 프로젝트 하나를 한 절처럼 다룸 ──
   function bindWork() {
-    const sec = root.querySelector('#work');
-    if (!sec) return null;
-    const track = sec.querySelector('.w-track'), view = sec.querySelector('.w-view'), frame = sec.querySelector('.w-frame');
-    const N = track.children.length;
-    const prev = sec.querySelector('[data-w-prev]'), next = sec.querySelector('[data-w-next]'), cur = sec.querySelector('[data-w-cur]');
-    const STEP = .9;                                                   // 프로젝트 하나에 드는 세로 거리(화면 높이 배수)
-    const pinned = () => !narrowView.matches && N > 1;
-    let index = 0;
-
-    const show = (i) => {
-      index = Math.max(0, Math.min(N - 1, i));
-      if (cur) cur.textContent = pad2(index + 1);
-      if (prev) prev.disabled = index === 0;
-      if (next) next.disabled = index === N - 1;
+    const slides = [...root.querySelectorAll('#work > .slide')];
+    if (!slides.length) return null;
+    const go = (i, jump = false) => {
+      const s = slides[Math.max(0, Math.min(slides.length - 1, i))];
+      const y = Math.max(0, docTop(s) - topH());
+      if (jump) moveTo(y); else glide(y);
     };
-    const start = () => docTop(sec) - (parseFloat(getComputedStyle(frame).top) || 0);   // 붙기 시작하는 세로 위치
-    const range = () => Math.max(1, sec.offsetHeight - frame.offsetHeight);
-    const yOf = (i) => start() + (range() * i) / Math.max(1, N - 1);
-    const pos = () => Math.max(0, Math.min(1, (scrollY - start()) / range())) * (N - 1);   // 지금 몇 번째(소수)
-    const inside = () => pinned() && scrollY >= start() - 2 && scrollY <= start() + range() + 2;
-
-    function layout() {
-      if (!pinned()) { sec.style.height = ''; track.style.transform = ''; show(Math.round(track.scrollLeft / Math.max(1, track.clientWidth))); return; }
-      sec.style.height = `${frame.offsetHeight + innerHeight * STEP * (N - 1)}px`;
-      onScroll();
-    }
-    function onScroll() {
-      if (!pinned()) return;
-      const x = pos();
-      track.style.transform = `translate3d(${-x * track.clientWidth}px,0,0)`;
-      view.scrollLeft = 0;                                             // 포커스 이동으로 브라우저가 몰래 가로 스크롤한 것 되돌림
-      show(Math.round(x));
-    }
-    function go(i, jump = false) {
-      i = Math.max(0, Math.min(N - 1, i));
-      if (pinned()) { if (jump) moveTo(yOf(i)); else glide(yOf(i)); }
-      else { track.scrollTo({ left: track.children[i].offsetLeft - track.offsetLeft, behavior: jump || reduceMotion.matches ? 'auto' : 'smooth' }); show(i); }
-    }
-    // 휠 한 번: 붙어 있는 구간 안이면 바로 다음(이전) 프로젝트로 → true. 처음·끝에서 바깥쪽이거나 구간 밖이면 false(절 넘기기가 받음)
-    function wheel(dir) {
-      if (!inside()) return false;
-      const x = pos();
-      const target = dir > 0 ? Math.floor(x + 1e-3) + 1 : Math.ceil(x - 1e-3) - 1;
-      if (target < 0 || target > N - 1) return false;
-      go(target);
-      return true;
-    }
-
-    let idle = 0;
-    addEventListener('scroll', () => {
-      onScroll();
-      clearTimeout(idle);
-      idle = setTimeout(() => {                                        // 스크롤바·키보드로 어중간하게 멈춘 경우만
-        if (!pinned() || anim || performance.now() - lastWheel < 300) return;
-        const s = start(), r = range();
-        if (scrollY <= s + 1 || scrollY >= s + r - 1) return;
-        const x = pos();
-        if (Math.abs(x - Math.round(x)) > .01) glide(yOf(Math.round(x)));
-      }, 160);
-    }, { passive: true });
-    addEventListener('resize', layout);
-    narrowView.addEventListener?.('change', layout);
-    prev?.addEventListener('click', () => go(index - 1));
-    next?.addEventListener('click', () => go(index + 1));
-    track.addEventListener('scroll', () => { if (!pinned()) show(Math.round(track.scrollLeft / Math.max(1, track.clientWidth))); }, { passive: true });
-    sec.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); go(index + 1); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); go(index - 1); }
-    });
-    track.addEventListener('focusin', (e) => {                         // 키보드로 다른 프로젝트의 링크에 들어가면 그 프로젝트를 정면으로
-      const s = e.target.closest('.slide');
-      const i = s ? [...track.children].indexOf(s) : -1;
-      if (i >= 0 && i !== index) go(i);
-    });
-    addEventListener('load', layout);
-    onGlide.push(onScroll);
-    layout(); show(0);
-    return { wheel, go, layout };
+    return { go };
   }
 
   // ── 절 넘기기: 머리 · 대표 프로젝트 · 소개 · 핵심 기능 · 연락처를 한 화면씩 ──
-  //   휠(또는 PageDown·PageUp·Space·↑·↓) 한 번 = 다음(이전) 절의 맨 위로 미끄러짐. 대표 프로젝트 안에서는 먼저 프로젝트를 넘기고, 마지막에서 다음 절로.
+  //   휠(또는 PageDown·PageUp·Space·↑·↓) 한 번 = 다음(이전) 절의 맨 위로 미끄러짐. 대표 프로젝트는 프로젝트 하나가 한 화면.
   //   절이 화면보다 길면(메시지 칸을 펼친 연락처 등) 그 안에서는 보통 스크롤, 끝에 닿으면 다음 절로. 트랙패드 관성 휠은 넘어가는 동안 삼킴
-  function bindPaging(work) {
+  function bindPaging() {
     const paged = () => !narrowView.matches;
-    const pages = () => [...root.querySelectorAll('main > section[id], main > footer[id]')].filter((s) => s.offsetHeight > 0);
+    const pages = () => [...root.querySelectorAll('main > section[id], main > footer[id]')]
+      .flatMap((s) => (s.id === 'work' ? [...s.querySelectorAll(':scope > .slide')] : [s])).filter((s) => s.offsetHeight > 0);
     let held = false;
     const pageTop = (s) => Math.max(0, docTop(s) - topH());
     const current = (list) => {
@@ -512,7 +436,7 @@
       if (rest > 2) { if (rest > dy) return false; glide(pageTop(s)); return true; }
       if (i === 0) return false;
       const p = list[i - 1];
-      glide(Math.max(pageTop(p), docTop(p) + p.offsetHeight - innerHeight));   // 앞 절이 길면 그 끝(대표 프로젝트면 마지막 프로젝트)으로
+      glide(Math.max(pageTop(p), docTop(p) + p.offsetHeight - innerHeight));   // 앞 절이 길면 그 끝으로
       return true;
     }
     addEventListener('wheel', (e) => {
@@ -525,7 +449,7 @@
       const dir = Math.sign(e.deltaY);
       if (!dir) return;
       const dy = Math.abs(e.deltaY) * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? innerHeight : 1);
-      if ((work && work.wheel(dir)) || step(dir, dy)) { e.preventDefault(); held = true; }
+      if (step(dir, dy)) { e.preventDefault(); held = true; }
     }, { passive: false });
     // 키보드: PageDown·PageUp·Space, ↑·↓도 휠 한 번과 같게(한 번 누를 때마다 한 절 · 대표 프로젝트 안에서는 한 프로젝트)
     addEventListener('keydown', (e) => {
@@ -537,7 +461,7 @@
         : e.key === 'PageUp' || e.key === 'ArrowUp' || (e.key === ' ' && e.shiftKey) ? -1 : 0;
       if (!dir) return;
       if (anim) { e.preventDefault(); return; }                        // 넘어가는 중(키를 꾹 누른 반복 포함)이면 한 번만 넘기고 기다림
-      if ((work && work.wheel(dir)) || step(dir, innerHeight * .9)) e.preventDefault();
+      if (step(dir, innerHeight * .9)) e.preventDefault();
     });
     // 스크롤바로 절 사이 어중간한 곳에 멈추면(화면보다 짧은 절일 때만) 가까운 절 맨 위로
     let idle = 0;
@@ -547,7 +471,7 @@
         if (!paged() || anim || performance.now() - lastWheel < 300) return;
         const list = pages();
         const i = current(list), s = list[i];
-        if (!s || s.id === 'work' || s.offsetHeight > innerHeight - topH() + 4) return;   // 대표 프로젝트는 bindWork가, 긴 절은 그대로
+        if (!s || s.offsetHeight > innerHeight - topH() + 4) return;   // 긴 절은 그대로
         const off = scrollY + topH() - docTop(s);
         if (off < 3) return;
         const nextS = list[i + 1];

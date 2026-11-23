@@ -146,32 +146,28 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .hc-row:hover > span:first-child { text-decoration: underline; text-underline-offset: 4px; }
 .hc-row .pf-newtab-icon { margin-left: auto; color: var(--muted); }
 
-/* ② 대표 프로젝트: 머리 막대 아래에 붙은 틀 안에서 트랙이 가로로 이동(높이는 portfolio.js가 프로젝트 수만큼). 대표 이미지는 모두 같은 높이, 넘치면 잘라 냄 */
+/* ② (직접 고침 11/23) 대표 프로젝트: 프로젝트마다 한 화면, 위에서 아래로 쌓임. 머리 → 링크 4칸 → 대표 그림(모두 같은 높이, 넘치면 잘라 냄) → 소제목·본문 3칸 */
 .work { position: relative; scroll-margin-top: var(--top-h); }
-.w-frame { position: sticky; top: var(--top-h); height: calc(100svh - var(--top-h)); overflow: hidden; display: flex; flex-direction: column; padding-top: clamp(18px, 3vh, 36px); }
-.w-frame > .wrap { width: 100%; }
-.w-frame .sec-head { margin-bottom: 0; }
+.slide { scroll-margin-top: var(--top-h); }
+.slide > .wrap { --shot-h: clamp(200px, calc(100svh - var(--top-h) - 430px), 600px);
+                 display: grid; grid-template-rows: auto auto var(--shot-h) auto; align-content: start; padding-top: clamp(18px, 3vh, 36px); padding-bottom: 24px; }
+.w-head { margin-bottom: 0; }
+.w-title { margin-top: 8px; font-size: clamp(28px, 3.6vw, 46px); font-weight: 800; line-height: 1.1; letter-spacing: -.03em; }
+.w-title a { text-decoration: none; }
+.w-title a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.w-title .pf-newtab-icon { width: .4em; height: .4em; }
 .w-count { flex: none; padding-bottom: 4px; font-family: var(--display); font-size: 14px; font-weight: 700; letter-spacing: .06em; color: var(--ink); }
 .w-count b { font-weight: 700; }
-.w-view { position: relative; flex: 1; min-height: 0; overflow: hidden; }
-.w-track { display: flex; height: 100%; will-change: transform; }
-.slide { flex: 0 0 100%; height: 100%; }
-.slide > .wrap { --shot-h: clamp(200px, calc(100svh - var(--top-h) - 400px), 600px);
-                 height: 100%; display: grid; grid-template-rows: var(--shot-h) auto; align-content: start; padding-top: 22px; }
 .w-shot { display: block; height: var(--shot-h); overflow: hidden; background: var(--tint); }
 .w-shot img { width: 100%; height: 100%; object-fit: cover; }
 /* (직접 고침 11/20) 제목 → 소제목 3칸(같은 가로선) → 본문 3칸(같은 가로선) → 링크 4칸 한 줄. 세 칸은 subgrid로 줄을 맞춤 */
-.w-info { display: grid; grid-template-columns: minmax(0, 1fr); padding-top: 18px; }
+.w-info { display: grid; grid-template-columns: minmax(0, 1fr); }
 .w-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: auto auto; column-gap: 40px; row-gap: 10px; margin-top: 18px; }
 .w-col { display: grid; grid-row: span 2; grid-template-rows: subgrid; }
 .w-info .w-cols dt, .w-info .w-kind { margin: 0; font-family: var(--display); font-size: 12px; font-weight: 700; letter-spacing: .1em; line-height: 1.4; color: var(--muted); }
 .w-info .w-cols dd { font-size: 15px; line-height: 1.65; }
-.w-links { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 20px; margin-top: 24px; align-items: end; }
+.w-links { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 20px; margin: 14px 0 16px; align-items: end; }
 .w-links > .wl { display: block; padding-bottom: 8px; }   /* 밑줄을 글 길이가 아니라 칸 폭 전체로 → 가로 한 줄을 네 칸으로 나눈 모양 */
-.w-info h3 { font-size: clamp(24px, 2.6vw, 34px); font-weight: 800; line-height: 1.15; letter-spacing: -.02em; }
-.w-info h3 a { text-decoration: none; }
-.w-info h3 a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
-.w-info h3 .pf-newtab-icon { width: .45em; height: .45em; }
 .w-tag { color: var(--body); }
 .w-info dd { color: var(--ink); }
 .w-role { font-weight: 600; }
@@ -179,13 +175,6 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 .wl { font-size: 14px; font-weight: 600; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
 .wl.main { font-weight: 800; color: var(--accent-ink); border-bottom: 1.5px solid currentColor; }
 .wl:hover { border-bottom-color: currentColor; }
-.w-arrow { position: absolute; z-index: 3; top: calc(22px + var(--shot-h, 40%) / 2); transform: translateY(-50%); width: 44px; height: 44px; display: grid; place-items: center;
-           border: 1px solid var(--ink); background: var(--paper); color: var(--ink); font: 400 20px/1 var(--display); cursor: pointer; }
-.w-view { --shot-h: clamp(200px, calc(100svh - var(--top-h) - 400px), 600px); }
-.w-arrow.prev { left: max(8px, calc((100% - var(--wrap)) / 2 + var(--pad) - 22px)); }
-.w-arrow.next { right: max(8px, calc((100% - var(--wrap)) / 2 + var(--pad) - 22px)); }
-.w-arrow:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
-.w-arrow:disabled { opacity: .25; cursor: default; }
 
 /* ③ 소개: 왼쪽 작은 이름 칸 · 오른쪽 내용(자기소개 → 기술 스택) */
 .ab-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
@@ -333,9 +322,9 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
 }
 
 /* 한 화면 = 한 절(넓고 충분히 높은 화면): 머리 · 소개 · 핵심 기능 · 연락처가 각각 머리 막대 아래 화면 높이를 채움.
-   대표 프로젝트는 붙은 틀(.w-frame)이 이미 화면 높이. 넘기기는 portfolio.js bindPaging */
+   대표 프로젝트는 프로젝트 하나가 한 화면. 넘기기는 portfolio.js bindPaging */
 @media screen and (min-width: 760px) and (min-height: 561px) {
-  .hero, #intro, .sec.kf, .contact { min-height: calc(100svh - var(--top-h)); }
+  .hero, #intro, .sec.kf, .contact, .slide { min-height: calc(100svh - var(--top-h)); }
   .hero { display: flex; flex-direction: column; justify-content: center; padding: clamp(24px, 4vh, 48px) 0; }
   .hero > .wrap { width: 100%; }
   #intro, .sec.kf { padding: clamp(18px, 3vh, 36px) 0 clamp(24px, 4vh, 48px); }
@@ -385,21 +374,14 @@ code { font-family: var(--mono); font-size: .88em; background: var(--accent-soft
   .sec-head { flex-wrap: wrap; }
   .msg-2 { grid-template-columns: 1fr; }
 }
-/* 대표 프로젝트 — 좁거나 낮은 화면: 붙여 두지 않고 손가락으로 가로로 밀어 넘김(+ 화살표). 이미지는 2:1로 같은 크기 */
+/* 대표 프로젝트 — 좁거나 낮은 화면: 위에서 아래로 보통 스크롤. 이미지는 2:1로 같은 크기 */
 @media (max-width: 759px), (max-height: 560px) {
-  .work { height: auto !important; }
-  .w-frame { position: static; height: auto; overflow: visible; }
-  .w-view { overflow: visible; }
-  .w-track { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; transform: none !important; }
-  .w-track::-webkit-scrollbar { display: none; }
-  .slide { scroll-snap-align: start; height: auto; }
-  .slide > .wrap { display: block; height: auto; }
+  .slide > .wrap { display: block; }
   .w-shot { height: auto; aspect-ratio: 2 / 1; }
   .w-cols { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: 18px; margin-top: 12px; }
   .w-col { grid-row: auto; grid-template-rows: none; row-gap: 6px; }
   .w-col:has(> dd:empty) { display: none; }
-  .w-links { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 12px; margin-top: 18px; }
-  .w-arrow { top: calc(22px + (100vw - 2 * var(--pad)) / 4); width: 38px; height: 38px; }
+  .w-links { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
