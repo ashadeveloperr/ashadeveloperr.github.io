@@ -119,8 +119,8 @@
       <div class="sec-head"><div><p class="eyebrow">${esc(eyebrow)}</p><h2>${esc(title)}</h2></div>${right ? `<p class="sec-r">${esc(right)}</p>` : ''}</div>${body}</div></section>`;
     const out = [];
 
-    // ① 머리 + 소개(직접 고침 11/24): 2×2 격자 — 왼쪽 위 큰 제목(문구 표 en.hero — 비우면 이름)·부제, 오른쪽 위 자기소개(profile.intro 줄바꿈 그대로, 왼쪽 정렬)
-    //   왼쪽 아래 연락처·링크(제목 왼쪽 기준선), 오른쪽 아래 기술 스택(자기소개 왼쪽 기준선). 내가 누구인지·무엇을 다루는지를 프로젝트보다 먼저 보여 줌
+    // ① 머리 + 소개(직접 고침 11/24): 큰 제목(문구 표 en.hero — 비우면 이름)·부제·자기소개(profile.intro 줄바꿈 그대로, 왼쪽 정렬) · 기술 스택 · 연락처 링크
+    //   내가 누구인지·무엇을 다루는지를 프로젝트보다 먼저 보여 줌
     //   인쇄(제출 PDF)는 예전 그대로: 머리(제목·주소) → ④ 소개 절(print-only)
     const heroT = t('en.hero').trim() || nameT;
     const hc = [prof.email && `<li><button type="button" class="hc-row" data-open-msg><span>${esc(prof.email)}</span><span class="k">${T('en.contact')}</span></button></li>`,
@@ -129,13 +129,18 @@
     const introP = prof.intro ? prof.intro.split(/\n+/).filter((l) => l.trim()).map((l) => `<p>${inline(l)}</p>`).join('') : '';
     const skillsL = (pf.skills || []).length ? `<ul class="skills">${pf.skills.map((s) => `<li class="skill">
       <h3>${esc(s.name)}</h3><ul>${(s.evidence || []).map((e) => `<li><span>${inline(e.text)}</span>${byId[e.project] ? link({ href: `#p-${e.project}`, label: esc(byId[e.project].title), kind: 'anchor', cls: 'chip' }) : ''}</li>`).join('')}</ul></li>`).join('')}</ul>` : '';
+    // (직접 고침 11/24 두 번째) 두 칸: 왼쪽 = 제목(콘덴스드 산스, 칸 폭에 꽉 차게)·부제·자기소개, 오른쪽 = 기술 스택(근거 프로젝트와 함께)·Contact 링크
     out.push(`<section id="cover" class="hero"><div class="wrap">
       <div class="hero-top"><p class="eyebrow">${T('en.portfolio')} · ${esc(nameT)}</p>${pf.generatedAt ? `<p class="upd">${T('page.updated', { date: pf.generatedAt })}</p>` : ''}</div>
       <div class="hero-g">
-        <div class="hero-t"><h1${heroT !== nameT ? ' lang="en"' : ''}>${esc(heroT)}</h1>${prof.headline ? `<p class="headline">${esc(prof.headline)}</p>` : ''}</div>
-        ${introP ? `<div class="hero-about about no-print">${introP}</div>` : ''}
-        ${hc.length ? `<div class="hero-lk no-print"><p class="hero-k">${T('page.nav-contact')}</p><ul class="hero-ct">${hc.join('')}</ul></div>` : ''}
-        ${skillsL ? `<div class="hero-sk no-print" id="stack"><p class="hero-k">${T('page.stack')}<span>${T('page.stack-note')}</span></p>${skillsL}</div>` : ''}
+        <div class="hero-l">
+          <div class="hero-t"><h1${heroT !== nameT ? ' lang="en"' : ''}>${esc(heroT)}</h1>${prof.headline ? `<p class="headline">${esc(prof.headline)}</p>` : ''}</div>
+          ${introP ? `<div class="hero-about about no-print">${introP}</div>` : ''}
+        </div>
+        <div class="hero-r no-print">
+          ${skillsL ? `<div class="hero-sk" id="stack"><p class="hero-k">${T('page.stack')}<span>${T('page.stack-note')}</span></p>${skillsL}</div>` : ''}
+          ${hc.length ? `<div class="hero-lk"><p class="hero-k" lang="en">${T('en.hero-links')}</p><ul class="hero-ct">${hc.join('')}</ul></div>` : ''}
+        </div>
       </div>
       ${printUrls([prof.email && [t('page.print-email'), prof.email, `mailto:${prof.email}`, 'mail'], isUrl(prof.github) && ['GitHub', shortUrl(prof.github), prof.github, 'external'],
         ...profLinks.map((l) => [l.label, shortUrl(l.url), l.url, 'external']), [t('page.print-web'), PF.visibleUrl('')]].filter(Boolean))}

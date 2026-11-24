@@ -73,6 +73,7 @@ const PFStr = (() => {
     ['en.why', 'Why', '포트폴리오 페이지 기능 목록 · 왜 이 방법인가(셋째 줄 라벨)', 6, 'en'],
     ['en.glance', 'AT A GLANCE', '포트폴리오 페이지 · 한눈에 보기 절 위', 14, 'en'],
     ['en.contact', 'CONTACT', '포트폴리오 페이지 · 맨 아래 연락처', 14, 'en'],
+    ['en.hero-links', 'Contact', '포트폴리오 페이지 · 첫 화면 오른쪽 링크 목록 위(직접 고침 11/24)', 14, 'en'],
     ['en.chapter', 'CHAPTER', '슬라이드 · 장 표지(뒤에 번호)', 10, 'en'],
     ['en.contents', 'CONTENTS', '슬라이드 · 목차 장면 제목', 12, 'en'],
     ['en.more', 'MORE', '슬라이드 · 맺음 장면 왼쪽 위', 10, 'en'],
