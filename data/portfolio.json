@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23",
+  "generatedAt": "2026-11-24",
   "profile": {
     "name": "채경희",
     "nameEn": "",
@@ -77,7 +77,7 @@
       "name": "Unity Test Framework",
       "evidence": [
         {
-          "text": "EditMode(Core 규칙)·PlayMode(화면·진행률) 테스트로 AI가 짠 코드를 정리 전후마다 검증",
+          "text": "EditMode(Core 규칙)·PlayMode(화면 기반 검증) 테스트로 AI가 짠 코드를 정리 전후마다 검증",
           "project": "3-desert-settlement"
         }
       ]
