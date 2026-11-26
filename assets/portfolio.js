@@ -132,7 +132,10 @@
     // (직접 고침 11/24 두 번째) 두 칸: 왼쪽 = 제목(콘덴스드 산스, 칸 폭에 꽉 차게)·부제·자기소개, 오른쪽 = 기술 스택(근거 프로젝트와 함께)·Contact 링크
     out.push(`<section id="cover" class="hero"><div class="wrap">
       <div class="hero-top"><p class="eyebrow">${T('en.portfolio')} · ${esc(nameT)}</p>${pf.generatedAt ? `<p class="upd">${T('page.updated', { date: pf.generatedAt })}</p>` : ''}</div>
-      <div class="hero-g"><div class="hero-t"><h1${heroT !== nameT ? ' lang="en"' : ''}>${esc(heroT)}</h1>${prof.headline ? `<p class="headline">${esc(prof.headline)}</p>` : ''}<p class="hero-specialty no-print">Unity · C# · 게임 시스템 설계와 구현 · 시각디자인</p></div>${hc.length ? `<ul class="hero-ct no-print">${hc.join('')}</ul>` : ''}</div>
+      <div class="hero-g"><div class="hero-t"><h1${heroT !== nameT ? ' lang="en"' : ''}>${esc(heroT)}</h1>
+        <div class="hero-summary"><div class="hero-statement">${prof.headline ? `<p class="headline">${esc(prof.headline)}</p>` : ''}<p class="hero-specialty no-print">게임 시스템 설계와 구현 · 시각디자인</p></div>
+        <div class="hero-spec no-print"><div><span>ENGINE / LANGUAGE</span><strong>Unity · C#</strong></div><div><span>SELECTED WORKS</span><strong>${total} PROJECTS</strong></div></div></div></div>
+        ${hc.length ? `<ul class="hero-ct no-print">${hc.join('')}</ul>` : ''}</div>
       ${projects.length ? heroGallery(projects) : ''}
       ${printUrls([prof.email && [t('page.print-email'), prof.email, `mailto:${prof.email}`, 'mail'], isUrl(prof.github) && ['GitHub', shortUrl(prof.github), prof.github, 'external'],
         ...profLinks.map((l) => [l.label, shortUrl(l.url), l.url, 'external']), [t('page.print-web'), PF.visibleUrl('')]].filter(Boolean))}
@@ -195,7 +198,7 @@
   function coverMotion(p) {
     const still = PF.srcPath(p.id, p.cover);
     const motion = PF.srcPath(p.id, p.cover.replace(/[^/]*$/, 'cover-motion.webp'));
-    return `<picture style="display:contents"><source media="(prefers-reduced-motion: reduce)" srcset="${esc(still)}"><img src="${esc(motion)}" alt="" onerror="this.onerror=null;this.previousElementSibling.remove();this.src='${esc(still)}'"></picture>`;
+    return `<picture class="w-motion"><source media="(prefers-reduced-motion: reduce)" srcset="${esc(still)}"><img src="${esc(motion)}" alt="" onerror="this.onerror=null;this.parentElement.classList.add('is-still');this.previousElementSibling.remove();this.src='${esc(still)}'"></picture>`;
   }
 
   // (직접 고침 11/23) 대표 프로젝트: 프로젝트마다 한 화면, 위에서 아래로 쌓임(휠 한 번에 다음 프로젝트 — 가로로 넘기지 않음).
@@ -204,31 +207,37 @@
     return `<div class="hero-gallery no-print"><div class="hero-gallery-head"><h2>${T('page.work')}</h2><span class="eyebrow">SELECTED WORKS / ${pad2(projects.length)}</span></div>
       <div class="hero-gallery-grid">${projects.map((p, i) => `<a class="hero-project" data-project="${esc(p.id)}" href="#p-${esc(p.id)}">
         <div class="hero-project-media">${p.cover ? `<img src="${esc(PF.srcPath(p.id, p.cover))}" alt="" loading="eager">` : ''}<span class="hero-project-number">${pad2(i + 1)}</span></div>
-        <div class="hero-project-caption"><strong>${esc(p.title)}</strong><span>${esc(PF.teamLabel(p.team))}</span></div>
+        <div class="hero-project-caption"><div><strong>${esc(p.title)}</strong><span>${esc(PF.teamLabel(p.team))}</span></div><span class="hero-project-arrow" aria-hidden="true">↘</span></div>
       </a>`).join('')}</div></div>`;
   }
 
-  // 대표 프로젝트: 한 장에 한 프로젝트(대표 이미지 — 모두 같은 높이, 비율이 다르면 잘라 냄 · 제목 · 소개 · 내 역할 · 기술 · 링크)
+  // 전체 3:1 영상과 양쪽 블러 여백을 활용하는 시네마틱 프로젝트 전시.
   function work(projects, total) {
     const slide = (p, i) => {
       const L = p.links || {};
-      const links = [link({ href: PF.projectUrl(p.id), label: T('name.deck'), kind: 'page', cls: 'wl main' }), link({ href: PF.docUrl(p.id), label: T('name.doc'), kind: 'page', cls: 'wl main' }),
-        isUrl(L.video) && link({ href: L.video, label: T('name.video'), kind: 'external', cls: 'wl main' }), isUrl(L.github) && link({ href: L.github, label: 'GitHub', kind: 'external', cls: 'wl main' })].filter(Boolean);
+      const links = [link({ href: PF.docUrl(p.id), label: T('name.doc'), kind: 'page', cls: 'wl main' }),
+        link({ href: PF.projectUrl(p.id), label: T('name.deck'), kind: 'page', cls: 'wl main' }),
+        isUrl(L.video) && link({ href: L.video, label: T('name.video'), kind: 'external', cls: 'wl main' }),
+        isUrl(L.github) && link({ href: L.github, label: 'GitHub', kind: 'external', cls: 'wl main' })].filter(Boolean);
+      const genre = (p.meta || []).find((m) => m.label === '장르')?.value || '';
+      const duration = (p.meta || []).find((m) => ['기간', '개발 기간'].includes(m.label))?.value || '';
       return `<article class="slide" id="showcase-${esc(p.id)}" data-project="${esc(p.id)}" aria-label="${i + 1} / ${projects.length} · ${esc(p.title)}"><div class="wrap">
-        ${p.cover ? `<a class="w-shot" href="${esc(PF.docUrl(p.id))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">${coverMotion(p)}</a>`
-          : '<div class="w-shot empty" aria-hidden="true"></div>'}
-        <div class="w-info">
-          <p class="w-index">${pad2(i + 1)} / ${total} · ${esc(PF.teamLabel(p.team))}</p><h3>${link({ href: PF.projectUrl(p.id), label: esc(p.title), kind: 'page' })}</h3>
-          <dl class="w-cols">
-            <div class="w-col"><dt class="w-kind">${pad2(i + 1)} · ${esc(PF.teamLabel(p.team))}</dt><dd class="w-tag">${p.tagline ? inline(p.tagline) : ''}</dd></div>
-            <div class="w-col"><dt>${p.team?.role ? T('name.role') : ''}</dt><dd class="w-role">${p.team?.role ? inline(p.team.role) : ''}</dd></div>
-            <div class="w-col"><dt>${(p.tags || []).length ? T('en.skills') : ''}</dt><dd class="w-tags">${esc((p.tags || []).join(' / '))}</dd></div>
-          </dl>
-          <div class="w-links">${links.join('')}${(p.highlights || []).length ? `<a class="wl w-feature-link" href="#p-${esc(p.id)}-core">핵심 기능 보기 ↓</a>` : ''}</div>
+        <div class="w-module"><div class="w-topline"><span>PROJECT ${pad2(i + 1)} / ${total}</span><span>${esc(PF.teamLabel(p.team))}</span></div>
+          <div class="w-banner">
+            <h3 class="w-banner-title">${link({ href: PF.projectUrl(p.id), label: esc(p.title), kind: 'page' })}</h3>
+            ${p.cover ? `<div class="w-shot">${coverMotion(p)}</div>` : '<div class="w-shot empty" aria-hidden="true"></div>'}
+            <div class="w-banner-meta"><span class="w-banner-label">DEVELOPMENT</span><span>${esc((p.tags || []).slice(0,3).join(' / '))}</span><span class="w-banner-label w-gameplay">${p.cover ? 'GAMEPLAY' : 'PROJECT'}</span></div>
+          </div>
+          <div class="w-status"><span>${genre ? esc(genre) : esc(p.title)}</span>${duration ? `<span class="w-duration">${esc(duration)}</span>` : ''}</div>
+          <div class="w-info"><dl class="w-cols">
+            <div class="w-col"><dt>OVERVIEW / 프로젝트 개요</dt><dd class="w-tag">${p.tagline ? inline(p.tagline) : ''}</dd></div>
+            <div class="w-col"><dt>CONTRIBUTION / ${T('name.role')}</dt><dd class="w-role">${p.team?.role ? inline(p.team.role) : ''}</dd></div>
+            <div class="w-col"><dt>TECH STACK / 기술 스택</dt><dd class="w-tags">${esc((p.tags || []).join(' / '))}</dd></div>
+          </dl><div class="w-links">${links.join('')}${(p.highlights || []).length ? `<a class="wl w-feature-link" href="#p-${esc(p.id)}-core">핵심 기능 보기 <span aria-hidden="true">↓</span></a>` : ''}</div></div>
         </div></div></article>`;
     };
     return `<section id="work" class="work no-print editorial-work" aria-label="${T('page.work')}">
-      <div class="wrap"><div class="sec-head"><div><p class="eyebrow">${T('en.work')}</p><h2>${T('page.work')}</h2></div><p class="w-count">${total} PROJECTS</p></div></div>
+      <div class="wrap"><div class="sec-head"><div><p class="eyebrow">01 / SELECTED PROJECTS</p><h2>${T('page.work')}</h2></div><p class="w-count">${total} PROJECTS</p></div></div>
       <div class="editorial-work-list">${projects.map(slide).join('')}</div></section>`;
   }
 
@@ -278,26 +287,30 @@
     const tabs = list.map((p, i) => `<button type="button" role="tab" class="kf-tab" data-project="${esc(p.id)}" id="kf-tab-${i}" aria-controls="kf-${i}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>${esc(p.title)}</button>`).join('');
     const panels = list.map((p, i) => {
       const hl = p.highlights.slice(0, 4);
-      const featured = p.id === "2-project-babel" && hl.length > 1 ? 1 : 0;
+      const featureSrc = { '1-folk-sack': 'dig_timing.gif', '2-project-babel': 'ship_prefab_pivots.png', '3-desert-settlement': 'map_sketch_paint.gif' }[p.id];
+      const featured = Math.max(0, hl.findIndex((h) => featureSrc && h.image?.src?.endsWith('/' + featureSrc)));
+      const ordered = hl.map((h, j) => ({h, j})).sort((a, b) => Number(b.j === featured) - Number(a.j === featured));
       return `<div class="kf-panel" data-project="${esc(p.id)}" role="tabpanel" id="kf-${i}" aria-labelledby="kf-tab-${i}"${i ? ' hidden' : ''}>
-        <h3 class="kf-proj">${esc(p.title)}<span>${esc(PF.teamLabel(p.team))}</span></h3><ol class="kf-grid">${hl.map((h, j) => {
+        <h3 class="kf-proj">${esc(p.title)}<span>${esc(PF.teamLabel(p.team))}</span></h3><ol class="kf-grid">${ordered.map(({h, j}) => {
         // 핵심 기능에 대표 이미지가 없으면 같은 문서 절의 발표 덱에 있는 실제 이미지로 보완.
         const imRef = h.image?.src ? h.image : (h.section ? (p.deck?.slides || [])
           .filter((s) => Array.isArray(s.sectionPath) && s.sectionPath.includes(h.section))
           .flatMap((s) => s.visuals || []).find((v) => v.kind === 'image' && v.src) : null);
         const im = imRef?.src ? `<img src="${esc(PF.srcPath(p.id, imRef.src))}" alt="${esc(capText(imRef.caption) || h.title)}"${imRef.w && imRef.h ? ` width="${imRef.w}" height="${imRef.h}"` : ''}>` : '';
-        return `<li class="kf-card${j === featured ? ' kf-featured' : ''}"><div class="kf-media${im ? '' : ' empty'}">${im}</div>
-          <p class="kf-n">${T('en.feature')} ${pad2(j + 1)}</p><h4>${inline(h.title)}</h4>
+        return `<li class="kf-card${j === featured ? ' kf-featured' : ''}${im ? '' : ' kf-no-media'}">
+          <div class="kf-id"><span>SYS_${pad2(j + 1)}</span>${j === featured ? '<span>FEATURED SYSTEM</span>' : ''}</div>
+          ${im ? `<figure class="kf-media">${im}</figure>` : ''}
+          <div class="kf-copy"><h4>${inline(h.title)}</h4>
           <p class="kf-lab">${h.what ? T('page.kf-problem') : ''}</p><p class="kf-txt">${h.what ? inline(h.what) : ''}</p>
           <p class="kf-lab">${h.summary ? T('page.kf-solution') : ''}</p><p class="kf-txt">${h.summary ? inline(h.summary) : ''}</p>
           <div class="kf-links">${link({ href: PF.projectUrl(p.id, PF.deckSceneFor(p, h.section)), label: T('page.see-in-deck'), kind: 'page', cls: 'kf-link',
             attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-deck')} (새 탭)"` })}${link({ href: PF.docUrl(p.id, h.section ? `sec=${encodeURIComponent(h.section)}` : ''), label: T('page.see-in-doc'), kind: 'page', cls: 'kf-link',
-            attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-doc')} (새 탭)"` })}</div></li>`;
+            attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-doc')} (새 탭)"` })}</div></div></li>`;
       }).join('')}</ol></div>`;
     }).join('');
     return `<section id="features" class="sec kf no-print"><div class="wrap">
-      <div class="sec-head"><div><p class="eyebrow">${T('en.key-features')}</p><h2>${T('page.key-features')}</h2></div>
-        <div class="kf-tabs" role="tablist" aria-label="${T('page.key-features')}">${tabs}</div></div>${panels}</div></section>`;
+      <div class="sec-head"><div><p class="eyebrow">02 / GAME SYSTEMS</p><h2>${T('page.key-features')}</h2></div><p class="w-count">DESIGN / IMPLEMENTATION / VALIDATION</p></div>
+        <div class="kf-tabs" role="tablist" aria-label="${T('page.key-features')}">${tabs}</div>${panels}</div></section>`;
   }
 
   // 기능 소개: 화면은 왼쪽(기능 번호와 함께), 기능 설명과 [슬라이드 열기]는 오른쪽 목록. 화면이 하나도 없으면 목록이 폭 전체
