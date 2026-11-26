@@ -281,7 +281,11 @@
       const featured = p.id === "2-project-babel" && hl.length > 1 ? 1 : 0;
       return `<div class="kf-panel" data-project="${esc(p.id)}" role="tabpanel" id="kf-${i}" aria-labelledby="kf-tab-${i}"${i ? ' hidden' : ''}>
         <h3 class="kf-proj">${esc(p.title)}<span>${esc(PF.teamLabel(p.team))}</span></h3><ol class="kf-grid">${hl.map((h, j) => {
-        const im = h.image?.src ? `<img src="${esc(PF.srcPath(p.id, h.image.src))}" alt="${esc(capText(h.image.caption) || h.title)}"${h.image.w && h.image.h ? ` width="${h.image.w}" height="${h.image.h}"` : ''}>` : '';
+        // 핵심 기능에 대표 이미지가 없으면 같은 문서 절의 발표 덱에 있는 실제 이미지로 보완.
+        const imRef = h.image?.src ? h.image : (h.section ? (p.deck?.slides || [])
+          .filter((s) => Array.isArray(s.sectionPath) && s.sectionPath.includes(h.section))
+          .flatMap((s) => s.visuals || []).find((v) => v.kind === 'image' && v.src) : null);
+        const im = imRef?.src ? `<img src="${esc(PF.srcPath(p.id, imRef.src))}" alt="${esc(capText(imRef.caption) || h.title)}"${imRef.w && imRef.h ? ` width="${imRef.w}" height="${imRef.h}"` : ''}>` : '';
         return `<li class="kf-card${j === featured ? ' kf-featured' : ''}"><div class="kf-media${im ? '' : ' empty'}">${im}</div>
           <p class="kf-n">${T('en.feature')} ${pad2(j + 1)}</p><h4>${inline(h.title)}</h4>
           <p class="kf-lab">${h.what ? T('page.kf-problem') : ''}</p><p class="kf-txt">${h.what ? inline(h.what) : ''}</p>
