@@ -1,8 +1,6 @@
 // 포트폴리오 페이지(index.html) — 아래로 읽는 한 페이지 + A4 인쇄(제출 PDF)
-//   순서(에디토리얼 · 2026-11-18 이 저장소에서 고침 — /portfolio-update 뒤 다시 넣기, 작업메모 참고):
-//     화면(2026-11-24): 머리(왼쪽 큰 제목 en.hero·부제 / 오른쪽 자기소개, 그 아래 왼쪽 연락처·링크 / 오른쪽 기술 스택)
-//       → 프로젝트 1 소개 → 프로젝트 1 핵심 기능 → 프로젝트 2 소개 → … (한 화면씩) → 연락처(이메일을 누르면 메시지 칸이 펼쳐짐, Web3Forms)
-//     인쇄(제출 PDF): 머리 → 소개(자기소개 + 기술 스택) → 프로젝트마다 소개 + 기능 소개 → 한눈에 보기 → 연락처
+//   화면: 표지와 프로젝트 미리보기 → 프로젝트 전시 → 핵심 기능 탭 → 자기소개와 기술 스택 → 연락처
+//   인쇄: 기존 프로젝트별 소개와 기능, 연락처 및 PDF 메뉴 유지
 //   기능 소개: 화면(그 기능 절의 이미지 highlights[].image만)은 왼쪽에 모으고, 기능 설명과 [슬라이드 열기]는 오른쪽 목록에 한 열로 맞춤
 //   모든 글은 data/portfolio.json·data/projects/*.json 값 그대로입니다. 절 이름·버튼 같은 UI 문구는 문구 표(PF.t, assets/strings.js + theme/strings.tsv)에서 옵니다.
 //   주소: #<절 id>(cover · intro · stack · p-<폴더> · p-<폴더>-core · glance · contact). 예전 포트폴리오 슬라이드 주소(#s=<장면 id> · #<번호>)는 같은 절로 넘깁니다.
@@ -54,22 +52,24 @@
     addEventListener('hashchange', () => go(projects));                // 같은 페이지에서 예전 주소(#s=…)를 붙여 넣은 경우
   }
 
-  // 화면에서 숨긴(인쇄 전용) 절로 가려는 주소 → 같은 내용이 있는 곳으로: #p-<폴더> = 대표 프로젝트의 그 장, #p-<폴더>-core = 그 프로젝트의 핵심 기능 화면,
-  //   #intro(예전 소개 절)·#features(예전 핵심 기능 탭 절) = 첫 화면·첫 프로젝트
-  let workCtl = null, projIds = [];
+  // 화면에서 숨긴(인쇄 전용) 프로젝트 절로 가려는 주소 → 같은 내용이 있는 곳으로: #p-<폴더> = 대표 프로젝트의 그 장, #p-<폴더>-core = 핵심 기능의 그 탭
+  let tabsCtl = null, projIds = [];
   function redirect(id) {
-    const el = document.getElementById(id);
-    if (id === 'intro' && el && !el.offsetHeight) { document.getElementById('cover')?.scrollIntoView({ behavior: 'instant', block: 'start' }); return true; }
-    if (id === 'features' && !el && workCtl) { workCtl.go(0, true); return true; }
+    if (id?.startsWith('kf-') && projIds.includes(id.slice(3))) id = `p-${id.slice(3)}-core`;
     const m = /^p-(.+?)(-core)?$/.exec(id || '');
+    const el = document.getElementById(id);
     if (!m || !el || el.offsetHeight > 0) return false;
     const i = projIds.indexOf(m[1]);
     if (i < 0) return false;
-    const kf = m[2] && document.getElementById(`kf-${m[1]}`);
-    if (kf) {
-      moveTo(Math.max(0, docTop(kf) - topH()));
+    if (m[2] && tabsCtl) {
+      const tab = [...root.querySelectorAll('.kf-tab')].findIndex((b) => b.dataset.project === m[1]);
+      if (tab < 0) return false;
+      tabsCtl.pick(tab);
+      root.querySelector('#features')?.scrollIntoView({ behavior: 'instant', block: 'start' });
     } else {
-      workCtl?.go(i, true);                                            // 대표 프로젝트의 그 프로젝트 화면으로
+      const target = document.getElementById(`showcase-${m[1]}`);
+      if (!target) return false;
+      target.scrollIntoView({ behavior: 'instant', block: 'start' });
     }
     return true;
   }
@@ -132,28 +132,21 @@
     // (직접 고침 11/24 두 번째) 두 칸: 왼쪽 = 제목(콘덴스드 산스, 칸 폭에 꽉 차게)·부제·자기소개, 오른쪽 = 기술 스택(근거 프로젝트와 함께)·Contact 링크
     out.push(`<section id="cover" class="hero"><div class="wrap">
       <div class="hero-top"><p class="eyebrow">${T('en.portfolio')} · ${esc(nameT)}</p>${pf.generatedAt ? `<p class="upd">${T('page.updated', { date: pf.generatedAt })}</p>` : ''}</div>
-      <div class="hero-g">
-        <div class="hero-l">
-          <div class="hero-t"><h1${heroT !== nameT ? ' lang="en"' : ''}>${esc(heroT)}</h1>${prof.headline ? `<p class="headline">${esc(prof.headline)}</p>` : ''}</div>
-          ${introP ? `<div class="hero-about about no-print">${introP}</div>` : ''}
-        </div>
-        <div class="hero-r no-print">
-          ${skillsL ? `<div class="hero-sk" id="stack"><p class="hero-k">${T('page.stack')}<span>${T('page.stack-note')}</span></p>${skillsL}</div>` : ''}
-          ${hc.length ? `<div class="hero-lk"><p class="hero-k" lang="en">${T('en.hero-links')}</p><ul class="hero-ct">${hc.join('')}</ul></div>` : ''}
-        </div>
-      </div>
+      <div class="hero-g"><div class="hero-t"><h1${heroT !== nameT ? ' lang="en"' : ''}>${esc(heroT)}</h1>${prof.headline ? `<p class="headline">${esc(prof.headline)}</p>` : ''}<p class="hero-specialty no-print">Unity · C# · 게임 시스템 설계와 구현 · 시각디자인</p></div>${hc.length ? `<ul class="hero-ct no-print">${hc.join('')}</ul>` : ''}</div>
+      ${projects.length ? heroGallery(projects) : ''}
       ${printUrls([prof.email && [t('page.print-email'), prof.email, `mailto:${prof.email}`, 'mail'], isUrl(prof.github) && ['GitHub', shortUrl(prof.github), prof.github, 'external'],
         ...profLinks.map((l) => [l.label, shortUrl(l.url), l.url, 'external']), [t('page.print-web'), PF.visibleUrl('')]].filter(Boolean))}
     </div></section>`);
 
-    // ② 대표 프로젝트 + 핵심 기능(화면만, 직접 고침 11/24): 프로젝트 소개 한 화면 → 그 프로젝트의 핵심 기능 한 화면 → 다음 프로젝트 …
-    //   인쇄에서는 아래 ⑤ 프로젝트 절이 대표 이미지·기능 소개까지 보여 줌
+    // ② 프로젝트 전시 → ③ 핵심 기술 사례 (화면)
     if (projects.length) out.push(work(projects, total));
+    const kf = keyFeatures(projects);
+    if (kf) out.push(kf);
 
-    // ④ 소개(제출 PDF에만 — 화면은 ① 머리에 자기소개·기술 스택이 들어감): 자기소개(profile.intro를 줄바꿈까지 그대로) + 기술 스택(기술마다 evidence와 근거 프로젝트)
+    // ④ 소개: 화면과 인쇄에서 동일한 자기소개·기술 스택을 사용
     const aboutB = introP ? `<div class="ab-row"><p class="ab-k">${T('page.intro')}</p><div class="about">${introP}</div></div>` : '';
-    const stackB = skillsL ? `<div class="ab-row"><div class="ab-k"><p>${T('page.stack')}</p><p class="ab-note">${T('page.stack-note')}</p></div>${skillsL}</div>` : '';
-    if (aboutB || stackB) out.push(sec('intro', t('en.about'), t('page.about'), '', `<div class="ab-grid">${aboutB}${stackB}</div>`, 'print-only'));
+    const stackB = skillsL ? `<div class="ab-row" id="stack"><div class="ab-k"><p>${T('page.stack')}</p><p class="ab-note">${T('page.stack-note')}</p></div>${skillsL}</div>` : '';
+    if (aboutB || stackB) out.push(sec('intro', t('en.about'), t('page.about'), '', `<div class="ab-grid">${aboutB}${stackB}</div>`));
 
     // ⑤ 프로젝트마다 소개 + 기능 소개 — 제출 PDF에만(화면에서는 ② 대표 프로젝트 · ④ 핵심 기능이 같은 역할, 자세한 글은 슬라이드·상세 문서)
     projects.forEach((p, j) => {
@@ -184,7 +177,7 @@
           .map((l) => `<span class="ex">${esc(l.label)} ${link({ href: l.url, label: `<span class="url">${esc(shortUrl(l.url))}</span>` })}</span>`).join('')}</div>`).join('')}</div>
       </div></div></footer>`);
 
-    const nav = [['cover', t('page.nav-intro'), true], ['work', t('page.nav-projects'), projects.length],
+    const nav = [['work', t('page.nav-projects'), projects.length], ['features', t('page.nav-features'), kf], ['intro', t('page.nav-intro'), aboutB || stackB],
       ['contact', t('page.nav-contact'), true]].filter((x) => x[0] && x[2]);
     root.innerHTML = `<header class="top no-print"><div class="wrap top-in">
         <a class="top-name" href="#cover">${esc(nameT)}</a>
@@ -207,26 +200,36 @@
 
   // (직접 고침 11/23) 대표 프로젝트: 프로젝트마다 한 화면, 위에서 아래로 쌓임(휠 한 번에 다음 프로젝트 — 가로로 넘기지 않음).
   //   머리(PROJECTS · 제목 · 01 / 03) → 링크 4칸 → 대표 그림(모두 같은 높이, 비율이 다르면 잘라 냄) → 소제목 3칸 · 본문 3칸
+  function heroGallery(projects) {
+    return `<div class="hero-gallery no-print"><div class="hero-gallery-head"><h2>${T('page.work')}</h2><span class="eyebrow">SELECTED WORKS / ${pad2(projects.length)}</span></div>
+      <div class="hero-gallery-grid">${projects.map((p, i) => `<a class="hero-project" data-project="${esc(p.id)}" href="#p-${esc(p.id)}">
+        <div class="hero-project-media">${p.cover ? `<img src="${esc(PF.srcPath(p.id, p.cover))}" alt="" loading="eager">` : ''}<span class="hero-project-number">${pad2(i + 1)}</span></div>
+        <div class="hero-project-caption"><strong>${esc(p.title)}</strong><span>${esc(PF.teamLabel(p.team))}</span></div>
+      </a>`).join('')}</div></div>`;
+  }
+
+  // 대표 프로젝트: 한 장에 한 프로젝트(대표 이미지 — 모두 같은 높이, 비율이 다르면 잘라 냄 · 제목 · 소개 · 내 역할 · 기술 · 링크)
   function work(projects, total) {
     const slide = (p, i) => {
       const L = p.links || {};
       const links = [link({ href: PF.projectUrl(p.id), label: T('name.deck'), kind: 'page', cls: 'wl main' }), link({ href: PF.docUrl(p.id), label: T('name.doc'), kind: 'page', cls: 'wl main' }),
         isUrl(L.video) && link({ href: L.video, label: T('name.video'), kind: 'external', cls: 'wl main' }), isUrl(L.github) && link({ href: L.github, label: 'GitHub', kind: 'external', cls: 'wl main' })].filter(Boolean);
-      return `<article class="slide" aria-label="${i + 1} / ${projects.length} · ${esc(p.title)}"><div class="wrap">
-        <div class="sec-head w-head"><div><p class="eyebrow">${T('en.work')}</p><h3 class="w-title">${link({ href: PF.projectUrl(p.id), label: esc(p.title), kind: 'page' })}</h3></div>
-          <p class="w-count"><b>${pad2(i + 1)}</b> / ${total}</p></div>
-        <div class="w-links">${links.join('')}</div>
+      return `<article class="slide" id="showcase-${esc(p.id)}" data-project="${esc(p.id)}" aria-label="${i + 1} / ${projects.length} · ${esc(p.title)}"><div class="wrap">
         ${p.cover ? `<a class="w-shot" href="${esc(PF.docUrl(p.id))}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">${coverMotion(p)}</a>`
           : '<div class="w-shot empty" aria-hidden="true"></div>'}
         <div class="w-info">
+          <p class="w-index">${pad2(i + 1)} / ${total} · ${esc(PF.teamLabel(p.team))}</p><h3>${link({ href: PF.projectUrl(p.id), label: esc(p.title), kind: 'page' })}</h3>
           <dl class="w-cols">
             <div class="w-col"><dt class="w-kind">${pad2(i + 1)} · ${esc(PF.teamLabel(p.team))}</dt><dd class="w-tag">${p.tagline ? inline(p.tagline) : ''}</dd></div>
             <div class="w-col"><dt>${p.team?.role ? T('name.role') : ''}</dt><dd class="w-role">${p.team?.role ? inline(p.team.role) : ''}</dd></div>
             <div class="w-col"><dt>${(p.tags || []).length ? T('en.skills') : ''}</dt><dd class="w-tags">${esc((p.tags || []).join(' / '))}</dd></div>
           </dl>
+          <div class="w-links">${links.join('')}${(p.highlights || []).length ? `<a class="wl w-feature-link" href="#p-${esc(p.id)}-core">핵심 기능 보기 ↓</a>` : ''}</div>
         </div></div></article>`;
     };
-    return `<section id="work" class="work no-print" aria-label="${T('page.work')}"><h2 class="pf-sr-only">${T('page.work')}</h2>${projects.map((p, i) => slide(p, i) + keyFeatures(p)).join('')}</section>`;
+    return `<section id="work" class="work no-print editorial-work" aria-label="${T('page.work')}">
+      <div class="wrap"><div class="sec-head"><div><p class="eyebrow">${T('en.work')}</p><h2>${T('page.work')}</h2></div><p class="w-count">${total} PROJECTS</p></div></div>
+      <div class="editorial-work-list">${projects.map(slide).join('')}</div></section>`;
   }
 
   // 메시지 칸: 정적 페이지는 메일을 직접 못 보내 Web3Forms를 거침(받는 주소 = access key를 만들 때 넣은 이메일. 이 키는 페이지에 공개해도 되는 값)
@@ -268,23 +271,29 @@
   // 핵심 기능(화면만, 직접 고침 11/24 — 탭 대신 프로젝트마다 그 프로젝트 소개 바로 뒤 한 화면): 머리(KEY FEATURES · 핵심 기능 · 프로젝트 이름) + 기능 카드(최대 4개 한 줄).
   //   카드 = 그림(같은 크기 틀 안에 원래 비율 그대로 — 잘리거나 늘어나지 않음) · 번호 · 기능 이름 · 문제(What) · 기능(summary) · [슬라이드 열기]
   //   (직접 고침 11/20) 문제·기능 두 칸을 라벨과 함께. 카드끼리 같은 줄에 오게 subgrid(빈 칸도 자리를 지킴)
-  function keyFeatures(p) {
-    if (!(p.highlights || []).length) return '';
+  function keyFeatures(projects) {
+    const list = projects.filter((p) => (p.highlights || []).length);
+    if (!list.length) return '';
     const capText = (c) => (typeof c === 'string' ? c : c?.text || '');
-    const hl = p.highlights.slice(0, 4);
-    return `<div class="kf-sec" id="kf-${esc(p.id)}" role="region" aria-label="${esc(p.title)} · ${T('page.key-features')}"><div class="wrap">
-        <div class="sec-head"><div><p class="eyebrow">${T('en.key-features')}</p><h3 class="kf-h">${T('page.key-features')}</h3></div>
-          <p class="sec-r kf-of">${esc(p.title)}<span>${esc(PF.teamLabel(p.team))}</span></p></div>
-        <ol class="kf-grid">${hl.map((h, j) => {
+    const tabs = list.map((p, i) => `<button type="button" role="tab" class="kf-tab" data-project="${esc(p.id)}" id="kf-tab-${i}" aria-controls="kf-${i}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>${esc(p.title)}</button>`).join('');
+    const panels = list.map((p, i) => {
+      const hl = p.highlights.slice(0, 4);
+      const featured = p.id === "2-project-babel" && hl.length > 1 ? 1 : 0;
+      return `<div class="kf-panel" data-project="${esc(p.id)}" role="tabpanel" id="kf-${i}" aria-labelledby="kf-tab-${i}"${i ? ' hidden' : ''}>
+        <h3 class="kf-proj">${esc(p.title)}<span>${esc(PF.teamLabel(p.team))}</span></h3><ol class="kf-grid">${hl.map((h, j) => {
         const im = h.image?.src ? `<img src="${esc(PF.srcPath(p.id, h.image.src))}" alt="${esc(capText(h.image.caption) || h.title)}"${h.image.w && h.image.h ? ` width="${h.image.w}" height="${h.image.h}"` : ''}>` : '';
-        return `<li class="kf-card"><div class="kf-media${im ? '' : ' empty'}">${im}</div>
+        return `<li class="kf-card${j === featured ? ' kf-featured' : ''}"><div class="kf-media${im ? '' : ' empty'}">${im}</div>
           <p class="kf-n">${T('en.feature')} ${pad2(j + 1)}</p><h4>${inline(h.title)}</h4>
           <p class="kf-lab">${h.what ? T('page.kf-problem') : ''}</p><p class="kf-txt">${h.what ? inline(h.what) : ''}</p>
           <p class="kf-lab">${h.summary ? T('page.kf-solution') : ''}</p><p class="kf-txt">${h.summary ? inline(h.summary) : ''}</p>
           <div class="kf-links">${link({ href: PF.projectUrl(p.id, PF.deckSceneFor(p, h.section)), label: T('page.see-in-deck'), kind: 'page', cls: 'kf-link',
             attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-deck')} (새 탭)"` })}${link({ href: PF.docUrl(p.id, h.section ? `sec=${encodeURIComponent(h.section)}` : ''), label: T('page.see-in-doc'), kind: 'page', cls: 'kf-link',
             attrs: `aria-label="${esc(PF.normTitle(h.title))} — ${T('page.see-in-doc')} (새 탭)"` })}</div></li>`;
-      }).join('')}</ol></div></div>`;
+      }).join('')}</ol></div>`;
+    }).join('');
+    return `<section id="features" class="sec kf no-print"><div class="wrap">
+      <div class="sec-head"><div><p class="eyebrow">${T('en.key-features')}</p><h2>${T('page.key-features')}</h2></div>
+        <div class="kf-tabs" role="tablist" aria-label="${T('page.key-features')}">${tabs}</div></div>${panels}</div></section>`;
   }
 
   // 기능 소개: 화면은 왼쪽(기능 번호와 함께), 기능 설명과 [슬라이드 열기]는 오른쪽 목록. 화면이 하나도 없으면 목록이 폭 전체
@@ -333,12 +342,14 @@
     root.addEventListener('focusin', (e) => pair(e.target, true));
     root.addEventListener('focusout', (e) => pair(e.target, false));
     PF.bindMode(root);
-    workCtl = bindWork();
-    bindPaging();
+    tabsCtl = bindTabs();
     bindContact();
     root.addEventListener('click', (e) => {                            // 기술 스택 근거 칩 등 #p-<폴더> 링크: 화면에서는 그 절이 인쇄 전용이라 대표 프로젝트로
       const a = e.target.closest('a[href^="#p-"]');
-      if (a && redirect(decodeURIComponent(a.getAttribute('href').slice(1)))) e.preventDefault();
+      if (a && redirect(decodeURIComponent(a.getAttribute('href').slice(1)))) {
+        e.preventDefault();
+        if (location.hash !== a.getAttribute('href')) history.pushState(null, '', a.getAttribute('href'));
+      }
     });
     // [PDF로 저장](직접 고침 11/22): 레포 맨 위에 확정 PDF가 있으면 [새 탭에서 열기]·[파일로 받기] 메뉴, 없으면 예전처럼 인쇄 창
     const pdfBtn = root.querySelector('[data-pdf]');
@@ -372,121 +383,26 @@
     addEventListener('beforeprint', () => eager());                    // Ctrl+P: 아직 받지 않은 그림을 바로 받기 시작(할 수 있는 만큼)
   }
 
-  // ── 부드러운 세로 이동(대표 프로젝트 넘기기 · 절 넘기기 공용) ──
-  //   정해 둔 시간 동안 처음 빠르고 끝에서 느려지게. 움직임 줄이기 설정이면 바로 이동. 가려진 창(rAF 멈춤)에서도 끝 위치에 닿게 시간 초과로 마무리
-  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const GLIDE_MS = 560;
-  const moveTo = (y) => scrollTo({ top: y, behavior: 'instant' });
-  let anim = null;
-  function glide(to) {
-    to = Math.max(0, Math.min(document.documentElement.scrollHeight - innerHeight, to));
-    cancelAnimationFrame(anim?.raf ?? 0);
-    const from = scrollY, d = to - from;
-    if (Math.abs(d) < 1 || reduceMotion.matches) { moveTo(to); anim = null; return; }
-    const t0 = performance.now(), ease = (k) => 1 - Math.pow(1 - k, 3);
-    const a = anim = { to, raf: 0 };
-    const step = (now) => {
-      if (anim !== a) return;
-      const k = Math.min(1, (now - t0) / GLIDE_MS);
-      moveTo(from + d * ease(k));
-      if (k < 1) a.raf = requestAnimationFrame(step); else anim = null;
+  // ── 핵심 기능 탭: 누르거나 ←·→로 프로젝트를 바꿈 ──
+  function bindTabs() {
+    const tabs = [...root.querySelectorAll('.kf-tab')];
+    const pick = (i, focus) => {
+      tabs.forEach((b, k) => {
+        const on = k === i;
+        b.setAttribute('aria-selected', String(on));
+        b.tabIndex = on ? 0 : -1;
+        root.querySelector(`#${b.getAttribute('aria-controls')}`).hidden = !on;
+      });
+      if (focus) tabs[i].focus();
     };
-    a.raf = requestAnimationFrame(step);
-    setTimeout(() => { if (anim === a) { cancelAnimationFrame(a.raf); moveTo(to); anim = null; } }, GLIDE_MS + 400);
-  }
-  // 넓고 충분히 높은 화면에서만 한 화면씩 넘김(휴대폰·낮은 창은 보통 스크롤)
-  const narrowView = matchMedia('(max-width: 759px), (max-height: 560px)');
-  const topH = () => root.querySelector('.top')?.offsetHeight || 0;
-  const docTop = (el) => el.getBoundingClientRect().top + scrollY;
-  let lastWheel = 0;
-
-  // ── (직접 고침 11/23) 대표 프로젝트: 프로젝트마다 한 화면(세로로 쌓임). 넘기기는 bindPaging이 프로젝트 하나를 한 절처럼 다룸 ──
-  function bindWork() {
-    const slides = [...root.querySelectorAll('#work > .slide')];
-    if (!slides.length) return null;
-    const go = (i, jump = false) => {
-      const s = slides[Math.max(0, Math.min(slides.length - 1, i))];
-      const y = Math.max(0, docTop(s) - topH());
-      if (jump) moveTo(y); else glide(y);
-    };
-    return { go };
-  }
-
-  // ── 절 넘기기: 머리(소개) · 프로젝트 1 · 핵심 기능 1 · 프로젝트 2 · 핵심 기능 2 … · 연락처를 한 화면씩 ──
-  //   휠(또는 PageDown·PageUp·Space·↑·↓) 한 번 = 다음(이전) 절의 맨 위로 미끄러짐. #work 안은 프로젝트 소개·핵심 기능이 각각 한 화면.
-  //   절이 화면보다 길면(메시지 칸을 펼친 연락처 등) 그 안에서는 보통 스크롤, 끝에 닿으면 다음 절로. 트랙패드 관성 휠은 넘어가는 동안 삼킴
-  function bindPaging() {
-    const paged = () => !narrowView.matches;
-    const pages = () => [...root.querySelectorAll('main > section[id], main > footer[id]')]
-      .flatMap((s) => (s.id === 'work' ? [...s.querySelectorAll(':scope > .slide, :scope > .kf-sec')] : [s])).filter((s) => s.offsetHeight > 0);
-    let held = false;
-    const pageTop = (s) => Math.max(0, docTop(s) - topH());
-    const current = (list) => {
-      const vt = scrollY + topH();
-      let i = 0;
-      list.forEach((s, k) => { if (docTop(s) <= vt + 2) i = k; });
-      return i;
-    };
-    // 한 걸음(dir: 1 아래 · -1 위, dy: 이번 입력의 크기). 직접 움직였으면 true, 보통 스크롤에 맡기면 false
-    function step(dir, dy) {
-      const list = pages();
-      if (!list.length) return false;
-      const vt = scrollY + topH(), vb = scrollY + innerHeight;
-      const i = current(list);
-      const s = list[i], top = docTop(s), bot = top + s.offsetHeight;
-      if (dir > 0) {
-        const rest = bot - vb;
-        if (rest > 2) { if (rest > dy) return false; glide(bot - innerHeight); return true; }   // 절 안에 남은 내용: 보통 스크롤, 끝 직전이면 끝에 맞춤
-        if (i + 1 >= list.length) return false;
-        glide(pageTop(list[i + 1]));
-        return true;
-      }
-      const rest = vt - top;
-      if (rest > 2) { if (rest > dy) return false; glide(pageTop(s)); return true; }
-      if (i === 0) return false;
-      const p = list[i - 1];
-      glide(Math.max(pageTop(p), docTop(p) + p.offsetHeight - innerHeight));   // 앞 절이 길면 그 끝으로
-      return true;
-    }
-    addEventListener('wheel', (e) => {
-      if (!paged() || e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
-      if (e.target.closest?.('textarea')) return;                      // 메시지 입력칸 안의 스크롤은 그대로
-      const now = performance.now(), gap = now - lastWheel;
-      lastWheel = now;
-      if (held && gap < 160) { e.preventDefault(); return; }           // 방금 넘긴 휠 동작의 나머지(트랙패드 관성) — 멈출 때까지 삼킴
-      held = false;
-      const dir = Math.sign(e.deltaY);
-      if (!dir) return;
-      const dy = Math.abs(e.deltaY) * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? innerHeight : 1);
-      if (step(dir, dy)) { e.preventDefault(); held = true; }
-    }, { passive: false });
-    // 키보드: PageDown·PageUp·Space, ↑·↓도 휠 한 번과 같게(한 번 누를 때마다 한 절 · 대표 프로젝트 안에서는 한 프로젝트)
-    addEventListener('keydown', (e) => {
-      if (!paged() || e.altKey || e.ctrlKey || e.metaKey) return;
-      const arrow = e.key === 'ArrowDown' || e.key === 'ArrowUp';
-      // 입력칸에서는 그대로. Space는 버튼·링크를 누르는 키라 그 위에서는 그대로, ↑↓는 버튼·링크 위에서도 넘김
-      if (e.target.closest?.(arrow ? 'input, textarea, select, [contenteditable]' : 'input, textarea, select, button, a, [contenteditable], [role="tab"]')) return;
-      const dir = e.key === 'PageDown' || e.key === 'ArrowDown' || (e.key === ' ' && !e.shiftKey) ? 1
-        : e.key === 'PageUp' || e.key === 'ArrowUp' || (e.key === ' ' && e.shiftKey) ? -1 : 0;
-      if (!dir) return;
-      if (anim) { e.preventDefault(); return; }                        // 넘어가는 중(키를 꾹 누른 반복 포함)이면 한 번만 넘기고 기다림
-      if (step(dir, innerHeight * .9)) e.preventDefault();
+    tabs.forEach((b, i) => {
+      b.addEventListener('click', () => pick(i));
+      b.addEventListener('keydown', (e) => {
+        const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (d) { e.preventDefault(); pick((i + d + tabs.length) % tabs.length, true); }
+      });
     });
-    // 스크롤바로 절 사이 어중간한 곳에 멈추면(화면보다 짧은 절일 때만) 가까운 절 맨 위로
-    let idle = 0;
-    addEventListener('scroll', () => {
-      clearTimeout(idle);
-      idle = setTimeout(() => {
-        if (!paged() || anim || performance.now() - lastWheel < 300) return;
-        const list = pages();
-        const i = current(list), s = list[i];
-        if (!s || s.offsetHeight > innerHeight - topH() + 4) return;   // 긴 절은 그대로
-        const off = scrollY + topH() - docTop(s);
-        if (off < 3) return;
-        const nextS = list[i + 1];
-        glide(off < s.offsetHeight / 2 || !nextS ? pageTop(s) : pageTop(nextS));
-      }, 220);
-    }, { passive: true });
+    return { pick };
   }
 
   // ── 메시지 칸(이메일을 누르면 아래로 펼쳐짐) ──
