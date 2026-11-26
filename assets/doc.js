@@ -231,8 +231,8 @@
       if (/^\s*%%\s*feature-flow\b/m.test(code.textContent)) fig.classList.add('mmd-summary');
       else if (/^\s*%%\s*simple\b/m.test(code.textContent)) fig.classList.add('mmd-simple');
       fig.appendChild(div);
-      fig.insertAdjacentHTML('beforeend', `<div class="mmd-bar"><details class="mmd-src"><summary>${T('doc.diagram-src')}</summary><pre><code>${esc(code.textContent)}</code></pre></details>` +
-        `<button type="button" class="mmd-zoom">${T('doc.zoom')}</button></div>`);
+      // 원문은 테마 재렌더링에 필요하므로 내부에 보존.
+      fig.insertAdjacentHTML('beforeend', `<div class="mmd-src" hidden><pre><code>${esc(code.textContent)}</code></pre></div>`);
       (code.closest('pre') || code).replaceWith(fig);
       if (!acc) fig.dataset.label = diagramLabel(fig, code.textContent) || fig.dataset.label;
       figs.push(fig);
@@ -335,18 +335,83 @@
     // ⑩ 목차 현재 위치(스크롤 기준) + 레일 "지금 읽는 절"
     trackSection(headings.filter((h) => h.tagName === 'H2' || h.tagName === 'H3'));
 
-    // ⑪ 이미지 크게 보기, 다이어그램 크게 보기(같은 페이지 dialog)
+    // ⑪ 이미지·도표 호버 확대. 클릭과 키보드는 기존 라이트박스를 대체 경로로 유지.
+    const targetOf = (node) => node instanceof Element
+      ? node.closest('img:not(a img), .mmd:not(.mmd-summary) .mermaid') : null;
+    const mediaOf = (target) => target?.matches('img') ? target : target?.querySelector('svg');
+    const preview = document.createElement('div');
+    preview.className = 'doc-hover-preview';
+    preview.hidden = true;
+    preview.setAttribute('aria-hidden', 'true');
+    preview.inert = true;
+    document.body.appendChild(preview);
+    let hovered = null, timer = 0;
+    const clearPreview = () => {
+      clearTimeout(timer);
+      hovered = null;
+      preview.hidden = true;
+      preview.replaceChildren();
+    };
+    const showPreview = (target) => {
+      if (hovered !== target || !target.isConnected || document.body.classList.contains('pf-editing')) return;
+      const media = mediaOf(target);
+      if (!media) return;
+      const rect = media.getBoundingClientRect();
+      if (!rect.width || !rect.height || (media.matches('img') && !media.naturalWidth)) return;
+      const vw = document.documentElement.clientWidth, vh = innerHeight, margin = 16;
+      const scale = Math.min(2.2, (vw - 2 * margin) / rect.width, (vh - 2 * margin) / rect.height);
+      if (scale < 1.05) return;
+      const w = rect.width * scale, h = rect.height * scale;
+      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+      const isImage = media.matches('img');
+      const clone = isImage ? new Image() : cloneDiagram(media, '-hover');
+      if (isImage) { clone.src = media.currentSrc || media.src; clone.alt = ''; }
+      preview.classList.toggle('doc-hover-diagram', !isImage);
+      Object.assign(preview.style, {
+        width: w + 'px', height: h + 'px',
+        left: clamp(rect.left + (rect.width - w) / 2, margin, vw - w - margin) + 'px',
+        top: clamp(rect.top + (rect.height - h) / 2, margin, vh - h - margin) + 'px'
+      });
+      preview.replaceChildren(clone);
+      preview.hidden = false;
+    };
+    doc.addEventListener('pointerover', (e) => {
+      if (e.pointerType !== 'mouse' || document.body.classList.contains('pf-editing')) return;
+      const target = targetOf(e.target);
+      if (!target || target === hovered || e.target.closest('a')) return;
+      clearPreview();
+      hovered = target;
+      timer = setTimeout(() => showPreview(target), 120);
+    });
+    doc.addEventListener('pointerout', (e) => {
+      if (hovered && !hovered.contains(e.relatedTarget)) clearPreview();
+    });
+    doc.addEventListener('pointercancel', clearPreview);
+    window.addEventListener('scroll', clearPreview, { capture: true, passive: true });
+    window.addEventListener('resize', clearPreview);
+    window.addEventListener('blur', clearPreview);
+    window.addEventListener('beforeprint', clearPreview);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') clearPreview(); });
+    const openMedia = (target) => {
+      const media = mediaOf(target);
+      if (!media || document.body.classList.contains('pf-editing')) return;
+      clearPreview();
+      if (media.matches('img')) zoom({ src: media.currentSrc || media.src, caption: media.alt });
+      else zoom({ svg: media, caption: target.closest('.mmd').dataset.label });
+    };
+    doc.querySelectorAll('img:not(a img), .mmd:not(.mmd-summary) .mermaid').forEach((target) => {
+      if (!mediaOf(target)) return;
+      target.tabIndex = 0;
+      target.setAttribute('aria-keyshortcuts', 'Enter Space');
+    });
+    doc.addEventListener('keydown', (e) => {
+      const target = targetOf(e.target);
+      if (!target || e.target !== target || !['Enter', ' '].includes(e.key) || document.body.classList.contains('pf-editing')) return;
+      e.preventDefault();
+      openMedia(target);
+    });
     doc.addEventListener('click', (e) => {
-      const img = e.target.closest('img');
-      if (img && !img.closest('a')) return zoom({ src: img.currentSrc || img.src, caption: img.alt });
-      const zb = e.target.closest('.mmd-zoom');
-      if (zb) { const svg = zb.closest('.mmd').querySelector('.mermaid svg'); if (svg) zoom({ svg, caption: zb.closest('.mmd').dataset.label }); return; }
-      // 도표 자체를 눌러도 크게 보기(작은 설명 도표 .mmd-simple 포함, 장 머리 요약 도표 .mmd-summary 제외, 도표 안 링크·편집 모드 중에는 그대로)(직접 고침 11/21)
-      const fig = e.target.closest('.mmd:not(.mmd-summary)');
-      if (fig && e.target.closest('.mermaid') && !e.target.closest('a') && !document.body.classList.contains('pf-editing')) {
-        const svg = fig.querySelector('.mermaid svg');
-        if (svg) zoom({ svg, caption: fig.dataset.label });
-      }
+      if (!e.target.closest('a')) openMedia(targetOf(e.target));
     });
     // 코드 오른쪽 흐림 표시: 가로로 더 있을 때만
     const fade = (pre) => pre.classList.toggle('fade-r', pre.scrollWidth > pre.clientWidth + 1 && pre.scrollLeft + pre.clientWidth < pre.scrollWidth - 1);
@@ -425,6 +490,27 @@
     update();
   }
 
+  // Mermaid 스타일·마커 등의 참조 ID가 원본 SVG와 충돌하지 않게 복제.
+  function cloneDiagram(svg, suffix) {
+    const clone = svg.cloneNode(true);
+    const nodes = [clone, ...clone.querySelectorAll('*')];
+    const ids = new Map(nodes.filter((node) => node.id).map((node) => [node.id, node.id + suffix]));
+    const escapeRegex = (s) => s.replace(/[-.*+?^$(){}|[\]\\]/g, '\\$&');
+    const keys = [...ids.keys()].sort((a, b) => b.length - a.length);
+    const pattern = keys.length ? new RegExp('#(' + keys.map(escapeRegex).join('|') + ')(?![\\w-])', 'g') : null;
+    const refs = (s) => pattern ? s.replace(pattern, (_, id) => '#' + ids.get(id)) : s;
+    nodes.forEach((node) => {
+      for (const attr of [...node.attributes]) {
+        if (attr.name === 'id') attr.value = ids.get(attr.value) || attr.value;
+        else if (attr.name === 'aria-labelledby' || attr.name === 'aria-describedby')
+          attr.value = attr.value.split(/\s+/).map((id) => ids.get(id) || id).join(' ');
+        else if (attr.value.includes('#')) attr.value = refs(attr.value);
+      }
+      if (node.localName === 'style') node.textContent = refs(node.textContent);
+    });
+    return clone;
+  }
+
   function lightbox() {
     const dlg = document.createElement('dialog');
     dlg.className = 'lightbox';
@@ -437,14 +523,7 @@
       st.className = svg ? 'lb-stage lb-svg' : 'lb-stage';
       st.innerHTML = '';
       if (svg) {
-        // Mermaid는 svg 안 <style>을 "#<svg id> …"로 한정합니다. id를 지우면 색·선이 빠져 검은 상자가 되므로, 복제본에 새 id를 주고 그 스타일의 id도 같이 바꿈
-        const c = svg.cloneNode(true);
-        if (svg.id) {
-          const nid = `${svg.id}-lb`;
-          const own = new RegExp('#' + svg.id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![\\w-])', 'g');
-          c.id = nid;
-          c.querySelectorAll('style').forEach((s) => { s.textContent = s.textContent.replace(own, `#${nid}`); });
-        }
+        const c = cloneDiagram(svg, '-lb');
         c.style.maxWidth = 'none'; st.appendChild(c);
       }
       else { const im = new Image(); im.src = src; im.alt = caption || ''; st.appendChild(im); }
