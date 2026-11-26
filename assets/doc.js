@@ -335,67 +335,13 @@
     // ⑩ 목차 현재 위치(스크롤 기준) + 레일 "지금 읽는 절"
     trackSection(headings.filter((h) => h.tagName === 'H2' || h.tagName === 'H3'));
 
-    // ⑪ 이미지·도표 호버 확대. 클릭과 키보드는 기존 라이트박스를 대체 경로로 유지.
+    // ⑪ 이미지·도표 클릭 또는 키보드로 라이트박스 열기.
     const targetOf = (node) => node instanceof Element
       ? node.closest('img:not(a img), .mmd:not(.mmd-summary) .mermaid') : null;
     const mediaOf = (target) => target?.matches('img') ? target : target?.querySelector('svg');
-    const preview = document.createElement('div');
-    preview.className = 'doc-hover-preview';
-    preview.hidden = true;
-    preview.setAttribute('aria-hidden', 'true');
-    preview.inert = true;
-    document.body.appendChild(preview);
-    let hovered = null, timer = 0;
-    const clearPreview = () => {
-      clearTimeout(timer);
-      hovered = null;
-      preview.hidden = true;
-      preview.replaceChildren();
-    };
-    const showPreview = (target) => {
-      if (hovered !== target || !target.isConnected || document.body.classList.contains('pf-editing')) return;
-      const media = mediaOf(target);
-      if (!media) return;
-      const rect = media.getBoundingClientRect();
-      if (!rect.width || !rect.height || (media.matches('img') && !media.naturalWidth)) return;
-      const vw = document.documentElement.clientWidth, vh = innerHeight, margin = 16;
-      const scale = Math.min(2.2, (vw - 2 * margin) / rect.width, (vh - 2 * margin) / rect.height);
-      if (scale < 1.05) return;
-      const w = rect.width * scale, h = rect.height * scale;
-      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-      const isImage = media.matches('img');
-      const clone = isImage ? new Image() : cloneDiagram(media, '-hover');
-      if (isImage) { clone.src = media.currentSrc || media.src; clone.alt = ''; }
-      preview.classList.toggle('doc-hover-diagram', !isImage);
-      Object.assign(preview.style, {
-        width: w + 'px', height: h + 'px',
-        left: clamp(rect.left + (rect.width - w) / 2, margin, vw - w - margin) + 'px',
-        top: clamp(rect.top + (rect.height - h) / 2, margin, vh - h - margin) + 'px'
-      });
-      preview.replaceChildren(clone);
-      preview.hidden = false;
-    };
-    doc.addEventListener('pointerover', (e) => {
-      if (e.pointerType !== 'mouse' || document.body.classList.contains('pf-editing')) return;
-      const target = targetOf(e.target);
-      if (!target || target === hovered || e.target.closest('a')) return;
-      clearPreview();
-      hovered = target;
-      timer = setTimeout(() => showPreview(target), 120);
-    });
-    doc.addEventListener('pointerout', (e) => {
-      if (hovered && !hovered.contains(e.relatedTarget)) clearPreview();
-    });
-    doc.addEventListener('pointercancel', clearPreview);
-    window.addEventListener('scroll', clearPreview, { capture: true, passive: true });
-    window.addEventListener('resize', clearPreview);
-    window.addEventListener('blur', clearPreview);
-    window.addEventListener('beforeprint', clearPreview);
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') clearPreview(); });
     const openMedia = (target) => {
       const media = mediaOf(target);
       if (!media || document.body.classList.contains('pf-editing')) return;
-      clearPreview();
       if (media.matches('img')) zoom({ src: media.currentSrc || media.src, caption: media.alt });
       else zoom({ svg: media, caption: target.closest('.mmd').dataset.label });
     };

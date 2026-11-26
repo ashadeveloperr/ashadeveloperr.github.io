@@ -367,19 +367,7 @@ dialog.lightbox::backdrop { background: rgba(10, 11, 14, .82); }
 .md.print-probe :is(th, td) { padding: 4pt 6pt; white-space: normal; overflow-wrap: break-word; }
 .md.print-probe :is(th, td) a { overflow-wrap: anywhere; }
 
-/* 호버 확대: 원래 레이아웃과 마우스 히트 영역을 유지한다. */
+/* 이미지·도표 확대의 키보드 포커스 표시. */
 @media screen {
-  .doc-hover-preview { position: fixed; z-index: 1000; pointer-events: none; box-sizing: border-box;
-    overflow: hidden; border-radius: calc(var(--r) * .5); background: var(--surface);
-    box-shadow: 0 12px 42px rgba(0,0,0,.3), 0 0 0 1px var(--line-2); }
-  .doc-hover-preview:not([hidden]) { display: block; }
-  .doc-hover-preview.doc-hover-diagram { background: var(--diagram-bg); }
-  .doc-hover-preview > :is(img, svg) { display: block; width: 100%; height: 100%; max-width: none !important; max-height: none !important; object-fit: contain; }
-  .doc-hover-preview[hidden], body.pf-editing .doc-hover-preview { display: none !important; }
   .md :is(img, .mermaid)[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 }
-@media screen and (prefers-reduced-motion: no-preference) {
-  .doc-hover-preview:not([hidden]) { animation: doc-hover-in 120ms ease-out; }
-  @keyframes doc-hover-in { from { opacity: 0; } to { opacity: 1; } }
-}
-@media print { .doc-hover-preview { display: none !important; } }
