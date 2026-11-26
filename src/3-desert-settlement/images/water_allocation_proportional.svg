@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 220" width="100%"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <style>
+      :root {
+        --bg: transparent;
+        --text: #0f172a;
+        --muted: #475569;
+        --line: #0284c7;
+        --chip: #0284c7;
+        --panel-fill: #f8fbff;
+        --panel-stroke: #cbd5e1;
+        --well-fill: #edf8ff;
+        --well-stroke: #0ea5e9;
+        --track: #dbe3ef;
+        --divider: #cbd5e1;
+        --title-fill: #f1f5f9;
+        --title-stroke: #cbd5e1;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --text: #f1f5f9;
+          --muted: #cbd5e1;
+          --line: #38bdf8;
+          --chip: #0ea5e9;
+          --panel-fill: #111827;
+          --panel-stroke: #334155;
+          --well-fill: #0b2231;
+          --well-stroke: #38bdf8;
+          --track: #334155;
+          --divider: #334155;
+          --title-fill: #1e293b;
+          --title-stroke: #475569;
+        }
+      }
+
+      .titleBox { fill: var(--title-fill); stroke: var(--title-stroke); stroke-width: 1.2; }
+      .title { font-size: 12px; font-weight: 800; fill: var(--text); }
+      .wellBox { fill: var(--well-fill); stroke: var(--well-stroke); stroke-width: 1.5; }
+      .panel { fill: var(--panel-fill); stroke: var(--panel-stroke); stroke-width: 1.2; }
+      .label { fill: var(--text); }
+      .muted { fill: var(--muted); }
+      .small { font-size: 10px; }
+      .medium { font-size: 11px; }
+      .bold { font-weight: 700; }
+      .pipe { stroke: var(--line); stroke-width: 2.4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .chip { fill: var(--chip); }
+      .chipText { fill: white; font-size: 10px; font-weight: 700; }
+      .track { fill: var(--track); }
+      .bar { fill: var(--line); }
+      .divider { stroke: var(--divider); stroke-width: 1.2; stroke-dasharray: 4 4; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="340" height="220" fill="var(--bg)"/>
+
+  <!-- Left: sequential -->
+  <rect x="26" y="8" width="112" height="24" rx="12" class="titleBox"/>
+  <text x="82" y="24" class="title" text-anchor="middle">순차 배분 모델</text>
+
+  <rect x="46" y="40" width="72" height="40" rx="6" class="wellBox"/>
+  <text x="82" y="57" class="label medium" text-anchor="middle">우물</text>
+  <text x="82" y="72" class="muted small" text-anchor="middle">공급량 60</text>
+
+  <path d="M82 80 V92 H40 V124" class="pipe"/>
+  <path d="M82 92 H124 V124" class="pipe"/>
+
+  <rect x="21" y="99" width="38" height="17" rx="4" class="chip"/>
+  <text x="40" y="111" class="chipText" text-anchor="middle">60</text>
+  <rect x="105" y="99" width="38" height="17" rx="4" class="chip"/>
+  <text x="124" y="111" class="chipText" text-anchor="middle">0</text>
+
+  <rect x="4" y="129" width="72" height="82" rx="6" class="panel"/>
+  <text x="40" y="147" class="label medium bold" text-anchor="middle">시설 A</text>
+  <text x="40" y="162" class="label small" text-anchor="middle">수요 80</text>
+  <text x="40" y="175" class="label small" text-anchor="middle">공급 60</text>
+  <rect x="12" y="182" width="56" height="6" rx="3" class="track"/>
+  <rect x="12" y="182" width="42" height="6" rx="3" class="bar"/>
+  <text x="40" y="202" class="label small" text-anchor="middle">75%</text>
+
+  <rect x="88" y="129" width="72" height="82" rx="6" class="panel"/>
+  <text x="124" y="147" class="label medium bold" text-anchor="middle">시설 B</text>
+  <text x="124" y="162" class="label small" text-anchor="middle">수요 40</text>
+  <text x="124" y="175" class="label small" text-anchor="middle">공급 0</text>
+  <rect x="96" y="182" width="56" height="6" rx="3" class="track"/>
+  <rect x="96" y="182" width="0" height="6" rx="3" class="bar"/>
+  <text x="124" y="202" class="label small" text-anchor="middle">0%</text>
+
+  <!-- Divider -->
+  <line x1="170" y1="12" x2="170" y2="214" class="divider"/>
+
+  <!-- Right: proportional -->
+  <rect x="200" y="8" width="116" height="24" rx="12" class="titleBox"/>
+  <text x="258" y="24" class="title" text-anchor="middle">수요 배분 모델</text>
+
+  <rect x="222" y="40" width="72" height="40" rx="6" class="wellBox"/>
+  <text x="258" y="57" class="label medium" text-anchor="middle">우물</text>
+  <text x="258" y="72" class="muted small" text-anchor="middle">공급량 60</text>
+
+  <path d="M258 80 V92 H216 V124" class="pipe"/>
+  <path d="M258 92 H300 V124" class="pipe"/>
+
+  <rect x="197" y="99" width="38" height="17" rx="4" class="chip"/>
+  <text x="216" y="111" class="chipText" text-anchor="middle">40</text>
+  <rect x="281" y="99" width="38" height="17" rx="4" class="chip"/>
+  <text x="300" y="111" class="chipText" text-anchor="middle">20</text>
+
+  <rect x="180" y="129" width="72" height="82" rx="6" class="panel"/>
+  <text x="216" y="147" class="label medium bold" text-anchor="middle">시설 A</text>
+  <text x="216" y="162" class="label small" text-anchor="middle">수요 80</text>
+  <text x="216" y="175" class="label small" text-anchor="middle">공급 40</text>
+  <rect x="188" y="182" width="56" height="6" rx="3" class="track"/>
+  <rect x="188" y="182" width="28" height="6" rx="3" class="bar"/>
+  <text x="216" y="202" class="label small" text-anchor="middle">50%</text>
+
+  <rect x="264" y="129" width="72" height="82" rx="6" class="panel"/>
+  <text x="300" y="147" class="label medium bold" text-anchor="middle">시설 B</text>
+  <text x="300" y="162" class="label small" text-anchor="middle">수요 40</text>
+  <text x="300" y="175" class="label small" text-anchor="middle">공급 20</text>
+  <rect x="272" y="182" width="56" height="6" rx="3" class="track"/>
+  <rect x="272" y="182" width="28" height="6" rx="3" class="bar"/>
+  <text x="300" y="202" class="label small" text-anchor="middle">50%</text>
+</svg>
