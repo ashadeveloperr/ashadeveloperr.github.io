@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 792 516" width="100%"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', Helvetica, Arial, sans-serif">
+  <defs>
+    <style>
+      :root { --text:#0f172a; --muted:#475569; --node:#ffffff; --stroke:#cbd5e1; --head:#1e293b; --headT:#f8fafc;
+        --w:#0284c7; --l:#ea580c; --f:#16a34a; --s:#64748b; --o:#ca8a04; --c:#334155; --n:#94a3b8; --band:#f1f5f9; --group:#f8fafc; }
+      @media (prefers-color-scheme: dark) { :root { --text:#f1f5f9; --muted:#cbd5e1; --node:#111827; --stroke:#334155; --head:#e2e8f0; --headT:#0f172a;
+        --w:#38bdf8; --l:#fb923c; --f:#4ade80; --s:#94a3b8; --o:#facc15; --c:#cbd5e1; --n:#64748b; --band:#1e293b; --group:#0b1220; } }
+      .head { fill:var(--head); } .ht { fill:var(--headT); font-size:13px; font-weight:700; }
+      .node { fill:var(--node); stroke:var(--stroke); stroke-width:1.3; }
+      .water { stroke:var(--w); stroke-width:1.8; } .labor { stroke:var(--l); stroke-width:1.8; } .food { stroke:var(--f); stroke-width:1.8; }
+      .stone { stroke:var(--s); stroke-width:1.8; } .ore { stroke:var(--o); stroke-width:1.8; } .cash { stroke:var(--c); stroke-width:2.2; }
+      .sub { stroke-dasharray:4 3; }
+      .group { fill:var(--group); stroke:var(--stroke); stroke-width:1.2; stroke-dasharray:5 4; }
+      .nt { fill:var(--text); font-size:14px; font-weight:700; } .nd { fill:var(--muted); font-size:12px; }
+      .ln { fill:none; stroke-width:2; stroke-linejoin:round; }
+      .w { stroke:var(--w); } .l { stroke:var(--l); } .f { stroke:var(--f); } .s { stroke:var(--s); } .o { stroke:var(--o); } .c { stroke:var(--c); }
+      .n { stroke:var(--n); stroke-dasharray:5 4; }
+      .lb { font-size:11.5px; font-weight:700; }
+      .wT { fill:var(--w); } .lT { fill:var(--l); } .fT { fill:var(--f); } .sT { fill:var(--s); } .oT { fill:var(--o); } .cT { fill:var(--c); } .nT { fill:var(--muted); }
+      .band { fill:var(--band); } .bt { fill:var(--text); font-size:13px; font-weight:700; }
+      .st { fill:var(--text); font-size:12.5px; font-weight:700; } .sd { fill:var(--muted); font-size:12px; }
+    </style>
+    <marker id="a-w" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 z" style="fill:var(--w)"/></marker>
+    <marker id="a-l" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 z" style="fill:var(--l)"/></marker>
+    <marker id="a-f" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 z" style="fill:var(--f)"/></marker>
+    <marker id="a-s" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 z" style="fill:var(--s)"/></marker>
+    <marker id="a-o" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 z" style="fill:var(--o)"/></marker>
+    <marker id="a-c" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 z" style="fill:var(--c)"/></marker>
+    <marker id="a-n" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 z" style="fill:var(--n)"/></marker>
+  </defs>
+  <rect x="8" y="8" width="136" height="28" rx="14" class="head"/>
+  <text x="76.0" y="27" class="ht" text-anchor="middle">① 물 끌어오기</text>
+  <rect x="168" y="8" width="136" height="28" rx="14" class="head"/>
+  <text x="236.0" y="27" class="ht" text-anchor="middle">② 주민 받기</text>
+  <rect x="328" y="8" width="136" height="28" rx="14" class="head"/>
+  <text x="396.0" y="27" class="ht" text-anchor="middle">③ 생산하기</text>
+  <rect x="488" y="8" width="136" height="28" rx="14" class="head"/>
+  <text x="556.0" y="27" class="ht" text-anchor="middle">④ 자금과 건설</text>
+  <rect x="648" y="8" width="136" height="28" rx="14" class="head"/>
+  <text x="716.0" y="27" class="ht" text-anchor="middle">⑤ 경매와 매각</text>
+  <rect x="8" y="62" width="136" height="66" rx="8" class="node water"/>
+  <text x="76.0" y="84" class="nt" text-anchor="middle">우물</text>
+  <text x="76.0" y="102" class="nd" text-anchor="middle">오아시스 칸에 건설</text>
+  <text x="76.0" y="118" class="nd" text-anchor="middle">물 100 / 시간</text>
+  <rect x="8" y="158" width="136" height="82" rx="8" class="node water"/>
+  <text x="76.0" y="180" class="nt" text-anchor="middle">수로</text>
+  <text x="76.0" y="198" class="nd" text-anchor="middle">칸의 변을 따라 연결</text>
+  <text x="76.0" y="214" class="nd" text-anchor="middle">구간마다 100 / 시간</text>
+  <text x="76.0" y="230" class="nd" text-anchor="middle">가까운 시설부터</text>
+  <rect x="8" y="274" width="136" height="50" rx="8" class="node sub"/>
+  <text x="76.0" y="296" class="nt" text-anchor="middle">물탱크</text>
+  <text x="76.0" y="314" class="nd" text-anchor="middle">남는 물 저장·방출</text>
+  <rect x="168" y="62" width="136" height="66" rx="8" class="node"/>
+  <text x="236.0" y="84" class="nt" text-anchor="middle">주택</text>
+  <text x="236.0" y="102" class="nd" text-anchor="middle">주민 최대 6명</text>
+  <text x="236.0" y="118" class="nd" text-anchor="middle">물·식량 있으면 이주</text>
+  <rect x="168" y="158" width="136" height="82" rx="8" class="node labor"/>
+  <text x="236.0" y="180" class="nt" text-anchor="middle">주민 = 일손</text>
+  <text x="236.0" y="198" class="nd" text-anchor="middle">1명이 시간마다</text>
+  <text x="236.0" y="214" class="nd" text-anchor="middle">물 0.25 · 식량 0.2</text>
+  <text x="236.0" y="230" class="nd" text-anchor="middle">시설·공사에 배치</text>
+  <rect x="328" y="54" width="136" height="268" rx="10" class="group"/>
+  <rect x="336" y="62" width="120" height="66" rx="8" class="node food"/>
+  <text x="396.0" y="84" class="nt" text-anchor="middle">경작지</text>
+  <text x="396.0" y="102" class="nd" text-anchor="middle">물 30 + 일손 2</text>
+  <text x="396.0" y="118" class="nd" text-anchor="middle">→ 곡물 4 / 시간</text>
+  <rect x="336" y="150" width="120" height="66" rx="8" class="node ore"/>
+  <text x="396.0" y="172" class="nt" text-anchor="middle">광산 (광맥)</text>
+  <text x="396.0" y="190" class="nd" text-anchor="middle">물 50 + 일손 4</text>
+  <text x="396.0" y="206" class="nd" text-anchor="middle">→ 광석 12 / 시간</text>
+  <rect x="336" y="246" width="120" height="66" rx="8" class="node stone"/>
+  <text x="396.0" y="268" class="nt" text-anchor="middle">채석장 (암반)</text>
+  <text x="396.0" y="286" class="nd" text-anchor="middle">물 25 + 일손 2</text>
+  <text x="396.0" y="302" class="nd" text-anchor="middle">→ 석재 1 / 시간</text>
+  <rect x="488" y="62" width="136" height="66" rx="8" class="node"/>
+  <text x="556.0" y="84" class="nt" text-anchor="middle">시장</text>
+  <text x="556.0" y="102" class="nd" text-anchor="middle">남는 곡물·석재 판매</text>
+  <text x="556.0" y="118" class="nd" text-anchor="middle">부족하면 구매</text>
+  <rect x="488" y="158" width="136" height="66" rx="8" class="node cash"/>
+  <text x="556.0" y="180" class="nt" text-anchor="middle">자금</text>
+  <text x="556.0" y="198" class="nd" text-anchor="middle">모든 시설의 유지비가</text>
+  <text x="556.0" y="214" class="nd" text-anchor="middle">매시간 빠져나감</text>
+  <rect x="488" y="252" width="136" height="66" rx="8" class="node stone"/>
+  <text x="556.0" y="274" class="nt" text-anchor="middle">건설</text>
+  <text x="556.0" y="292" class="nd" text-anchor="middle">석재 + 일손</text>
+  <text x="556.0" y="308" class="nd" text-anchor="middle">→ 새 시설</text>
+  <rect x="648" y="62" width="136" height="66" rx="8" class="node"/>
+  <text x="716.0" y="84" class="nt" text-anchor="middle">경매장</text>
+  <text x="716.0" y="102" class="nd" text-anchor="middle">입찰자 = 1 + 경매장 수</text>
+  <text x="716.0" y="118" class="nd" text-anchor="middle">(최대 7명)</text>
+  <rect x="648" y="150" width="136" height="98" rx="8" class="node ore"/>
+  <text x="716.0" y="172" class="nt" text-anchor="middle">경매</text>
+  <text x="716.0" y="190" class="nd" text-anchor="middle">72시간 뒤 첫 경매</text>
+  <text x="716.0" y="206" class="nd" text-anchor="middle">보류하면 36시간 뒤</text>
+  <text x="716.0" y="222" class="nd" text-anchor="middle">평가: 광석 생산·식량</text>
+  <text x="716.0" y="238" class="nd" text-anchor="middle">석재·기반시설·주민</text>
+  <rect x="648" y="268" width="136" height="82" rx="8" class="node cash"/>
+  <text x="716.0" y="290" class="nt" text-anchor="middle">매각</text>
+  <text x="716.0" y="308" class="nd" text-anchor="middle">자금 + 경매 대금</text>
+  <text x="716.0" y="324" class="nd" text-anchor="middle">+ 영구 보너스</text>
+  <text x="716.0" y="340" class="nd" text-anchor="middle">→ 다음 정착지</text>
+  <path d="M76.0 128 V156" class="ln w" marker-end="url(#a-w)"/>
+  <path d="M144 200 H156.0 V96 H166" class="ln w" marker-end="url(#a-w)"/>
+  <path d="M156.0 200 V290 H326" class="ln w" marker-end="url(#a-w)"/>
+  <text x="236.0" y="284" class="lb wT" text-anchor="middle">물 (가까운 시설부터)</text>
+  <path d="M76.0 240 V272" class="ln w" marker-end="url(#a-w)"/>
+  <path d="M236.0 128 V156" class="ln l" marker-end="url(#a-l)"/>
+  <text x="242.0" y="148" class="lb lT" text-anchor="start">이주</text>
+  <path d="M304 196 H326" class="ln l" marker-end="url(#a-l)"/>
+  <path d="M316.0 196 V342 H556.0 V320" class="ln l" marker-end="url(#a-l)"/>
+  <text x="396.0" y="336" class="lb lT" text-anchor="middle">공사에도 일손</text>
+  <path d="M396.0 62 V46 H236.0 V60" class="ln f" marker-end="url(#a-f)"/>
+  <path d="M464 96 H486" class="ln s" marker-end="url(#a-s)"/>
+  <path d="M556.0 128 V156" class="ln c" marker-end="url(#a-c)"/>
+  <text x="562.0" y="148" class="lb cT" text-anchor="start">판매 대금</text>
+  <path d="M456 190 H476.0 V240 H636.0 V210 H646" class="ln o" marker-end="url(#a-o)"/>
+  <path d="M456 292 H486" class="ln s" marker-end="url(#a-s)"/>
+  <path d="M716.0 128 V148" class="ln c" marker-end="url(#a-c)"/>
+  <text x="722.0" y="143" class="lb cT" text-anchor="start">입찰자 수</text>
+  <path d="M716.0 248 V266" class="ln c" marker-end="url(#a-c)"/>
+  <path d="M716.0 350 V372 H556.0" class="ln n"/>
+  <path d="M556.0 318 V372 H3 V96 H6" class="ln n" marker-end="url(#a-n)"/>
+  <text x="396.0" y="387" class="lb nT" text-anchor="middle">새 시설로 정착지를 넓히고, 매각하면 다음 정착지에서 다시 우물부터</text>
+  <rect x="8" y="400" width="776" height="110" rx="10" class="band"/>
+  <text x="22" y="422" class="bt">그 밖의 시설</text>
+  <line x1="250" y1="418" x2="268" y2="418" class="ln w"/>
+  <text x="273" y="422" class="sd">물</text>
+  <line x1="300" y1="418" x2="318" y2="418" class="ln l"/>
+  <text x="323" y="422" class="sd">일손</text>
+  <line x1="363" y1="418" x2="381" y2="418" class="ln f"/>
+  <text x="386" y="422" class="sd">식량</text>
+  <line x1="426" y1="418" x2="444" y2="418" class="ln s"/>
+  <text x="449" y="422" class="sd">석재</text>
+  <line x1="489" y1="418" x2="507" y2="418" class="ln o"/>
+  <text x="512" y="422" class="sd">광석</text>
+  <line x1="552" y1="418" x2="570" y2="418" class="ln c"/>
+  <text x="575" y="422" class="sd">자금</text>
+  <line x1="615" y1="418" x2="633" y2="418" class="ln n"/>
+  <text x="638" y="422" class="sd">확장·다음 정착지</text>
+  <text x="22" y="452" class="st">과수원·목축지·허브 농장</text>
+  <text x="22" y="472" class="sd">과일·고기·향신료 생산</text>
+  <text x="212" y="452" class="st">제분소·양조장·포도주 공방</text>
+  <text x="212" y="472" class="sd">곡물·과일을 빵·맥주·</text>
+  <text x="212" y="488" class="sd">와인으로 가공</text>
+  <text x="402" y="452" class="st">생활 수준</text>
+  <text x="402" y="472" class="sd">식품이 다양할수록 이주가</text>
+  <text x="402" y="488" class="sd">늘고 생산 최대 +20%</text>
+  <text x="592" y="452" class="st">창고·병원</text>
+  <text x="592" y="472" class="sd">저장 한도 증가,</text>
+  <text x="592" y="488" class="sd">인근 전염병 피해 절반</text>
+</svg>
